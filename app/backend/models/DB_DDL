@@ -1,3 +1,11 @@
+create type public.internship_status as enum ('application', 'interview', 'ongoing', 'terminated');
+
+alter type public.internship_status owner to "postgres-user";
+
+create type student_internship_status as enum ('applied', 'accepted', 'rejected', 'finished');
+
+alter type student_internship_status owner to "postgres-user";
+
 create table public."user"
 (
     email     varchar(255) not null
