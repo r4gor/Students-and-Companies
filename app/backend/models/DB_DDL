@@ -1,0 +1,225 @@
+create table public."user"
+(
+    email     varchar(255) not null
+        primary key,
+    password  varchar(255) not null,
+    user_type char         not null
+);
+
+alter table public."user"
+    owner to "postgres-user";
+
+create table public.university
+(
+    user_email   varchar(255) not null
+        primary key
+        constraint university_user_email_fk
+            references public."user",
+    password     varchar(255) not null,
+    name         varchar(255) not null,
+    address      varchar(255),
+    website      varchar(255),
+    phone_number varchar(15)
+);
+
+alter table public.university
+    owner to "postgres-user";
+
+create table public.student
+(
+    user_email       varchar(255) not null
+        primary key
+        constraint student_user_email_fk
+            references public."user",
+    password         varchar(255) not null,
+    university_email varchar(255)
+        constraint student_user_email_fk_2
+            references public."user",
+    first_name       varchar(255) not null,
+    last_name        varchar(255) not null,
+    phone_number     varchar(15),
+    date_of_birth    date,
+    cv               varchar(255)
+);
+
+alter table public.student
+    owner to "postgres-user";
+
+create table public.company
+(
+    user_email   varchar(255) not null
+        primary key
+        constraint company_user_email_fk
+            references public."user",
+    password     varchar(255) not null,
+    name         varchar(255) not null,
+    address      varchar(255),
+    website      varchar(255),
+    phone_number varchar(15)
+);
+
+alter table public.company
+    owner to "postgres-user";
+
+create table public.internship
+(
+    id              integer      not null
+        primary key,
+    company_email   varchar(255)
+        constraint internship_user_email_fk
+            references public."user",
+    title           varchar(255) not null,
+    description     text,
+    start           date,
+    "end"           date,
+    published       date,
+    application_end date,
+    status          internship_status
+);
+
+alter table public.internship
+    owner to "postgres-user";
+
+create table public.student_internship
+(
+    student_email varchar(255) not null
+        constraint student_internship_user_email_fk
+            references public."user",
+    internship_id integer      not null
+        constraint student_internship_internship_id_fk
+            references public.internship,
+    status        student_internship_status,
+    primary key (student_email, internship_id)
+);
+
+alter table public.student_internship
+    owner to "postgres-user";
+
+create table public.complaint
+(
+    id            integer not null
+        primary key,
+    user_email    varchar(255)
+        constraint complaint_user_email_fk
+            references public."user",
+    internship_id integer
+        constraint complaint_internship_id_fk
+            references public.internship,
+    description   text    not null
+);
+
+alter table public.complaint
+    owner to "postgres-user";
+
+create table public.notification
+(
+    id         integer not null
+        primary key,
+    user_email varchar(255)
+        constraint notification_user_email_fk
+            references public."user",
+    title      varchar(255),
+    body       text
+);
+
+alter table public.notification
+    owner to "postgres-user";
+
+create table public.tag
+(
+    id          integer      not null
+        primary key,
+    description varchar(255) not null
+);
+
+alter table public.tag
+    owner to "postgres-user";
+
+create table public.tag_user
+(
+    tag_id     integer      not null
+        constraint tag_user_tag_id_fk
+            references public.tag,
+    user_email varchar(255) not null
+        constraint tag_user_user_email_fk
+            references public."user",
+    primary key (tag_id, user_email)
+);
+
+alter table public.tag_user
+    owner to "postgres-user";
+
+create table public.tag_internship
+(
+    tag_id        integer not null
+        constraint tag_internship_tag_id_fk
+            references public.tag,
+    internship_id integer not null
+        constraint tag_internship_internship_id_fk
+            references public.internship,
+    primary key (tag_id, internship_id)
+);
+
+alter table public.tag_internship
+    owner to "postgres-user";
+
+create table public.interview_question
+(
+    id            integer not null
+        primary key,
+    internship_id integer
+        constraint interview_question_internship_id_fk
+            references public.internship,
+    question      text    not null
+);
+
+alter table public.interview_question
+    owner to "postgres-user";
+
+create table public.reply
+(
+    student_email varchar(255) not null
+        constraint reply_user_email_fk
+            references public."user",
+    question_id   integer      not null
+        constraint reply_interview_question_id_fk
+            references public.interview_question,
+    answer        text         not null,
+    primary key (student_email, question_id)
+);
+
+alter table public.reply
+    owner to "postgres-user";
+
+create table public.feedback_question
+(
+    id                   integer not null
+        primary key,
+    designated_user_type char    not null,
+    question             text    not null
+);
+
+alter table public.feedback_question
+    owner to "postgres-user";
+
+create table public.feedback
+(
+    id            integer not null
+        primary key,
+    user_email    varchar(255)
+        constraint feedback_user_email_fk
+            references public."user",
+    question_id   integer
+        constraint feedback_feedback_question_id_fk
+            references public.feedback_question,
+    internship_id integer
+        constraint feedback_internship_id_fk
+            references public.internship,
+    rating        integer
+        constraint feedback_rating_check
+            check ((rating >= 1) AND (rating <= 5))
+);
+
+alter table public.feedback
+    owner to "postgres-user";
+
