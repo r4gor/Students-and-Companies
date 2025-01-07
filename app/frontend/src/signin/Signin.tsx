@@ -1,3 +1,6 @@
+import '../main.css'
+import './signin.css'
+
 function Signin ()  {
     return (
         <>
@@ -29,7 +32,7 @@ function Signin ()  {
 				</div>
 				
 			</div>
-    </div>
+    	</div>
         </>
     )
 }
