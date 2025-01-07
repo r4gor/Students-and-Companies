@@ -1,3 +1,6 @@
+/**
+ * Controller abstract class
+ */
 import { Request, Response } from "express";
 
 abstract class Controller {
