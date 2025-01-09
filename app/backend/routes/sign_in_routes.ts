@@ -1,7 +1,8 @@
 import { Router } from 'express';
+import {SignInController} from '../controllers/sign_in_controller'
 
 export const sign_in_route = Router();
 
 sign_in_route.get('/', (req, res) => {
-  res.send("What's up doc ?!");
+  new SignInController(req,res).handle();
 });
