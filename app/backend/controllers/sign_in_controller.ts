@@ -1,6 +1,6 @@
 import {Controller} from './controller'
 import {AccountManager} from '../components/account_manager'
-import { Status } from 'utils/status';
+import { Status } from '../utils/status';
 
 export class SignInController extends Controller {
   public handle(): void {
