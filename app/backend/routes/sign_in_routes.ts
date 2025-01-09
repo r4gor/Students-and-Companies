@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import {SignInController} from '../controllers/sign_in_controller'
 
-export const sign_in_route = Router();
+export const router = Router();
 
-sign_in_route.get('/', (req, res) => {
+router.get('/signin', (req, res) => {
   new SignInController(req,res).handle();
 });
