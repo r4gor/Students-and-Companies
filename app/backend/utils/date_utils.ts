@@ -1,4 +1,3 @@
-
 /**
  * Returns the current date and time formatted as dd/MM/yyyy hh:mm:ss
  * @returns string representing current date and time
