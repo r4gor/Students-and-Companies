@@ -1,5 +1,7 @@
 import { Pool } from "pg";
-require('dotprocess.env').config({path:'../.env'});
+
+import dotenv from "dotenv";
+dotenv.config({ path: "../.env" });
 
 const pool = new Pool({
 	host: process.env.POSTGRES_HOST,
