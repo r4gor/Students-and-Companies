@@ -33,7 +33,7 @@ export class InternshipManager {
             );
             return Status.ok;
         } catch (err) {
-            console.log(`[server]: (query error) ${err}`);
+            console.log(`[server]: (query error) (create internship) ${err}`);
             return Status.error;
         }
     }
