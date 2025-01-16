@@ -3,9 +3,9 @@
  */
 import { Request, Response } from "express";
 
-abstract class Controller {
-    private req: Request
-    private res: Response
+export abstract class Controller {
+    protected req: Request
+    protected res: Response
 
     public constructor(req: Request, res: Response) {
         this.req = req;
