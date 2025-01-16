@@ -14,16 +14,14 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
       <BrowserRouter>
           <Routes>
-              <Route path="/" element={<Signin/>}>
-                
-              </Route>
-              <Route path="/index" element={<Home/>} />
-                <Route path="/signup" element={<Signup/>} />
-                <Route path="/profile" element={<Profile/>} />
-                <Route path="/search_page" element={<SearchPage/>} />
-                <Route path="/create_internship" element={<CreateInternship/>} />
-                <Route path="/internship_management" element={<InternshipManagement/>} />
-                <Route path="*" element={<ErrorPage errorType={''}/>} />
+            <Route path="/" element={<Signin/>} />
+            <Route path="/index" element={<Home/>} />
+            <Route path="/signup" element={<Signup/>} />
+            <Route path="/profile" element={<Profile/>} />
+            <Route path="/search_page" element={<SearchPage/>} />
+            <Route path="/create_internship" element={<CreateInternship/>} />
+            <Route path="/internship_management" element={<InternshipManagement/>} />
+            <Route path="*" element={<ErrorPage errorType={''}/>} />
           </Routes>
       </BrowserRouter>
   </StrictMode>,
