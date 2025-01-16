@@ -37,4 +37,5 @@ export class InternshipManager {
             return Status.error;
         }
     }
+
 }
