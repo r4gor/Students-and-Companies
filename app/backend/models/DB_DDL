@@ -231,3 +231,40 @@ create table public.feedback
 alter table public.feedback
     owner to "postgres-user";
 
+ALTER TABLE "internship"
+    ALTER COLUMN "id"
+        ADD GENERATED ALWAYS AS IDENTITY;
+
+ALTER TABLE "interview_question"
+    ALTER COLUMN "id"
+        ADD GENERATED ALWAYS AS IDENTITY;
+
+ALTER TABLE "complaint"
+    ALTER COLUMN "id"
+        ADD GENERATED ALWAYS AS IDENTITY;
+
+ALTER TABLE "feedback"
+    ALTER COLUMN "id"
+        ADD GENERATED ALWAYS AS IDENTITY;
+
+ALTER TABLE "feedback_question"
+    ALTER COLUMN "id"
+        ADD GENERATED ALWAYS AS IDENTITY;
+
+ALTER TABLE "notification"
+    ALTER COLUMN "id"
+        ADD GENERATED ALWAYS AS IDENTITY;
+
+ALTER TABLE "tag"
+    ALTER COLUMN "id"
+        ADD GENERATED ALWAYS AS IDENTITY;
+
+ALTER TABLE public.university DROP COLUMN password;
+ALTER TABLE public.university ALTER COLUMN name DROP NOT NULL;
+ALTER TABLE public.student DROP COLUMN password;
+ALTER TABLE public.student ALTER COLUMN first_name DROP NOT NULL;
+ALTER TABLE public.student ALTER COLUMN last_name DROP NOT NULL;
+ALTER TABLE public.company DROP COLUMN password;
+ALTER TABLE public.company ALTER COLUMN name DROP NOT NULL;
+
+
