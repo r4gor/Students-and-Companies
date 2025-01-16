@@ -1,30 +1,24 @@
 import dotenv from "dotenv";
 dotenv.config();
 import express, { Express, Request, Response } from "express";
-import {AccountManager} from "./components/account_manager";
-import {Status} from "./utils/status";
-import pool from "./utils/db_pool";
-import {QueryResult} from "pg";
+import cors from "cors";
+
+import sign_up_routes from "./routes/sign_up_routes";
 
 
 const app: Express = express();
 const port: string = process.env.PORT || "4001";
 
+app.use(cors());
+app.use(express.json());
+
+
 app.get("/", (req: Request, res: Response) => {
     res.send("Express + TypeScript Server");
 });
 
-app.get("/random_query", async (req: Request, res: Response) => {
+app.use("/api", sign_up_routes);
 
-    console.log(typeof process.env.POSTGRES_PASSWORD);
-
-    let result: QueryResult  = await pool.query("SELECT NOW()");
-    res.json(result.rows);
-    res.send("Express + TypeScript Server");
-
-});
-
-// app.use("/api", bookRoutes);
 
 app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
