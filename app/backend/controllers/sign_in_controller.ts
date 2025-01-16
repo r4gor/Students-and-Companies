@@ -3,11 +3,11 @@ import {AccountManager} from '../components/account_manager'
 import { Status } from '../utils/status';
 
 export class SignInController extends Controller {
-  public handle(): void {
+  public async handle(): Promise<void> {
     let body = this.req.body;
     let email = body.email;
     let password = body.password;
-    
+
     //check for bad definitions of body and its expected fields
     if (body == undefined) {
       this.res.status(400).json({ message: "Missing credentials" });
@@ -19,11 +19,11 @@ export class SignInController extends Controller {
     }
 
     //check given credentials
-    let result = new AccountManager(email, password).sign_in();
+    let result = await new AccountManager(email, password).sign_in();
     if (result == Status.error) {
       this.res.status(401).json({ message: "Invalid credentials"});
     } else {
-      this.res.status(200);
+      this.res.status(200).json({ message: "Login authorized"});
     }
   }
 }
