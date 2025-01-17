@@ -8,10 +8,9 @@ import { useAppState } from '../appstatecontext/AppStateContext'; // Import the 
 
 function Signup () {
     // Shared app state
-    const {userEmail, isAuthenticated, setUserEmail, setIsAuthenticated} = useAppState();
+    const {userEmail, isAuthenticated, userType, setUserType, setUserEmail, setIsAuthenticated} = useAppState();
 
     const [email, setEmail] = useState('');
-    const [userType, setUserType] = useState('');
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
     const [university, setUniversity] = useState('');
