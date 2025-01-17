@@ -23,7 +23,7 @@ createRoot(document.getElementById('root')!).render(
                 <Route path="/search_page" element={<SearchPage/>} />
                 <Route path="/create_internship" element={<CreateInternship/>} />
                 <Route path="/internship_management" element={<InternshipManagement/>} />
-                <Route path="*" element={<ErrorPage/>} />
+                <Route path="*" element={<ErrorPage errorType={''}/>} />
           </Routes>
       </BrowserRouter>
   </StrictMode>,
