@@ -3,14 +3,19 @@ import './signup.css'
 import Email_Input from "./utils/Email_Input.tsx";
 import User_Type from "./utils/User_Type.tsx";
 import {ChangeEvent, useState} from "react";
+import { useAppState } from '../appstatecontext/AppStateContext'; // Import the custom hook
 
 
-function Signup ()  {
+function Signup () {
+    // Shared app state
+    const {userEmail, isAuthenticated, setUserEmail, setIsAuthenticated} = useAppState();
+
     const [email, setEmail] = useState('');
     const [userType, setUserType] = useState('');
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
     const [university, setUniversity] = useState('');
+
 
     const handleSignup = async () => {
         if (!userType) {
@@ -53,67 +58,72 @@ function Signup ()  {
 
         if (!response.ok) {
             alert(data.error);
-        }
-        else {
-            alert(data.message);
+        } else {
+            setUserEmail(email);
+            setIsAuthenticated(true);
+            window.location.href = '/profile';
         }
     };
 
+    if (userEmail && isAuthenticated) {
+        window.location.href = '/profile';
 
-    return (
-        <>
-            <div className='signup'>
-                <div className="main-flex-container">
-                    <div className="central-container">
-                        <div id="title">
-                            Welcome to <b>S&C</b>
-                        </div>
-                        <div className="main-content-container">
+    } else {
+        return (
+            <>
+                <div className='signup'>
+                    <div className="main-flex-container">
+                        <div className="central-container">
+                            <div id="title">
+                                Welcome to <b>S&C</b>
+                            </div>
+                            <div className="main-content-container">
 
-                            <User_Type setUserType={setUserType} setUniversity={setUniversity} />
+                                <User_Type setUserType={setUserType} setUniversity={setUniversity}/>
 
-                            <Email_Input setEmail={setEmail} />
+                                <Email_Input setEmail={setEmail}/>
 
-                            <div className="input-container" id="password">
-                                <div id="label">
-                                    Password
+                                <div className="input-container" id="password">
+                                    <div id="label">
+                                        Password
+                                    </div>
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        id="password"
+                                        value={password}
+                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                                    />
                                 </div>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    id="password"
-                                    value={password}
-                                    onChange={(e:ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                                />
-                            </div>
-                            <div className="input-container" id="rep-password">
-                                <div id="label">
-                                    Repeat Password
+                                <div className="input-container" id="rep-password">
+                                    <div id="label">
+                                        Repeat Password
+                                    </div>
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        id="rep-password"
+                                        value={repeatPassword}
+                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setRepeatPassword(e.target.value)}
+                                    />
                                 </div>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    id="rep-password"
-                                    value={repeatPassword}
-                                    onChange={(e:ChangeEvent<HTMLInputElement>) => setRepeatPassword(e.target.value)}
-                                />
+                                <div className="button-container">
+                                    <button
+                                        type="button"
+                                        id="signup"
+                                        onClick={handleSignup}
+                                    >
+                                        Sign Up
+                                    </button>
+                                </div>
                             </div>
-                            <div className="button-container">
-                                <button
-                                    type="button"
-                                    id="signup"
-                                    onClick={handleSignup}
-                                >
-                                    Sign Up
-                                </button>
-                            </div>
-                        </div>
 
+                        </div>
                     </div>
                 </div>
-            </div>
-        </>
-    )
+            </>
+        )
+    }
 }
 
 export default Signup
