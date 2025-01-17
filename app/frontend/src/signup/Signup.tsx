@@ -66,7 +66,7 @@ function Signup () {
     };
 
     if (userEmail && isAuthenticated) {
-        window.location.href = '/profile';
+        window.location.href = '/edit_profile';
 
     } else {
         return (
