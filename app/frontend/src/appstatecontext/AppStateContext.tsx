@@ -3,8 +3,10 @@ import React, {createContext, useState, useEffect, ReactNode, useContext} from '
 type AppState = {
     userEmail: string | null;
     isAuthenticated: boolean;
-    setUserEmail: (user: string | null) => void;
+    userType: string | null;
+    setUserEmail: (userEmail: string | null) => void;
     setIsAuthenticated: (auth: boolean) => void;
+    setUserType: (type: string | null) => void;
 };
 
 export const AppStateContext = createContext<AppState | undefined>(undefined);
@@ -14,14 +16,16 @@ export const AppStateProvider: React.FC<{ children: ReactNode }> = ({ children }
     const [isAuthenticated, setIsAuthenticated] = useState(
         localStorage.getItem('isAuthenticated') === 'true'
     );
+    const [userType, setUserType] = useState(localStorage.getItem('userType'));
 
     useEffect(() => {
         localStorage.setItem('userEmail', userEmail || '');
         localStorage.setItem('isAuthenticated', String(isAuthenticated));
-    }, [userEmail, isAuthenticated]);
+        localStorage.setItem('userType', userType || '');
+    }, [userEmail, isAuthenticated, userType]);
 
     return (
-        <AppStateContext.Provider value={{ userEmail, isAuthenticated, setUserEmail, setIsAuthenticated }}>
+        <AppStateContext.Provider value={{ userEmail, isAuthenticated, userType, setUserType, setUserEmail, setIsAuthenticated }}>
             {children}
         </AppStateContext.Provider>
     );
