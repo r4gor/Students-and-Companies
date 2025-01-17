@@ -30,8 +30,8 @@ function SideColumn () {
 				<option value="duration">duration</option>
 			</select>
 			<select name="direction" id="direction">
-				<option value="0">ascending</option>
-				<option value="1">descending</option>
+				<option value="1">ascending</option>
+				<option value="0">descending</option>
 			</select>
 
 			<label id="salary">Minimum salary:</label>
@@ -53,17 +53,18 @@ function SideColumn () {
 				<option value="4">4 months</option>
 				<option value="5">5 months</option>
 				<option value="6">6 months</option>
-				<option value="7"> 6 months</option>
+				<option value="7"> &gt6 months</option>
 			</select>
 			<label id="mode">Mode:</label>
 			<select name="mode" id="mode">
-				<option value="1">In presence</option>
-				<option value="2">Full remote</option>
-				<option value="3">Mixed</option>
+				<option value="presence">In presence</option>
+				<option value="remote">Full remote</option>
+				<option value="mixed">Mixed</option>
 			</select>
 			<label id="mode">Tags:</label>
 			<input type="search" name="tag-search" id="tag-search" placeholder="Search tags..."/>
 			<div className="tags-container">
+				
 			</div>
 			<button type="button" className="std-button">Apply filters</button>
 		</div>
