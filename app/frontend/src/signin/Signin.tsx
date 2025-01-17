@@ -3,6 +3,8 @@ import './signin.css'
 import { useState, ChangeEvent } from 'react'; 
 // import  { redirect } from 'react-router-dom';
 import { useNavigate } from "react-router";
+import { useAppState } from '../appstatecontext/AppStateContext';
+// const {userEmail, isAuthenticated, setUserEmail, setIsAuthenticated } = useAppState();
 
 function Signin() {
 		const [email, setEmail] = useState('');
@@ -76,6 +78,8 @@ function Signin() {
 		await fetch("http://localhost:4000/api/sign_in", options)
 		.then(response => {
 			if(response.ok) { 
+				useAppState().setUserEmail(email);
+				useAppState().setIsAuthenticated(true);
 				navigate("/index"); 
 			} 
 			else { 
