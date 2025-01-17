@@ -3,5 +3,6 @@
  */
 export enum Status {
     ok,
-    error
+    error,
+    Internal_Server_Error,
 }
