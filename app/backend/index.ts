@@ -13,7 +13,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/create_internship", create_internship_route);
-app.use("/api/search_internships", search_internships_route);
+app.use("/api/internship_browsing/search_internships", search_internships_route);
 
 app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
