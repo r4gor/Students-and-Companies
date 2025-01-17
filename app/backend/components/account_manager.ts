@@ -11,21 +11,22 @@ export class AccountManager {
     }
 
   public async sign_in(): Promise<Status> {
+    let result;
     try {
-      console.dir(pool.options);
-      const result = await pool.query(`SELECT password FROM "user" WHERE email='${this.email}'`);
-      if (result.rowCount == 0) {
-        console.log(`[server]: ERROR SIGNIN: no account with email '${this.email}'`)
-        return Status.error;
-      } else if (result.rows[0].password != this.password) {
-        console.log(`[server]: ERROR SIGNIN for '${this.email}': invalid password`);
-        return Status.error;
-      }
-      console.log(`[server]: OK SIGNIN for '${this.email}'`);
-      return Status.ok;
-      } catch (err) {
+      result = await pool.query(`SELECT password FROM "user" WHERE email='${this.email}'`);
+    } catch (err) {
       console.log(`[server]: (query error) ${err}`);
       return Status.error;
     }
+
+    if (result.rowCount == 0) {
+      console.log(`[server]: ERROR SIGNIN: no account with email '${this.email}'`)
+      return Status.error;
+    } else if (result.rows[0].password != this.password) {
+      console.log(`[server]: ERROR SIGNIN for '${this.email}': invalid password`);
+      return Status.error;
+    }
+    console.log(`[server]: OK SIGNIN for '${this.email}'`);
+    return Status.ok;
   }
 }
