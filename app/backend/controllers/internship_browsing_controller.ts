@@ -1,4 +1,4 @@
-import { Status } from 'utils/status';
+import { Status } from '../utils/status';
 import { SearchEngine } from '../components/search_engine';
 import { Controller } from './controller'
 

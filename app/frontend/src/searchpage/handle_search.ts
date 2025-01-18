@@ -1,4 +1,4 @@
-export async function get_internship_list_http_query_no_filters (text: string) : Promise<Response> {
+export async function get_internship_list_http_query_no_filters (text: string) : Promise<Array<any>> {
     let parameters = {
         text: text,
         orderby: 'relevance',
@@ -8,13 +8,24 @@ export async function get_internship_list_http_query_no_filters (text: string) :
         mode: 'mixed',
         tags: []
     }
-    return fetch_list(parameters)
+    return (await fetch_internship_list(parameters)).json()
 }
 
-async function fetch_list(parameters: Object) {
-    let url = new URL('https://localhost:4000/api/internship_browsing/search_internships')
+export async function get_internship_list_http_query (
+    text: string,
+    orderby: string,
+    ascending: string,
+    salary: string,
+    duration: string,
+    mode: string,
+    tags: string[]
+) {
+    return (await fetch_internship_list({text,orderby,ascending,salary,duration,mode,tags})).json()
+}
+
+async function fetch_internship_list(parameters: Object): Promise<Response> {
+    let url = new URL('http://localhost:4000/api/internship_browsing/search_internships')
     url.search = format_search_parameters(parameters)
-    console.log(url)
     return fetch(url, {
         method: "GET"
     });
