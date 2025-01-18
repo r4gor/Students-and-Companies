@@ -8,6 +8,8 @@
   --dark-grey:#eaeff1;
   --light-grey:#fbfeff;
   --light-grey-transparent:#fbfeff8c;
+  --no-red: rgb(238, 44, 44);
+  --ok-green: #93D976;
 }
 
 body {
