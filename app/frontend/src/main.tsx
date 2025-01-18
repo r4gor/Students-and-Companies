@@ -10,6 +10,7 @@ import InternshipManagement from './internshipmgmt/InternshipManagement';
 import Signup from './signup/Signup';
 import CreateInternship from './createinternship/CreateInternship';
 import ErrorPage from './errorpage/ErrorPage';
+import EditProfile from "./editprofile/EditProfile.tsx";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -19,7 +20,7 @@ createRoot(document.getElementById('root')!).render(
                 <Route path="/" element={<Signin/>} />
                 <Route path="/index" element={<Home/>} />
                 <Route path="/signup" element={<Signup/>} />
-                <Route path="/edit_profile" element={<Profile/>} />
+                <Route path="/edit_profile" element={<EditProfile/>} />
                 <Route path="/profile" element={<Profile/>} />
                 <Route path="/search_page" element={<SearchPage/>} />
                 <Route path="/create_internship" element={<CreateInternship/>} />

@@ -99,4 +99,49 @@ export class AccountManager {
             return Status.error;
         }
     }
+
+    public async get_user_profile(email: string): Promise<any> {
+        if(email) {
+            let profileQuery = `
+                SELECT *
+                FROM "user" u
+                     LEFT JOIN "student" s ON u.email = s.user_email
+                     LEFT JOIN "company" c ON u.email = c.user_email
+                     LEFT JOIN "university" uni ON u.email = uni.user_email
+                WHERE u.email = $1;
+            `;
+            let result: QueryResult = await pool.query(profileQuery, [email]);
+            return result.rows;
+        }
+        else
+            return []
+    }
+
+    public async update_profile(formData: any): Promise<string> {
+        if(formData) {
+            //update password
+            if(formData.userType) {
+                let updateProfileQuery = `
+                    UPDATE "user" u
+                    SET password = $1
+                    WHERE u.email = $2;
+                `;
+                await pool.query(updateProfileQuery, [formData.password, formData.email]);
+            }
+
+            // update info
+            if(formData.userType === "university") {
+
+            }
+            else if (formData.userType === "company") {
+
+            }
+            else if(formData.userType === "student") {
+
+            }
+            return '';
+        }
+        else
+            return '';
+    }
 }

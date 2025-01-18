@@ -60,7 +60,7 @@ function Signup () {
         } else {
             setUserEmail(email);
             setIsAuthenticated(true);
-            window.location.href = '/profile';
+            window.location.href = '/edit_profile';
         }
     };
 
