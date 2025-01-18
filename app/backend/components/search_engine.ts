@@ -1,3 +1,4 @@
+import pool from "../utils/db_pool";
 import { Status } from "../utils/status";
 
 export class SearchEngine {
@@ -22,6 +23,34 @@ export class SearchEngine {
 		mode: string,
 		tags: string[]
 	) : Promise<Array<any> | Status> {
-		return []
+		try {
+			let result: InternshipQueryResult[] = []
+			let internships = await pool.query (
+				`
+				SELECT I.*, string_agg(T.description, ' ') AS tags
+				FROM internship as I join tag_internship on I.id=tag_internship.internship_id join tag as T on tag_id=T.id
+				GROUP BY I.id, company_email, title, I.description, start, "end", published, application_end, status
+				`
+			)
+
+			return []
+		} catch (err) {
+			console.log(`[server]: (query error) (create internship) ${err}`);
+            return Status.error;
+		}
 	}
+}
+
+type InternshipQueryResult = {
+	id: string
+	company: string
+	title: string
+	description: string
+	start: string
+	end: string
+	published: string
+	application_end: string
+	salary: string
+	mode: string
+	tags: string[]
 }
