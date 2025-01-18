@@ -1,4 +1,5 @@
 export class InternshipInformation {
+    public id: number
     public company: string
     public title: string
     public description: string
@@ -12,25 +13,27 @@ export class InternshipInformation {
 
     public constructor (
         raw_object: {
+            id: string
             company: string
             title: string
             description: string
-            post_date: string
-            application_end_date: string
-            start_date: string
-            end_date: string
+            start: string
+            end: string
+            published: string
+            application_end: string
             salary: string
             mode: string
             tags: string[]
         }
     ) {
+        this.id = Number(raw_object.id)
         this.company = raw_object.company,
         this.title = raw_object.title,
         this.description = raw_object.description,
-        this.post_date = new Date(raw_object.post_date),
-        this.application_end_date = new Date(raw_object.application_end_date),
-        this.start_date = new Date(raw_object.start_date),
-        this.end_date = new Date(raw_object.end_date),
+        this.post_date = new Date(raw_object.published),
+        this.application_end_date = new Date(raw_object.application_end),
+        this.start_date = new Date(raw_object.start),
+        this.end_date = new Date(raw_object.end),
         this.salary = Number(raw_object.salary),
         this.mode = raw_object.mode,
         this.tags = raw_object.tags
