@@ -2,21 +2,23 @@ import '../main.css'
 import './searchPage.css'
 import {ChangeEvent, useState} from 'react'
 import {TopBar} from "../components/top_bar/top_bar"
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { InternshipInformation } from './utils/internship_information'
 import InternshipPreview from './components/InternshipPreview'
+import { get_internship_list_http_query } from './handle_search'
 
 //@ts-ignore
 function SearchPage () {
 	const {state} = useLocation()
-	let internship_list = state===null || state===undefined ? [] as InternshipInformation[] : state as InternshipInformation[]
+	let internship_list = !Object.entries(state).length || state===undefined ? [] as InternshipInformation[] : state.result as InternshipInformation[]
+	let search_bar_content = !Object.entries(state).length || state===undefined ? '' : state.search_bar_content as string
 	return (
 		<>
 			<div className="search-page">
 				<div className="main-flex-container">
 					<TopBar></TopBar>
 					<div className="central-container">
-						<SideColumn></SideColumn>
+						<SideColumn search_bar_content={search_bar_content}></SideColumn>
 						<div className="box-background">
 							{
 								internship_list.map((content:any) => 
@@ -32,16 +34,19 @@ function SearchPage () {
 	)
 }
 
-function SideColumn () {
+function SideColumn ({search_bar_content}:{search_bar_content:string}) {
 	const [orderby, setOrderBy] = useState('relevance')
 	const [direction, setDirection] = useState('1')
 	const [salary, setSalary] = useState('0')
 	const [duration, setDuration] = useState('1')
 	const [mode, setMode] = useState('presence')
 	const [tags, setTags] = useState([])
+	const navigate = useNavigate()
 
 	function on_apply_filter() {
-		console.log(orderby, direction, salary, duration, mode)
+		get_internship_list_http_query(search_bar_content,orderby,direction,salary,duration,mode,tags).then((result) => {
+			navigate('/search_page', {state: {result:result, search_bar_content:search_bar_content}})
+		});
 	}
 
 	return (
