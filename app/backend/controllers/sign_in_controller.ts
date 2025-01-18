@@ -19,11 +19,11 @@ export class SignInController extends Controller {
     }
 
     //check given credentials
-    let result = await new AccountManager(email, password).sign_in();
-    if (result == Status.error) {
+    let [status, type] = await new AccountManager().sign_in(email, password);
+    if (status === Status.error) {
       this.res.status(401).json({ message: "Invalid credentials"});
     } else {
-      this.res.status(200).json({ message: "Login authorized"});
+      this.res.status(200).json({ user_type: type});
     }
   }
 }
