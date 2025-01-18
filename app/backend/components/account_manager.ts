@@ -3,32 +3,25 @@ import {Status} from "../utils/status";
 import {QueryResult} from "pg";
 
 export class AccountManager {
-    private email: String;
-    private password: String;
 
-    public constructor(email: String, password: String) {
-        this.email = email;
-        this.password = password;
-    }
-
-    public async sign_in(): Promise<Status> {
+    public async sign_in(email: String, password: String): Promise<[Status, String]> {
         let result;
         try {
-            result = await pool.query(`SELECT password FROM "user" WHERE email='${this.email}'`);
+            result = await pool.query(`SELECT password, user_type FROM "user" WHERE email=$1`, [email]);
         } catch (err) {
             console.log(`[server]: (query error) ${err}`);
-            return Status.error;
+            return [Status.error, ""];
         }
 
         if (result.rowCount == 0) {
-            console.log(`[server]: ERROR SIGNIN: no account with email '${this.email}'`)
-            return Status.error;
-        } else if (result.rows[0].password != this.password) {
-            console.log(`[server]: ERROR SIGNIN for '${this.email}': invalid password`);
-            return Status.error;
+            console.log(`[server]: ERROR SIGNIN: no account with email '${email}'`)
+            return [Status.error, ""];
+        } else if (result.rows[0].password != password) {
+            console.log(`[server]: ERROR SIGNIN for '${email}': invalid password`);
+            return [Status.error, ""];
         }
-        console.log(`[server]: OK SIGNIN for '${this.email}'`);
-        return Status.ok;
+        console.log(`[server]: OK SIGNIN for '${email}'`);
+        return [Status.ok, result.rows[0].user_type];
     }
 
     public async check_email_availability(email: string): Promise<Status> {

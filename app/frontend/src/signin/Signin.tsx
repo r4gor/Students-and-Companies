@@ -80,6 +80,7 @@ function Signin() {
 			if(response.ok) { 
 				useAppState().setUserEmail(email);
 				useAppState().setIsAuthenticated(true);
+				// response.json().then((data) => useAppState().setUserType(data.user_type))
 				navigate("/index"); 
 			} 
 			else { 
