@@ -1,3 +1,40 @@
 .create-internship {
-    
+    .inner-box-section {
+        padding: 60px 100px;
+    }
+    .inner-box-section input[type=text] {
+        font-family: inherit;
+        font-weight: 200;
+        width: 35%;
+        min-height: 30px;
+        border: 2px solid var(--dark-grey);
+        border-radius: 8px;
+        transition: 0.2s;
+    }
+    .inner-box-section input[type=text]:focus {
+        border: 2px solid var(--top-cyan);
+    }
+
+    .inner-box-section input[type=date] {
+        border: 2px solid var(--dark-grey);
+        padding: 5px;
+        border-radius: 8px;
+        font-family: inherit;
+        font-weight: 500;
+    }
+
+    .inner-box-section #label {
+        font-weight: 500;
+        margin: 10px 0;
+    }
+
+    .inner-box-section textarea {
+        font-family: inherit;
+        font-weight: 200;
+        width: 100%;
+        min-height: 30px;
+        border: 2px solid var(--dark-grey);
+        border-radius: 8px;
+        resize: vertical;
+    }
 }
