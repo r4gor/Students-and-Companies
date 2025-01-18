@@ -10,8 +10,8 @@ function SearchBar() {
 
 	function handle_search_input(evt:any, text:string) {
 		if(evt.key === 'Enter') {
-			get_internship_list_http_query_no_filters(text).then((res) => {
-				navigate('/search_page')
+			get_internship_list_http_query_no_filters(text).then((result) => {
+				navigate('/search_page', {state: result})
 			});
 		}
 	}
