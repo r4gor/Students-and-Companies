@@ -18,10 +18,8 @@ export class SignUpController extends Controller {
         }
     }
 
-    private async get_universities(): Promise<void> {
-        let universities = await this.account_manager.get_universities();
-        this.res.json( JSON.stringify(universities) );
-        return;
+    private async get_universities(): Promise<any[]> {
+        return await this.account_manager.get_universities();
     }
 
     private async create_account(
