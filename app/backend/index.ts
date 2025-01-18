@@ -4,6 +4,7 @@ import express, { Express, Request, Response } from "express";
 import cors from "cors";
 
 import sign_up_routes from "./routes/sign_up_routes";
+import edit_profile_routes from "./routes/edit_profile_routes";
 
 
 const app: Express = express();
@@ -14,10 +15,11 @@ app.use(express.json());
 
 
 app.get("/", (req: Request, res: Response) => {
-    res.send("Express + TypeScript Server");
+    res.send("Server ONLINE");
 });
 
 app.use("/api", sign_up_routes);
+app.use("/api", edit_profile_routes);
 
 
 app.listen(port, () => {
