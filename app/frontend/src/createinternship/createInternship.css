@@ -37,4 +37,10 @@
         border-radius: 8px;
         resize: vertical;
     }
+
+    .inner-box-section .error-label {
+        margin: 3px 0;
+        font-size: 13px;
+        color: var(--no-red);
+    }
 }
