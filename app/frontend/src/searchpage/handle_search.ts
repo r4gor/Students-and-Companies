@@ -1,7 +1,7 @@
 export async function get_internship_list_http_query_no_filters (text: string) : Promise<Array<any>> {
     let parameters = {
         text: text,
-        orderby: 'relevance',
+        orderby: 'posted',
         ascending: '1',
         salary: '0',
         duration: '1',
