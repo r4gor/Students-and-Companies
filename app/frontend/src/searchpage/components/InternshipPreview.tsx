@@ -15,7 +15,10 @@ function InternshipPreview ({
                 <div id="post-date">posted {post_date}</div>
             </div>
             <a href="" target="_blank" id="type"><i className="material-icons">apartment</i>{info.company}</a>
-            <div id="tags"></div>
+            <div id="tags">{
+                info.tags !== null && info.tags.map((content:any) => 
+                    <div className="tag">{content}</div>
+                )}</div>
             <div id="description">
                 <div className="description-body">{info.description}</div>
                 <ul>

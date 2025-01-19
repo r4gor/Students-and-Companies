@@ -28,7 +28,7 @@ export class SearchEngine {
 			let internships = await pool.query (
 				`
 				SELECT I.*, string_agg(T.description, ' ') AS tags, C.name AS company
-				FROM internship as I join tag_internship on I.id=tag_internship.internship_id join tag as T on tag_id=T.id join company as C on C.user_email = I.company_email
+				FROM internship as I left join tag_internship on I.id=tag_internship.internship_id left join tag as T on tag_id=T.id join company as C on C.user_email = I.company_email
 				GROUP BY I.id, company_email, title, I.description, start, "end", published, application_end, status, C.name
 				`
 			)
