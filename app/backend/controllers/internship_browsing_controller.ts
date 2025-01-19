@@ -3,7 +3,7 @@ import { SearchEngine } from '../components/search_engine';
 import { Controller } from './controller'
 
 export class InternshipBrowsingController extends Controller {
-    private static order_by_valid_values: string[] = ["relevance", "salary", "duration"]
+    private static order_by_valid_values: string[] = ["posted", "salary", "duration"]
     private static mode_valid_values: string[] = ["presence", "remote", "mixed"]
     private resultArray : string[] = [];
 
