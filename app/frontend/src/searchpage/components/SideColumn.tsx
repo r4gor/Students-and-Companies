@@ -5,7 +5,7 @@ import {useNavigate } from 'react-router-dom'
 import { get_internship_list_http_query } from '../handle_search'
 //TODO: tags pool
 function SideColumn ({search_bar_content}:{search_bar_content:string}) {
-	const [orderby, setOrderBy] = useState('relevance')
+	const [orderby, setOrderBy] = useState('posted')
 	const [direction, setDirection] = useState('1')
 	const [salary, setSalary] = useState('0')
 	const [duration, setDuration] = useState('1')
@@ -24,7 +24,7 @@ function SideColumn ({search_bar_content}:{search_bar_content:string}) {
 		<div className="side-column" id="left">
 			<label id="orderby">Order by:</label>
 			<select name="orderby" id="orderby" onChange={(e:ChangeEvent<HTMLSelectElement>) => setOrderBy(e.target.value)}>
-				<option value="posted">post date</option>
+				<option value="posted">publishing date</option>
 				<option value="salary">salary</option>
 				<option value="duration">duration</option>
 			</select>

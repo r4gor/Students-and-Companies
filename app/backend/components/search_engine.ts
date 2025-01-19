@@ -2,7 +2,13 @@ import pool from "../utils/db_pool";
 import { Status } from "../utils/status";
 
 export class SearchEngine {
-
+	public static order_by_valid_values: string[] = ["posted", "salary", "duration"]
+	public static mode_valid_values: string[] = ["presence", "remote", "mixed"]
+	private order_by_map = {
+		'posted': 'I.published',
+		'salary': 'I.salary',
+		'duration': 'I."end" - I.start'
+	}
 	/**
 	 * Return a list of internship information that respect the set of given parameters 
 	 * @param text textual query input
@@ -22,7 +28,7 @@ export class SearchEngine {
 		duration: number,
 		mode: string,
 		tags: string[]
-	) : Promise<Array<any> | Status> {
+	) : Promise<Array<InternshipQueryResult> | Status> {
 		try {
 			let result: InternshipQueryResult[] = []
 			let internships = await pool.query (
@@ -30,6 +36,7 @@ export class SearchEngine {
 				SELECT I.*, string_agg(T.description, ' ') AS tags, C.name AS company
 				FROM internship as I left join tag_internship on I.id=tag_internship.internship_id left join tag as T on tag_id=T.id join company as C on C.user_email = I.company_email
 				GROUP BY I.id, company_email, title, I.description, start, "end", published, application_end, status, C.name
+				ORDER BY ${this.order_by_map[orderby as keyof typeof this.order_by_map]} ${ascending ? 'ASC' : 'DESC'}
 				`
 			)
 			internships.rows.forEach(row => {
@@ -56,5 +63,5 @@ type InternshipQueryResult = {
 	application_end: string
 	salary: string
 	mode: string
-	tags: string[]
+	tags: string
 }
