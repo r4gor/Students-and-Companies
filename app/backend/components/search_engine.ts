@@ -27,13 +27,17 @@ export class SearchEngine {
 			let result: InternshipQueryResult[] = []
 			let internships = await pool.query (
 				`
-				SELECT I.*, string_agg(T.description, ' ') AS tags
-				FROM internship as I join tag_internship on I.id=tag_internship.internship_id join tag as T on tag_id=T.id
-				GROUP BY I.id, company_email, title, I.description, start, "end", published, application_end, status
+				SELECT I.*, string_agg(T.description, ' ') AS tags, C.name AS company
+				FROM internship as I join tag_internship on I.id=tag_internship.internship_id join tag as T on tag_id=T.id join company as C on C.user_email = I.company_email
+				GROUP BY I.id, company_email, title, I.description, start, "end", published, application_end, status, C.name
 				`
 			)
-
-			return []
+			internships.rows.forEach(row => {
+				row.salary = 0
+				row.mode = 'mixed'
+				result.push(row)
+			})
+			return result 
 		} catch (err) {
 			console.log(`[server]: (query error) (create internship) ${err}`);
             return Status.error;

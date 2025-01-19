@@ -1,5 +1,5 @@
 import { InternshipInformation } from "../utils/internship_information"
-import {date_diff_to_sentence, date_to_ddMMyyyy_string} from "../../utils/frontend_date_utils"
+import {date_diff_to_sentence, date_to_ddMMyyyy_string, month_diff} from "../../utils/frontend_date_utils"
 
 function InternshipPreview ({
     info
@@ -19,7 +19,7 @@ function InternshipPreview ({
             <div id="description">
                 <div className="description-body">{info.description}</div>
                 <ul>
-                    <li>Duration: months</li>
+                    <li>Duration: {month_diff(info.start_date, info.end_date)} months (from: {date_to_ddMMyyyy_string(info.start_date)} to: {date_to_ddMMyyyy_string(info.end_date)})</li>
                     <li>Salary: {info.salary}€/mo</li>
                     <li>Mode: {info.mode}</li>
                 </ul>
