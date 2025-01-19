@@ -3,8 +3,6 @@ import { SearchEngine } from '../components/search_engine';
 import { Controller } from './controller'
 
 export class InternshipBrowsingController extends Controller {
-    private static order_by_valid_values: string[] = ["posted", "salary", "duration"]
-    private static mode_valid_values: string[] = ["presence", "remote", "mixed"]
     private resultArray : string[] = [];
 
   	public async handle(): Promise<void> {
@@ -31,12 +29,12 @@ export class InternshipBrowsingController extends Controller {
 			return;
 		}
         
-        if (!InternshipBrowsingController.order_by_valid_values.includes(orderby)) {
+        if (!SearchEngine.order_by_valid_values.includes(orderby)) {
 			this.res.status(400).json({ message: "Invalid order by parameter: " + orderby });
 			return;
 		}
 
-        if (!InternshipBrowsingController.mode_valid_values.includes(mode)) {
+        if (!SearchEngine.mode_valid_values.includes(mode)) {
 			this.res.status(400).json({ message: "Invalid mode parameter: " + mode });
 			return;
 		}
