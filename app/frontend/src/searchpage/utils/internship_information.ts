@@ -23,7 +23,7 @@ export class InternshipInformation {
             application_end: string
             salary: string
             mode: string
-            tags: string[]
+            tags: string
         }
     ) {
         this.id = Number(raw_object.id)
@@ -36,7 +36,7 @@ export class InternshipInformation {
         this.end_date = new Date(raw_object.end),
         this.salary = Number(raw_object.salary),
         this.mode = raw_object.mode,
-        this.tags = raw_object.tags
+        this.tags = raw_object.tags === null ? [] : raw_object.tags.split(' ')
     }
 }
 
