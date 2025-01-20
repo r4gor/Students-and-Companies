@@ -16,7 +16,7 @@ function Signin() {
 
     	// Redirect to profile if authenticated
 	    if (appState.isAuthenticated && appState.userEmail && appState.userType) {
-	        navigate("/profile");
+	        navigate("/home");
 	    }
 		
     return (
@@ -87,7 +87,7 @@ function Signin() {
 				appState.setUserEmail(email);
 				appState.setIsAuthenticated(true);
 				response.json().then((data) => appState.setUserType(data.user_type))
-				navigate("/index"); 
+				// navigate("/home");
 			} 
 			else { 
 				response.json()
