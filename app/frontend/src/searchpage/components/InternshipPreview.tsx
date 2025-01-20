@@ -17,7 +17,7 @@ function InternshipPreview ({
             <a href="" target="_blank" id="type"><i className="material-icons">apartment</i>{info.company}</a>
             <div id="tags">{
                 info.tags !== null && info.tags.map((content:any) => 
-                    <div className="tag">{content}</div>
+                    <div className="tag" key={content}>{content}</div>
                 )}</div>
             <div id="description">
                 <div className="description-body">{info.description}</div>

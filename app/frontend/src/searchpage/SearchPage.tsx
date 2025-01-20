@@ -21,7 +21,7 @@ function SearchPage () {
 						<div className="box-background">
 							{
 								internship_list.map((content:any) => 
-									<InternshipPreview info={new InternshipInformation(content)}></InternshipPreview>
+									<InternshipPreview key={content.id} info={new InternshipInformation(content)}></InternshipPreview>
 								)
 							}
 						</div>
