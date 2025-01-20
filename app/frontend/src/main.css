@@ -58,11 +58,19 @@ i {
   font-size: 65px;
 }
 
-.right-group i {
-  cursor: pointer;
-  font-size: 35px;
-  padding: 10px;
+.right-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
+
+.right-group i {
+    cursor: pointer;
+    font-size: 35px;
+    padding: 10px;
+  }
+}
+
 
 .central-container {
   display: flex;
