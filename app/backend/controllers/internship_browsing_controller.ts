@@ -13,7 +13,7 @@ export class InternshipBrowsingController extends Controller {
         let salary: number = Number(body.salary)
         let duration: number = Number(body.duration)
         let mode: string = (body.mode as string).toLowerCase();
-        let tags: string[] = (body.tags as string).split(',') as string[];
+        let tags: string[] = body.tags !== '' ? (body.tags as string).split(' ') as string[] : [];
 		
 		// bad params check
 		if (body == undefined ||
