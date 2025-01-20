@@ -33,6 +33,7 @@ function InternshipPreview ({
                 </div>
                 <div className="application-expire">application closes: {date_to_ddMMyyyy_string(info.application_end_date)}
                 </div>
+                <div className="applied-people">{info.applied_students} people applied</div>
             </div>
         </div>
         </>

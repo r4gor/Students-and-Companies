@@ -10,6 +10,7 @@ export class InternshipInformation {
     public salary: number
     public mode: string
     public tags: string[]
+    public applied_students: number
 
     public constructor (
         raw_object: {
@@ -24,6 +25,7 @@ export class InternshipInformation {
             salary: string
             mode: string
             tags: string
+            applied_students: string
         }
     ) {
         this.id = Number(raw_object.id)
@@ -37,6 +39,7 @@ export class InternshipInformation {
         this.salary = Number(raw_object.salary),
         this.mode = raw_object.mode,
         this.tags = raw_object.tags === null ? [] : raw_object.tags.split(' ')
+        this.applied_students = Number(raw_object.applied_students)
     }
 }
 
