@@ -23,6 +23,12 @@ export class EditProfileController extends Controller {
     }
 
     private async update_profile(formData:any): Promise<string> {
-        return await this.account_manager.update_profile(formData);
+            let result = await this.account_manager.update_profile(formData);
+        if (result === Status.ok) {
+            return "success";
+        }
+        else {
+            return "error updating profile";
+        }
     }
 }
