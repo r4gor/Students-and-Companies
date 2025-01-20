@@ -2,6 +2,7 @@ import pool from "../utils/db_pool";
 import {Status} from "../utils/status";
 
 export type Notification = {
+    id: number,
     sender: string,
     // fromUser: string,
     title: string,
@@ -17,12 +18,23 @@ export class NotificationManager {
                 return Status.error;
             }
             return result.rows.map((row, _) => <Notification>{
+                id: row.id,
                 sender:row.sender, 
                 title:row.title, 
                 content:row.body,
                 read: row.read
             });
         })
+        .catch(err => {
+            console.error(err);
+            return Status.error;
+        })
+    }
+
+    public async mark_notification_as_read(id: number): Promise<Status> {
+        console.log(`marking notification ${id}`)
+        return await pool.query('UPDATE Notification SET read=TRUE WHERE id=$1', [id])
+        .then(_ => Status.ok)
         .catch(err => {
             console.error(err);
             return Status.error;

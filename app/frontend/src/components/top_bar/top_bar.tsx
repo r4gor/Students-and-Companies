@@ -1,15 +1,8 @@
 import "../../main.css"
 import SearchBar from "../search_bar/search_bar";
 import NotificationPanel from "../../notificationpanel/NotificationPanel";
-import { useState } from "react";
 
 export function TopBar () {
-	const [notificationsVisible, setNotificationVisible] = useState(true);
-	
-	function toggle_notifications() {
-		setNotificationVisible(!notificationsVisible);
-		if (!notificationsVisible) {return;}
-	}
 	
     return (
         <>
@@ -20,12 +13,11 @@ export function TopBar () {
 					</div>
 					<SearchBar></SearchBar>
 					<div className="right-group">
-						<i className="material-icons" onClick={() => toggle_notifications()}>notifications_none</i>
+						<NotificationPanel></NotificationPanel>
 						<i className="material-icons">person</i>
 					</div>
 				</div>
 			</div>
-			{NotificationPanel(notificationsVisible)}
         </>
     )
 }
