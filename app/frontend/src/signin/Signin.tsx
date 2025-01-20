@@ -12,6 +12,12 @@ function Signin() {
 		const [credentialsError, setCredentialsError] = useState('');
 
 		let navigate = useNavigate();
+		let appState = useAppState();
+
+    	// Redirect to profile if authenticated
+	    if (appState.isAuthenticated && appState.userEmail && appState.userType) {
+	        navigate("/profile");
+	    }
 		
     return (
         <>
@@ -60,7 +66,7 @@ function Signin() {
 			</div>
         </>
     )
-    
+
 	async function handle_login() {
 		const data = {
 			email: email,
@@ -78,9 +84,9 @@ function Signin() {
 		await fetch("http://localhost:4000/api/sign_in", options)
 		.then(response => {
 			if(response.ok) { 
-				useAppState().setUserEmail(email);
-				useAppState().setIsAuthenticated(true);
-				response.json().then((data) => useAppState().setUserType(data.user_type))
+				appState.setUserEmail(email);
+				appState.setIsAuthenticated(true);
+				response.json().then((data) => appState.setUserType(data.user_type))
 				navigate("/index"); 
 			} 
 			else { 
