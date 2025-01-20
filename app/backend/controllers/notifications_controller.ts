@@ -17,6 +17,16 @@ export class NotificationController extends Controller {
         }
     }
 
+    public async mark_notification_as_read(): Promise<void> {
+        let id = Number.parseInt(this.req.body.id);
+        let result = await new NotificationManager().mark_notification_as_read(id);
+        if (result === Status.error) {
+            this.res.status(400).json({ message: `Error updating notification ${id}`});
+        } else {
+            this.res.status(200).send('OK');
+        }
+    } 
+
     public async post(): Promise<void> {
         let body = this.req.body;
 

@@ -5,13 +5,14 @@ import {useAppState} from "../appstatecontext/AppStateContext"
 import { useState } from "react";
 
 type NotificationType = {
+    id: number,
     sender: string;
     title: string;
     content: string;
     read: boolean;
 }
 
-function Notification (index: number, model: NotificationType) {
+function Notification (index: number, model: NotificationType, onClick: Function) {
 
     function div_class(): string {
         return "notification-single" + (model.read ? "" : " unread");
@@ -23,17 +24,26 @@ function Notification (index: number, model: NotificationType) {
     }
     
     return (
-        <div key={index} className={div_class()}>
-            <i className="material-icons">priority_high</i>
+        <div key={index} className={div_class()} onClick={() => onClick(index)}>
+            { !model.read && <i className="material-icons">priority_high</i>}
             <div id="title">{title()}</div>
             <div id="content">{model.content}</div>
         </div>
     )
 }
 
-function NotificationPanel (visible: boolean)  {
+function NotificationPanel ()  {
     const email = useAppState().userEmail;
     const [notifications, setNotifications] = useState([] as Array<NotificationType>);
+	const [visible, setVisible] = useState(false);
+	const [unreadNotifications, setUnreadNotifications] = useState(true);
+	
+	function toggle_notifications() {
+		if (!visible) {
+		    fetch_notifications();
+		}
+		setVisible(!visible);
+	}
 
     async function fetch_notifications(): Promise<void> {
         console.log('fetching notifications')
@@ -43,8 +53,9 @@ function NotificationPanel (visible: boolean)  {
                 return;
             }
             res.json().then((data) => {
-                setNotifications(JSON.parse(data) as Array<NotificationType>);
-                console.dir(notifications);
+                let notifications = JSON.parse(data) as Array<NotificationType>;
+                setNotifications(notifications);
+                setUnreadNotifications(notifications.some(n => !n.read));
             });
         })
         .catch(err => {
@@ -53,18 +64,48 @@ function NotificationPanel (visible: boolean)  {
         });
     }
 
-    return (
-        visible && 
+    async function handle_notification_click(i: number): Promise<void> {
+        if (notifications[i].read) { return; }
+        
+		const options = {
+			method: 'POST',
+			headers: {
+    			'Content-Type': 'application/json' // Set content type to JSON
+			},
+			body: JSON.stringify({id: notifications[i].id}) // Convert JSON data to a string and set it as the request body
+		};
+
+        await fetch(`http://localhost:4000/api/notifications/mark_as_read`, options)
+        .then(res => {
+            if (!res.ok) {
+                console.dir(res);
+                return;
+            }
+            const nots = notifications.slice();
+            nots[i].read = true;
+            setNotifications(nots);
+            setUnreadNotifications(!notifications.every(n => n.read));
+        })
+        .catch(err => console.error(err));
+    }
+
+    return ( 
         <>
-            <div className="notification-wrapper" onClick={() => fetch_notifications()}>
-                <div className="notification-panel">
-                    <div className="notification-header">
-                        Notifications
-                        <hr/>
+			<i className="material-icons-outlined" onClick={() => toggle_notifications()}>
+    			{unreadNotifications ? "notification_important" : "notifications_none"}
+			</i>
+			{
+                visible &&
+                <div className="notification-wrapper" onMouseLeave={() => toggle_notifications()}>
+                    <div className="notification-panel">
+                        <div className="notification-header">
+                            Notifications
+                            <hr/>
+                        </div>
+                        {notifications.map((n,i) => Notification(i,n, handle_notification_click))}
                     </div>
-                    {notifications.map((n,i) => Notification(i,n))}
                 </div>
-            </div>
+    		}
         </>
     )
 }
