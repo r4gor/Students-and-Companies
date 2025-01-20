@@ -1,6 +1,7 @@
 import pool from "../utils/db_pool";
 import {Status} from "../utils/status";
 import {QueryResult} from "pg";
+import {saveBase64ToFile} from "../utils/exportBase64ToFile";
 
 export class AccountManager {
 
@@ -100,10 +101,13 @@ export class AccountManager {
         }
     }
 
-    public async get_user_profile(email: string): Promise<any> {
+    public async get_user_profile(email: string): Promise<any[]> {
         if(email) {
+            //coalesce prioritizes non null values
             let profileQuery = `
-                SELECT *
+                SELECT *,
+                    COALESCE(s.phone_number, c.phone_number, uni.phone_number) AS phone_number,
+                    TO_CHAR(s.date_of_birth, 'YYYY-MM-DD') AS date_of_birth
                 FROM "user" u
                      LEFT JOIN "student" s ON u.email = s.user_email
                      LEFT JOIN "company" c ON u.email = c.user_email
@@ -117,7 +121,7 @@ export class AccountManager {
             return []
     }
 
-    public async update_profile(formData: any): Promise<string> {
+    public async update_profile(formData: any): Promise<Status> {
         if(formData) {
             //update password
             if(formData.userType) {
@@ -131,17 +135,47 @@ export class AccountManager {
 
             // update info
             if(formData.userType === "university") {
-
+                let updateProfileQuery = `
+                    UPDATE "university" uni
+                    SET name = $1, address = $2, website = $3, phone_number = $4
+                    WHERE uni.user_email = $5;
+                `;
+                await pool.query(updateProfileQuery,
+                    [formData.name, formData.address, formData.website, formData.phoneNumber, formData.userEmail]);
             }
             else if (formData.userType === "company") {
-
+                let updateProfileQuery = `
+                    UPDATE "company" c
+                    SET name = $1, address = $2, website = $3, phone_number = $4
+                    WHERE c.user_email = $5;
+                `;
+                await pool.query(updateProfileQuery,
+                    [formData.name, formData.address, formData.website, formData.phoneNumber, formData.userEmail]);
             }
             else if(formData.userType === "student") {
+                let updateProfileQuery = `
+                    UPDATE "student" s
+                    SET first_name = $1, last_name = $2, phone_number = $3, date_of_birth = $4
+                    WHERE s.user_email = $5;
+                `;
+                await pool.query(updateProfileQuery,
+                    [formData.firstName, formData.lastName, formData.phoneNumber, formData.dateOfBirth, formData.userEmail]);
 
+                if(formData.cv) {
+                    saveBase64ToFile(formData.cv, formData.userEmail);
+
+                    let updateProfileQuery = `
+                    UPDATE "student" s
+                    SET cv = $1
+                    WHERE s.user_email = $2;
+                `;
+                    await pool.query(updateProfileQuery,
+                        ['models/cv_files' + formData.userEmail + '.pdf', formData.userEmail]);
+                }
             }
-            return '';
+            return Status.ok;
         }
         else
-            return '';
+            return Status.error;
     }
 }

@@ -2,10 +2,11 @@ import '../main.css';
 import './editprofile.css';
 import {ChangeEvent, useEffect, useState} from "react";
 import {useAppState} from '../appstatecontext/AppStateContext';
+import {toBase64} from "../global_utils/fileToBase64.ts";
 
 function EditProfile() {
     // Shared app state
-    const { userEmail, isAuthenticated, userType, setUserEmail, setIsAuthenticated, setUserType } = useAppState();
+    const { userEmail, userType} = useAppState();
 
     // State variables
     const [firstName, setFirstName] = useState('');
@@ -19,27 +20,17 @@ function EditProfile() {
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
 
-    // Helper function to convert a file to Base64
-    const toBase64 = (file: File): Promise<string> =>
-        new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = (error) => reject(error);
-        });
 
     const handleProfileUpdate = async () => {
-        if (!userType || !isAuthenticated || !userEmail) {
-            setUserType('');
-            setUserEmail('');
-            setIsAuthenticated(false);
-            window.location.href = '/signin';
-        }
-
         let payload: Record<string, any> = {
             userEmail,
             userType,
         };
+
+        if(phoneNumber.length > 14) {
+            alert('Phone number too long');
+            return;
+        }
 
         if (userType === "student") {
             if (!firstName || !lastName || !phoneNumber || !dateOfBirth || !password || !repeatPassword) {
@@ -97,7 +88,7 @@ function EditProfile() {
         const data = await response.json();
 
         console.log(data);
-        return;
+
         if (!response.ok) {
             alert(data.error);
         } else {
@@ -106,7 +97,7 @@ function EditProfile() {
         }
     };
 
-    //Populate edit_profile on mount
+    //Populate edit_profile page on mount
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
@@ -126,6 +117,7 @@ function EditProfile() {
                 }
 
                 let data = await response.json();
+                console.log(data);
                 if (data){
                     if(userType === "student"){
                         setFirstName(data[0].first_name || '');
