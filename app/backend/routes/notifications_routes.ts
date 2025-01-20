@@ -7,7 +7,7 @@ notifications_route.get('/fetch/:email', (req, res) => {
     new NotificationController(req, res).fetch();
 });
 
-notifications_route.post('/post_notifications', (req, res) => {
+notifications_route.post('/post', (req, res) => {
     new NotificationController(req, res).post();
 });
 
