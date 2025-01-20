@@ -12,5 +12,5 @@ export abstract class Controller {
         this.res = res;
     }
 
-    public abstract handle(): void
+    public abstract handle(): Promise<void>;
 }
