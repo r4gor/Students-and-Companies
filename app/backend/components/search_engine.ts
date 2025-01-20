@@ -10,6 +10,7 @@ export class SearchEngine {
 		'duration': 'I."end" - I.start'
 	}
 	/**
+	 * TODO: filter by text, salary, duration, mode, tags
 	 * Return a list of internship information that respect the set of given parameters 
 	 * @param text textual query input
 	 * @param orderby results can be ordered by 'relevance', 'salary' or 'duration'
@@ -33,9 +34,9 @@ export class SearchEngine {
 			let result: InternshipQueryResult[] = []
 			let internships = await pool.query (
 				`
-				SELECT I.*, string_agg(T.description, ' ') AS tags, C.name AS company
+				SELECT I.*, string_agg(T.description, ' ') AS tags, C.name AS company, (SELECT count(*) AS applied_students FROM student_internship WHERE status='applied' and internship_id=I.id)
 				FROM internship as I left join tag_internship on I.id=tag_internship.internship_id left join tag as T on tag_id=T.id join company as C on C.user_email = I.company_email
-				GROUP BY I.id, company_email, title, I.description, start, "end", published, application_end, status, C.name
+				GROUP BY I.id, I.company_email, I.title, I.description, I.start, I."end", I.published, I.application_end, I.status, C.name
 				ORDER BY ${this.order_by_map[orderby as keyof typeof this.order_by_map]} ${ascending ? 'ASC' : 'DESC'}
 				`
 			)
@@ -64,4 +65,5 @@ type InternshipQueryResult = {
 	salary: string
 	mode: string
 	tags: string
+	applied_students: string
 }
