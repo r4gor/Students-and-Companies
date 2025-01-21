@@ -24,7 +24,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/api/sign_in/", sign_in_route);
 app.use("/api/notifications/", notifications_route);
-app.use("/api/sign_in/", sign_in_route)
+
 app.use("/api", sign_up_routes);
 app.use("/api", edit_profile_routes);
 app.use("/api/create_internship", create_internship_route);
