@@ -3,7 +3,7 @@ import '../searchPage.css'
 import {ChangeEvent, useEffect, useState} from 'react'
 import {useNavigate } from 'react-router-dom'
 import { fetch_all_tags, get_internship_list_http_query } from '../handle_search'
-//TODO: tags pool
+
 function SideColumn ({search_bar_content}:{search_bar_content:string}) {
 	const [orderby, setOrderBy] = useState('posted')
 	const [direction, setDirection] = useState('1')
@@ -41,11 +41,13 @@ function SideColumn ({search_bar_content}:{search_bar_content:string}) {
 	}
 
 	function on_tag_click(e:any) {
+		let tag_descr = e.target.innerHTML as string
+
 		e.target.classList.toggle('selected')
-		if(selected_tags.includes(e.target.value as string)) // toggle tag from selected
-			setSelectedTags(selected_tags.filter(el => el !== e.target.value))
+		if(selected_tags.includes(tag_descr)) // toggle tag from selected_tags
+			setSelectedTags(selected_tags.filter(el => el !== tag_descr))
 		else
-			setSelectedTags([...selected_tags, e.target.value])
+			setSelectedTags([...selected_tags, tag_descr])
 	}
 
 	return (
@@ -107,10 +109,6 @@ function SideColumn ({search_bar_content}:{search_bar_content:string}) {
 		</div>
 		</>
 	)	
-}
-
-function SideColumnTag() {
-
 }
 
 export default SideColumn

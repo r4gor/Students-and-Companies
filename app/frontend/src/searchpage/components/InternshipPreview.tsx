@@ -25,6 +25,7 @@ function InternshipPreview ({
                     <li>Duration: {month_diff(info.start_date, info.end_date)} months (from: {date_to_ddMMyyyy_string(info.start_date)} to: {date_to_ddMMyyyy_string(info.end_date)})</li>
                     <li>Salary: {info.salary}€/mo</li>
                     <li>Mode: {info.mode}</li>
+                    <li>Place: {info.location}</li>
                 </ul>
             </div>
             <div className="apply-container">
