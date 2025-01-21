@@ -1,4 +1,4 @@
-import {StrictMode} from 'react'
+import {StrictMode, useEffect} from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {AppStateProvider, useAppState} from './appstatecontext/AppStateContext';
@@ -16,12 +16,18 @@ import { Navigate } from 'react-router-dom';
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     const {isAuthenticated, userEmail, userType, setUserType, setUserEmail, setIsAuthenticated} = useAppState();
 
+    useEffect(() => {
+        if (!isAuthenticated || !userEmail || !userType) {
+            setIsAuthenticated(false);
+            setUserEmail('');
+            setUserType('');
+        }
+    }, [isAuthenticated, userEmail, userType]);
+
+
     if(isAuthenticated && userEmail && userType)
         return children;
     else {
-        setIsAuthenticated(false);
-        setUserEmail('');
-        setUserType('');
         return <Navigate to="/" replace={true} />;
     }
 };
