@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AppStateProvider } from './appstatecontext/AppStateContext';
 import Signin from './signin/Signin';
 import Home from './homepage/Home';
 import Profile from './profile/Profile';
@@ -12,19 +13,20 @@ import ErrorPage from './errorpage/ErrorPage';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-      <BrowserRouter>
-          <Routes>
-              <Route path="/" element={<Signin/>}>
-                
-              </Route>
-              <Route path="/index" element={<Home/>} />
+      <AppStateProvider>
+          <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Signin/>} />
+                <Route path="/index" element={<Home/>} />
                 <Route path="/signup" element={<Signup/>} />
+                <Route path="/edit_profile" element={<Profile/>} />
                 <Route path="/profile" element={<Profile/>} />
                 <Route path="/search_page" element={<SearchPage/>} />
                 <Route path="/create_internship" element={<CreateInternship/>} />
                 <Route path="/internship_management" element={<InternshipManagement/>} />
                 <Route path="*" element={<ErrorPage errorType={''}/>} />
-          </Routes>
-      </BrowserRouter>
+              </Routes>
+          </BrowserRouter>
+      </AppStateProvider>
   </StrictMode>,
 );
