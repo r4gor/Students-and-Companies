@@ -4,11 +4,17 @@ import { Status } from "../utils/status";
 
 export class SearchEngine {
 	public static order_by_valid_values: string[] = ["posted", "salary", "duration"]
-	public static mode_valid_values: string[] = ["presence", "remote", "mixed"]
+	public static mode_valid_values: string[] = ["all", "presence", "remote", "mixed"]
 	private order_by_map = {
 		'posted': 'I.published',
 		'salary': 'I.salary',
 		'duration': 'I."end" - I.start'
+	}
+	private mode_map = {
+		"all": "'presence', 'remote', 'mixed'",
+		"presence": "'presence'",
+		"remote": "'remote'",
+		"mixed": "'mixed'"
 	}
 
 	/**
@@ -40,11 +46,10 @@ export class SearchEngine {
 				FROM internship as I left join tag_internship on I.id=tag_internship.internship_id left join tag as T on tag_id=T.id join company as C on C.user_email = I.company_email
 				${tags.length ? 'WHERE I.id in (SELECT internship_id from internship I1 join tag_internship on I1.id=tag_internship.internship_id join tag as T1 on tag_id=T1.id WHERE T1.description in '+this.array_to_sql_list(tags)+')' : ''}
 				GROUP BY I.id, I.company_email, I.title, I.description, I.start, I."end", I.published, I.application_end, I.status, C.name
-				HAVING date_part('month', AGE(I."end", I.start)) >= ${duration} AND I.salary >= ${salary} AND I.mode = '${mode}'
+				HAVING date_part('month', AGE(I."end", I.start)) >= ${duration} AND I.salary >= ${salary} AND I.mode in (${this.mode_map[mode as keyof typeof this.mode_map]})
 				ORDER BY ${this.order_by_map[orderby as keyof typeof this.order_by_map]} ${ascending ? 'ASC' : 'DESC'}
 				`
 			)
-
 			return internships.rows as InternshipQueryResult[] 
 		} catch (err) {
 			console.log(`[server]: (query error) (create internship) ${err}`);
