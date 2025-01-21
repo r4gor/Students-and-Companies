@@ -24,14 +24,17 @@ export class InternshipManager {
         application_end_date: Date,
         start_date: Date,
         end_date: Date,
-        tags: string[]
+        tags: string[],
+        salary: number,
+        mode: string,
+        location: string
     ) : Promise<Status> {
         try {
-            let result = await this.create_internship_inside_db(email,title,description,application_end_date,start_date,end_date)
+            let result = await this.create_internship_inside_db(email,title,description,application_end_date,start_date,end_date, salary, mode, location)
             console.dir(result.rows[0].id)
             if(!tags.length)
                 return Status.ok;
-            //let added_tags = await this.insert_new_tags(tags)
+            await this.insert_new_tags(result.rows[0].id,tags)
             return Status.ok
         } catch (err) {
             console.log(`[server]: (query error) (create internship) ${err}`);
@@ -39,12 +42,27 @@ export class InternshipManager {
         }
     }
 
-    private async insert_new_tags(tags: string[]) {
+    private async insert_new_tags(internship_id:string, tags: string[]) {
         return pool.query (
             `
-            INSERT INTO tags
+            INSERT INTO tag (description)
+            VALUES ${this.format_tag_list(tags,true)}
+            ON CONFLICT DO NOTHING;
+
+            INSERT INTO tag_internship
+            SELECT id, ${internship_id} as internship_id
+            FROM tag
+            WHERE description in (${this.format_tag_list(tags)});
             `
         )
+    }
+
+    private format_tag_list(tags:string[], middle_parentheses=false): string {
+        if(middle_parentheses)
+            return "('"+ tags.join("'),('") + "')"
+        else
+            return "('"+ tags.join("','") + "')"
+
     }
 
     private async create_internship_inside_db (
@@ -53,11 +71,14 @@ export class InternshipManager {
         description: string,
         application_end_date: Date,
         start_date: Date,
-        end_date: Date
+        end_date: Date,
+        salary: number,
+        mode: string,
+        location: string
     ) {
         return pool.query (
             `
-            INSERT INTO internship (company_email, title, description, start, "end", published, application_end, status)
+            INSERT INTO internship (company_email, title, description, start, "end", published, application_end, status, salary, mode, location)
             VALUES ('${email}',
                     '${title}', 
                     '${description}', 
@@ -65,7 +86,10 @@ export class InternshipManager {
                     to_date('${format_date_for_database(end_date)}', 'yyyy-MM-DD'), 
                     to_date('${format_date_for_database(new Date())}', 'yyyy-MM-DD'), 
                     to_date('${format_date_for_database(application_end_date)}', 'yyyy-MM-DD'), 
-                    'application')
+                    'application',
+                    ${salary},
+                    ${mode},
+                    ${location})
             RETURNING id
             `
         );
