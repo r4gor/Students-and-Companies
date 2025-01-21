@@ -1,7 +1,7 @@
-import { StrictMode } from 'react'
+import {StrictMode, useEffect} from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AppStateProvider } from './appstatecontext/AppStateContext';
+import {AppStateProvider, useAppState} from './appstatecontext/AppStateContext';
 import Signin from './signin/Signin';
 import Home from './homepage/Home';
 import Profile from './profile/Profile';
@@ -10,21 +10,85 @@ import InternshipManagement from './internshipmgmt/InternshipManagement';
 import Signup from './signup/Signup';
 import CreateInternship from './createinternship/CreateInternship';
 import ErrorPage from './errorpage/ErrorPage';
+import EditProfile from "./editprofile/EditProfile.tsx";
+import { Navigate } from 'react-router-dom';
+
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+    const {isAuthenticated, userEmail, userType, setUserType, setUserEmail, setIsAuthenticated} = useAppState();
+
+    useEffect(() => {
+        if (!isAuthenticated || !userEmail || !userType) {
+            setIsAuthenticated(false);
+            setUserEmail('');
+            setUserType('');
+        }
+    }, [isAuthenticated, userEmail, userType]);
+
+
+    if(isAuthenticated && userEmail && userType)
+        return children;
+    else {
+        return <Navigate to="/" replace={true} />;
+    }
+};
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
       <AppStateProvider>
           <BrowserRouter>
               <Routes>
-                <Route path="/" element={<Signin/>} />
-                <Route path="/index" element={<Home/>} />
-                <Route path="/signup" element={<Signup/>} />
-                <Route path="/edit_profile" element={<Profile/>} />
-                <Route path="/profile" element={<Profile/>} />
-                <Route path="/search_page" element={<SearchPage/>} />
-                <Route path="/create_internship" element={<CreateInternship/>} />
-                <Route path="/internship_management" element={<InternshipManagement/>} />
-                <Route path="*" element={<ErrorPage errorType={''}/>} />
+                  <Route path="/" element={<Signin />} />
+                  <Route path="/signup" element={<Signup />} />
+                  {/* Protected routes */}
+                  <Route
+                      path="/home"
+                      element={
+                          <ProtectedRoute>
+                              <Home />
+                          </ProtectedRoute>
+                      }
+                  />
+                  <Route
+                      path="/edit_profile"
+                      element={
+                          <ProtectedRoute>
+                              <EditProfile />
+                          </ProtectedRoute>
+                      }
+                  />
+                  <Route
+                      path="/profile"
+                      element={
+                          <ProtectedRoute>
+                              <Profile />
+                          </ProtectedRoute>
+                      }
+                  />
+                  <Route
+                      path="/search_page"
+                      element={
+                          <ProtectedRoute>
+                              <SearchPage />
+                          </ProtectedRoute>
+                      }
+                  />
+                  <Route
+                      path="/create_internship"
+                      element={
+                          <ProtectedRoute>
+                              <CreateInternship />
+                          </ProtectedRoute>
+                      }
+                  />
+                  <Route
+                      path="/internship_management"
+                      element={
+                          <ProtectedRoute>
+                              <InternshipManagement />
+                          </ProtectedRoute>
+                      }
+                  />
+                  <Route path="*" element={<ErrorPage errorType={''} />} />
               </Routes>
           </BrowserRouter>
       </AppStateProvider>

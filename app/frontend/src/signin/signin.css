@@ -25,6 +25,13 @@
         font-size: 28px;
     }
 
+    .error-container {
+        margin: 30px 0px 0px;
+        font-size: 14px;
+        font-weight: 450;
+        color: var(--error-red);
+    }
+
     .input-container {
         padding: 30px 0px;
         width: 100%;

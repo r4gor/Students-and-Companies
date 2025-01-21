@@ -1,0 +1,19 @@
+
+.profile {
+    .central-container {
+        background-color: var(--dark-grey);
+        height: 100vh;
+    }
+
+    .top-inner-box-section #name {
+        font-size: 40px;
+    }
+
+    .inner-box-section#experience .inner-box-section#contact {
+        padding-top: 30px;
+    }
+
+    .inner-container {
+        padding: 10px;
+    }
+}
