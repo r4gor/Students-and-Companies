@@ -1,0 +1,54 @@
+.button-container {
+    margin: 20px 0;
+}
+
+.button-container .std-button {
+    padding: 10px 10px;
+}
+
+.box-composite-description {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.box-description {
+    padding-right: 10px;
+}
+
+.inner-container {
+    padding-left: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.inner-container #name {
+    flex-grow: 1;
+}
+
+.inner-container #interviewed-ico {
+    visibility: hidden;
+    margin-right: 5px;
+}
+
+.inner-container.interviewed #interviewed-ico {
+    visibility: visible;
+    margin-right: 5px;
+    
+}
+
+.inner-container.odd {
+    background-color: var(--dark-grey);
+}
+
+button.icon-content.ok {
+    background-color: #93D976;
+    border-color: black;
+}
+
+button.icon-content.no {
+    background-color: rgb(238, 44, 44);
+    border-color: black;
+}
