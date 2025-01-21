@@ -6,7 +6,15 @@ export class InternshipBrowsingController extends Controller {
     private resultArray : string[] = [];
 
   	public async handle(): Promise<void> {
-		let body = this.req.query;
+        let path = this.req.route.path
+        if(path === '/query/')
+            this.handle_query()
+        else if(path === '/tags/')
+            this.request_all_tags()
+	}
+
+    private async handle_query() {
+        let body = this.req.query;
         let text: string = (body.text as string).toLowerCase();
         let orderby: string = (body.orderby as string).toLowerCase();
         let ascending: boolean = Number(body.ascending as string) == 0 ? false:true;
@@ -48,5 +56,17 @@ export class InternshipBrowsingController extends Controller {
             this.res.json(result)
             return;
         }
-	}
+    }
+
+    private async request_all_tags() {
+        let result = await new SearchEngine().get_all_tags()
+        if(result == Status.error) {
+            this.res.status(400).json({message: "Internal server error"})
+            return;
+        }
+        else {
+            this.res.json(result)
+            return;
+        }
+    }
 }

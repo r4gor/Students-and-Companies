@@ -24,19 +24,11 @@ export async function get_internship_list_http_query (
 }
 
 async function fetch_internship_list(parameters: Object): Promise<Response> {
-    let url = new URL('http://localhost:4000/api/internship_browsing/search_internships')
+    let url = new URL('http://localhost:4000/api/internship_browsing/search_internships/query/')
     url.search = format_search_parameters(parameters)
     return fetch(url, {
         method: "GET"
     });
-}
-
-function safe_parse_element(select_element: HTMLSelectElement, default_value: string) {
-    let safe_value: string = default_value
-    try {
-        safe_value = select_element.value
-    } catch (error) {}
-    return safe_value
 }
 
 /**
@@ -54,3 +46,10 @@ function format_search_parameters(parameters: Object, allow_empty:boolean=true) 
     });
     return search_params.toString();
 } 
+
+export async function fetch_all_tags() {
+    let url = new URL('http://localhost:4000/api/internship_browsing/search_internships/tags/')
+    return fetch(url, {
+        method: "GET"
+    });
+}
