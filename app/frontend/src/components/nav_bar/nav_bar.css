@@ -1,0 +1,19 @@
+.nav-bar {
+    background-color: var(--top-cyan);
+    display: flex;
+    flex-direction: row;
+
+    .nav-bar-link {
+        padding: 10px;
+        text-decoration: none;
+        color: var(--text-grey);
+        flex-grow: 1;
+        text-align: center;
+        transition-duration: 0.3s;
+    }
+
+    .nav-bar-link:hover {
+        background-color: var(--text-grey);
+        color: var(--dark-grey);
+    }
+}
