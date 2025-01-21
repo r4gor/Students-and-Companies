@@ -4,8 +4,8 @@ export async function get_internship_list_http_query_no_filters (text: string) :
         orderby: 'posted',
         ascending: '1',
         salary: '0',
-        duration: '1',
-        mode: 'mixed',
+        duration: '0',
+        mode: 'all',
         tags: []
     }
     return (await fetch_internship_list(parameters)).json()

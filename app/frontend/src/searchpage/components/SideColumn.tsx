@@ -87,6 +87,7 @@ function SideColumn ({search_bar_content}:{search_bar_content:string}) {
 			</select>
 			<label id="mode">Mode:</label>
 			<select name="mode" id="mode" onChange={(e:ChangeEvent<HTMLSelectElement>) => setMode(e.target.value)}>
+				<option value="all">All</option>
 				<option value="presence">In presence</option>
 				<option value="remote">Full remote</option>
 				<option value="mixed">Mixed</option>
