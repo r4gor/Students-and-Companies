@@ -84,9 +84,9 @@ export class SearchEngine {
 	private array_to_sql_list(array:Array<any>):string {
 		let res = '('
 		array.forEach(element => {
-			res += `'${element}'`
+			res += `'${element}',`
 		});
-		return res + ')'
+		return res.slice(0,-1) + ')'
 	}
 
 	private likeable_text(text:string):string {
