@@ -7,6 +7,10 @@ function InternshipPreview ({
     info:InternshipInformation
 }) {
     let post_date = date_diff_to_sentence(info.post_date)
+
+    function on_apply_to_internship() {
+        //TODO: add implementation
+    }
     return (
         <>
         <div className="inner-box-section top-inner-box-section">
@@ -30,7 +34,7 @@ function InternshipPreview ({
             </div>
             <div className="apply-container">
                 <div className="button-container">
-                    <button type="button" className="std-button" id="apply">Apply</button>
+                    <button type="button" className="std-button" id="apply" onClick={on_apply_to_internship}>Apply</button>
                 </div>
                 <div className="application-expire">application closes: {date_to_ddMMyyyy_string(info.application_end_date)}
                 </div>
