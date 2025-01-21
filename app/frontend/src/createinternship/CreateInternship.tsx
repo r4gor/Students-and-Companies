@@ -2,8 +2,10 @@ import { ChangeEvent, useState } from 'react'
 import { TopBarCentralText } from '../components/top_bar/top_bar'
 import '../main.css'
 import './createInternship.css'
+import { useAppState } from '../appstatecontext/AppStateContext';
 
 function CreateInternship ()  {
+	const user_email = useAppState().userEmail;
 	const [title, setTitle] = useState('')
 	const [description, setDescription] = useState('')
 	const [application_end_date, setApplicationEndDate] = useState('')
@@ -21,7 +23,7 @@ function CreateInternship ()  {
 		if(validateInputs())
 			return;
 		post_internship({
-			email: 'email1', //TODO: implement with useContext
+			email: user_email,
 			title: title,
 			description: description,
 			application_end_date: application_end_date,
