@@ -56,13 +56,22 @@ i {
   letter-spacing: -3px;
   font-weight: 900;
   font-size: 65px;
+  text-decoration: none;
+}
+
+.right-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .right-group i {
-  cursor: pointer;
-  font-size: 35px;
-  padding: 10px;
+    cursor: pointer;
+    font-size: 35px;
+    padding: 10px;
+  }
 }
+
 
 .central-container {
   display: flex;
@@ -121,9 +130,9 @@ i {
   padding: 3px 9px;
   margin: 5px;
   background-color: var(--top-cyan);
-  border: 1px solid var(--text-grey);
-  border-radius: 8px;
-  font-weight: 100;
+  border: 2px solid var(--text-grey);
+  border-radius: 15px;
+  font-weight: 400;
   font-size: 15px;
   color: var(--text-grey);
 }
