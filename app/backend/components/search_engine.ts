@@ -1,3 +1,4 @@
+import { QueryResult } from "pg";
 import pool from "../utils/db_pool";
 import { Status } from "../utils/status";
 
@@ -43,17 +44,28 @@ export class SearchEngine {
 				ORDER BY ${this.order_by_map[orderby as keyof typeof this.order_by_map]} ${ascending ? 'ASC' : 'DESC'}
 				`
 			)
-			internships.rows.forEach(row => {
-				row.salary = 0
-				row.mode = 'mixed'
-				result.push(row)
-			})
-			return result 
+
+			return internships.rows as InternshipQueryResult[] 
 		} catch (err) {
 			console.log(`[server]: (query error) (create internship) ${err}`);
             return Status.error;
 		}
 	}
+
+	public async get_all_tags() : Promise<QueryResult<any> | Status> {
+		try {
+			return await pool.query (
+				`
+				SELECT description
+				FROM tag
+				`
+			)
+		} catch (err) {
+			console.log(`[server]: (query error) (create internship) ${err}`);
+            return Status.error;
+		}
+	}
+
 	private array_to_sql_list(array:Array<any>):string {
 		let res = '('
 		array.forEach(element => {
@@ -74,6 +86,7 @@ type InternshipQueryResult = {
 	application_end: string
 	salary: string
 	mode: string
+	location: string
 	tags: string
 	applied_students: string
 }

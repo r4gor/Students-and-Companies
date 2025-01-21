@@ -1,8 +1,8 @@
 import '../../main.css'
 import '../searchPage.css'
-import {ChangeEvent, useState} from 'react'
+import {ChangeEvent, useEffect, useState} from 'react'
 import {useNavigate } from 'react-router-dom'
-import { get_internship_list_http_query } from '../handle_search'
+import { fetch_all_tags, get_internship_list_http_query } from '../handle_search'
 //TODO: tags pool
 function SideColumn ({search_bar_content}:{search_bar_content:string}) {
 	const [orderby, setOrderBy] = useState('posted')
@@ -10,13 +10,42 @@ function SideColumn ({search_bar_content}:{search_bar_content:string}) {
 	const [salary, setSalary] = useState('0')
 	const [duration, setDuration] = useState('1')
 	const [mode, setMode] = useState('presence')
-	const [tags, setTags] = useState([])
+	const [fetched_tags, setFetchedTags] = useState([])
+	const [displayed_tags, setDisplayedTags] = useState([])
+	const [selected_tags, setSelectedTags] = useState([] as string[])
 	const navigate = useNavigate()
 
+	useEffect(() => {
+		const fetch_tags = async () => {
+			const response = await fetch_all_tags()
+			const data = await response.json()
+			let data_map = data.rows.map((obj:any) => obj.description)
+			setFetchedTags(data_map)
+			setDisplayedTags(data_map)
+		}
+		fetch_tags()
+	}, []);
+
 	function on_apply_filter() {
-		get_internship_list_http_query(search_bar_content,orderby,direction,salary,duration,mode,tags).then((result) => {
+		get_internship_list_http_query(search_bar_content,orderby,direction,salary,duration,mode,selected_tags).then((result) => {
 			navigate('/search_page', {state: {result:result, search_bar_content:search_bar_content}})
 		});
+	}
+
+	function update_displayed_tags(e:ChangeEvent<HTMLInputElement>) {
+		let tag_search_value = e.target.value
+		if(tag_search_value === '')
+			setDisplayedTags(fetched_tags)
+		else
+			setDisplayedTags(fetched_tags.filter((str:string) => str.toLowerCase().indexOf(tag_search_value.toLowerCase()) > -1 ))
+	}
+
+	function on_tag_click(e:any) {
+		e.target.classList.toggle('selected')
+		if(selected_tags.includes(e.target.value as string)) // toggle tag from selected
+			setSelectedTags(selected_tags.filter(el => el !== e.target.value))
+		else
+			setSelectedTags([...selected_tags, e.target.value])
 	}
 
 	return (
@@ -61,14 +90,27 @@ function SideColumn ({search_bar_content}:{search_bar_content:string}) {
 				<option value="mixed">Mixed</option>
 			</select>
 			<label id="tags">Tags:</label>
-			<input type="search" name="tag-search" id="tag-search" placeholder="Search tags..."/>
+			<input 	type="search" 
+					name="tag-search" 
+					id="tag-search" 
+					placeholder="Search tags..." 
+					onChange={(e:ChangeEvent<HTMLInputElement>) => update_displayed_tags(e)
+			}/>
 			<div className="tags-container">
-				
+				{
+					displayed_tags.map((content:any) =>
+						<div className="tag" key={content} onClick={(e:any) => on_tag_click(e)}>{content}</div>	
+					)
+				}
 			</div>
 			<button type="button" className="std-button" onClick={on_apply_filter}>Apply filters</button>
 		</div>
 		</>
 	)	
+}
+
+function SideColumnTag() {
+
 }
 
 export default SideColumn
