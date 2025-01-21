@@ -18,7 +18,6 @@ export class SearchEngine {
 	}
 
 	/**
-	 * TODO: filter by text
 	 * Return a list of internship information that respect the set of given parameters 
 	 * @param text textual query input
 	 * @param orderby results can be ordered by 'relevance', 'salary' or 'duration'
@@ -42,11 +41,22 @@ export class SearchEngine {
 		try {
 			let internships = await pool.query (
 				`
-				SELECT I.*, string_agg(T.description, ' ') AS tags, C.name AS company, (SELECT count(*) AS applied_students FROM student_internship WHERE status='applied' and internship_id=I.id)
-				FROM internship as I left join tag_internship on I.id=tag_internship.internship_id left join tag as T on tag_id=T.id join company as C on C.user_email = I.company_email
+				SELECT 	I.*, 
+						string_agg(T.description, ' ') AS tags, 
+						C.name AS company, 
+						(SELECT count(*) AS applied_students 
+						 FROM student_internship 
+						 WHERE status='applied' AND internship_id=I.id
+						)
+				FROM internship as I left join tag_internship on I.id=tag_internship.internship_id 
+									left join tag as T on tag_id=T.id 
+									join company as C on C.user_email = I.company_email
 				${tags.length ? 'WHERE I.id in (SELECT internship_id from internship I1 join tag_internship on I1.id=tag_internship.internship_id join tag as T1 on tag_id=T1.id WHERE T1.description in '+this.array_to_sql_list(tags)+')' : ''}
 				GROUP BY I.id, I.company_email, I.title, I.description, I.start, I."end", I.published, I.application_end, I.status, C.name
-				HAVING date_part('month', AGE(I."end", I.start)) >= ${duration} AND I.salary >= ${salary} AND I.mode in (${this.mode_map[mode as keyof typeof this.mode_map]})
+				HAVING 	date_part('month', AGE(I."end", I.start)) >= ${duration} 
+						AND I.salary >= ${salary} 
+						AND I.mode in (${this.mode_map[mode as keyof typeof this.mode_map]}) 
+						AND (LOWER(I.title) LIKE '${this.likeable_text(text)}' OR LOWER(I.description) LIKE '${this.likeable_text(text)}')
 				ORDER BY ${this.order_by_map[orderby as keyof typeof this.order_by_map]} ${ascending ? 'ASC' : 'DESC'}
 				`
 			)
@@ -77,6 +87,10 @@ export class SearchEngine {
 			res += `'${element}'`
 		});
 		return res + ')'
+	}
+
+	private likeable_text(text:string):string {
+		return '%'+text.split(' ').join('%')+'%'
 	}
 }
 
