@@ -1,0 +1,107 @@
+.signup {
+
+    background-color: var(--top-cyan);
+
+    .main-flex-container {
+        align-items: center;
+        justify-content: center;
+        height: 100vb;
+    }
+
+    .central-container {
+        flex-direction: column;
+        background-color: var(--light-grey);
+        border-radius: 10px;
+        padding: 40px 0;
+    }
+
+    .main-content-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 450px;
+        padding: 0 70px;
+    }
+
+    .central-container #title {
+        font-size: 28px;
+    }
+
+    .input-container {
+        padding: 30px 0px;
+        width: 100%;
+    }
+
+    .input-container #label {
+        font-size: 14px;
+        font-weight: 100;
+        margin: 5px 0;
+    }
+
+    .input-container input {
+        width: 100%;
+        min-height: 30px;
+        border: 2px solid var(--dark-grey);
+        border-radius: 8px;
+        transition: 0.2s;
+    }
+
+    .input-container input:focus {
+        border: 2px solid var(--top-cyan);
+    }
+
+    .button-container {
+        width: 100%;
+        padding: 30px 0;
+        padding-bottom: 10px;
+    }
+
+    .button-container button {
+        width: 100%;
+        min-height: 30px;
+        border: none;
+        border-radius: 8px;
+        font-family: Roboto;
+        font-weight: 400;
+    }
+
+    .button-container button#signup {
+        background-color: var(--dark-grey);
+    }
+
+    .button-container button#login {
+        background-color: #2C2c2c;
+        color: var(--dark-grey);
+    }
+
+    .forgot-password-container {
+        width: 100%;
+        font-weight: 100;
+        font-size: 14px;
+        padding-bottom: 20px;
+    }
+
+    .main-content-container {
+        width: 500px;
+    }
+
+    .input-container {
+        padding: 20px 0;
+    }
+
+    .button-container {
+        width: 50%;
+    }
+
+    .input-container select {
+        font-family: Roboto, sans-serif;
+        font-weight: 400;
+        margin: 5px 0;
+        background-color: var(--dark-grey);
+        cursor: pointer;
+        border: none;
+        border-radius: 7px;
+        width: 100%;
+        padding: 5px;
+    }
+}
