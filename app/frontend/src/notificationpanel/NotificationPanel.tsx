@@ -22,12 +22,39 @@ function Notification (index: number, model: NotificationType, onClick: Function
         let sender = model.sender === undefined ? " " : model.sender;
         return `[${sender}] ${model.title}`
     }
+
+    function content(): JSX.Element {
+        let regex = new RegExp(/\[(.+)\]\((.+)\)|\n/, "g")
+        let lastIndex = 0;
+        let slices: Array<JSX.Element | string> = [];
+        let match: RegExpExecArray | null;
+        while((match = regex.exec(model.content)) !== null) {
+            if (lastIndex < match.index) {
+                slices.push(model.content.slice(lastIndex, match.index));
+            }
+            if (match[0] === "\n") {
+                slices.push(<br/>);
+            } else {
+                slices.push(<a className="link" href={match[2]}>{match[1]}</a>);
+            }
+            lastIndex = regex.lastIndex;
+        }
+        if (lastIndex < model.content.length) {
+            slices.push(model.content.slice(lastIndex));
+        }
+        
+        return (
+            <div id="content">
+                {...slices}
+            </div>
+        );
+    }
     
     return (
         <div key={index} className={div_class()} onClick={() => onClick(index)}>
             { !model.read && <i className="material-icons">priority_high</i>}
             <div id="title">{title()}</div>
-            <div id="content">{model.content}</div>
+            {content()}
         </div>
     )
 }
@@ -53,9 +80,11 @@ function NotificationPanel ()  {
                 return;
             }
             res.json().then((data) => {
-                let notifications = JSON.parse(data) as Array<NotificationType>;
-                setNotifications(notifications);
-                setUnreadNotifications(notifications.some(n => !n.read));
+                let nots = JSON.parse(data) as Array<NotificationType>;
+                setUnreadNotifications(nots.some(n => !n.read));
+                if (nots.length > notifications.length) {
+                    setNotifications(nots);
+                }
             });
         })
         .catch(err => {
