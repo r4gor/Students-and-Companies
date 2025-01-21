@@ -115,6 +115,9 @@ export class AccountManager {
             let profileQuery = `
                 SELECT *,
                     COALESCE(s.phone_number, c.phone_number, uni.phone_number) AS phone_number,
+                    COALESCE(c.name, uni.name) AS name,
+                    COALESCE(c.address, uni.address) AS address,
+                    COALESCE(c.website, uni.website) AS website,
                     TO_CHAR(s.date_of_birth, 'YYYY-MM-DD') AS date_of_birth
                 FROM "user" u
                      LEFT JOIN "student" s ON u.email = s.user_email
