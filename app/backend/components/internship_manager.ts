@@ -1,0 +1,41 @@
+import { Status } from "../utils/status";
+import pool from "../utils/db_pool";
+import { format_date_for_database, get_current_datetime } from "../utils/date_utils";
+import { fork } from "child_process";
+
+export class InternshipManager {
+
+    /**
+     * Create a new internship
+     * @param email Company email
+     * @param title internship position summary
+     * @param description internship description
+     * @param application_end_date date after which will not possible to apply to the internship
+     * @param start_date start date of the internship
+     * @param end_date end date of the internship
+     * @returns Status.ok if the internship has been created successfully, 
+     * Status.error if an error occurred
+     */
+    public async create_internship (
+        email: string, 
+        title: string, 
+        description: string,
+        application_end_date: Date,
+        start_date: Date,
+        end_date: Date
+    ) : Promise<Status> {
+        try {
+            await pool.query(
+                `
+                INSERT INTO internship (company_email, title, description, start, "end", published, application_end, status)
+                VALUES ('${email}', '${title}', '${description}', to_date('${format_date_for_database(start_date)}', 'YYYY-MM-DD'), to_date('${format_date_for_database(end_date)}', 'YYYY-MM-DD'), to_date('${format_date_for_database(new Date(get_current_datetime()))}', 'YYYY-MM-DD'), to_date('${format_date_for_database(application_end_date)}', 'YYYY-MM-DD'), 'application')
+                `
+            );
+            return Status.ok;
+        } catch (err) {
+            console.log(`[server]: (query error) (create internship) ${err}`);
+            return Status.error;
+        }
+    }
+
+}
