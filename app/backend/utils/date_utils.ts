@@ -11,3 +11,9 @@ export function get_current_datetime() : string {
                         + currentdate.getMinutes() + ":" 
                         + currentdate.getSeconds();
 }
+
+export function format_date_for_database(date: Date): string {
+    return date.getFullYear() + '-' 
+        + (date.getMonth()+1) + '-'
+        + date.getDate();
+}
