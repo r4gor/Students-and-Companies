@@ -17,6 +17,8 @@ type CandidateType = {
     email: string,
     first_name: string,
     last_name: string,
+    phone_number: number,
+    date_of_birth: Date,
     cv_ref: string,
     status: string,
 }
@@ -100,8 +102,8 @@ export class InternshipManager {
      */
     public async fetch_candidates(id: number): Promise<Status.error | Array<CandidateType>> {
         return await pool.query(`
-                SELECT user_email, first_name, last_name, CV, status) FROM 
-                student JOIN student_internship ON user_email = student_email 
+                SELECT s.*, status FROM 
+                student s JOIN student_internship ON user_email = student_email 
                 WHERE internship_id=${id}
             `).then(res => {
             if (res.rowCount === null) {
@@ -138,11 +140,11 @@ export class InternshipManager {
             GROUP BY student_email, question_id
         `).then(res => {
             if (res.rowCount === null) {
-                console.log(`[server]: (error) inside 'fetch_form_questions':\nrowCount == null`);
+                console.log(`[server]: (error) inside 'fetch_form_replies':\nrowCount == null`);
                 return Status.error;
             }
             return res.rows.reduce(((acc, row) => {
-                if (acc.lenth === 0 || acc.at(-1).email === row.student_email) {
+                if (acc.lenth === 0 || acc.at(-1).email !== row.student_email) {
                     acc.push(<CandidateRepliesType>{
                         email: row.student_email, 
                         replies: [<ReplyType>{id:row.question_id, text: row.anser}]
@@ -153,7 +155,7 @@ export class InternshipManager {
                 return acc;
             }), [] as Array<CandidateRepliesType>);
         }).catch(err => {
-            console.log(`[server]: (query error) inside 'fetch_form_questions':\n${err}`);
+            console.log(`[server]: (query error) inside 'fetch_form_replies':\n${err}`);
             return Status.error;
         });
     }
