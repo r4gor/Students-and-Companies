@@ -24,7 +24,6 @@ function InternshipPreview ({
         fetch(url, {
             method: "POST"
         }).then(result => {
-            console.log(result.status)
             if(result.status === 200)
                 setApplied(true)
         });
