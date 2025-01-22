@@ -9,7 +9,7 @@ function SideColumn ({search_bar_content}:{search_bar_content:string}) {
 	const [direction, setDirection] = useState('1')
 	const [salary, setSalary] = useState('0')
 	const [duration, setDuration] = useState('1')
-	const [mode, setMode] = useState('presence')
+	const [mode, setMode] = useState('all')
 	const [fetched_tags, setFetchedTags] = useState([])
 	const [displayed_tags, setDisplayedTags] = useState([])
 	const [selected_tags, setSelectedTags] = useState([] as string[])
