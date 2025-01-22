@@ -3,6 +3,8 @@ import { TopBarCentralText } from '../components/top_bar/top_bar'
 import '../main.css'
 import './createInternship.css'
 import { useAppState } from '../appstatecontext/AppStateContext';
+import FormField from './components/FormField';
+import ConfirmDialog from './components/ConfirmDialog';
 
 function CreateInternship ()  {
 	const user_email = useAppState().userEmail;
@@ -15,6 +17,7 @@ function CreateInternship ()  {
 	const [mode, setMode] = useState('presence')
 	const [location, setLocation] = useState('')
 	const [tags, setTags] = useState('')
+	const [internship_created, setInternshipCreated] = useState(false)
 	const [invalid_state_variables, setInvalidStateVariables] = useState({
 		title:false,
 		app_end_date:false,
@@ -38,7 +41,8 @@ function CreateInternship ()  {
 			mode: mode,
 			location:location
 		}).then((result) => {
-			console.log(result)
+			if(result.ok)
+				setInternshipCreated(true)
 		})
 	}
 
@@ -50,7 +54,7 @@ function CreateInternship ()  {
 			end_date: end_date === '',
 			location: location === ''
 		})
-		return (title === '' || application_end_date === '' || start_date === '' || end_date === '')
+		return (title === '' || application_end_date === '' || start_date === '' || end_date === '' || location === '')
 	}
 
     return (
@@ -131,27 +135,10 @@ function CreateInternship ()  {
 					</div>
 				</div>
 			</div>
+			<ConfirmDialog visible={internship_created} redirect='/internships'></ConfirmDialog>
         </div>
         </>
     )
-}
-
-function FormField ({label, type, name, value, is_invalid_state=false, onChangeHook} : {label:string, type:string, name:string, value:string, is_invalid_state:boolean, onChangeHook:React.Dispatch<React.SetStateAction<string>>}) {
-	return (
-		<>
-		<div id="label">{label}</div>
-		<input
-			type={type}
-			name={name}
-			id={name}
-			value={value}
-			onChange={(e: ChangeEvent<HTMLInputElement>) => onChangeHook(e.target.value)}
-		/>
-		{is_invalid_state && (
-			<div className="error-label">This field cannot be empty!</div>
-		)}
-		</>
-	)
 }
 
 async function post_internship(parameters: Object): Promise<Response> {
