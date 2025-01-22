@@ -1,4 +1,5 @@
 import '../internshipMgmt.css'
+
 function InternshipComponent({title, status}: {title:string,status:string}) {
     const internship_status_map = { 'application':'waiting for application phase end',
                                     'interview':'selected for interview', 
