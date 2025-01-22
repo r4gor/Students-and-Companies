@@ -1,7 +1,6 @@
 import { Status } from "../utils/status";
 import pool from "../utils/db_pool";
-import { format_date_for_database, get_current_datetime } from "../utils/date_utils";
-import { fork } from "child_process";
+import { format_date_for_database} from "../utils/date_utils";
 
 export class InternshipManager {
 
@@ -52,7 +51,7 @@ export class InternshipManager {
             INSERT INTO tag_internship
             SELECT id, ${internship_id} as internship_id
             FROM tag
-            WHERE description in (${this.format_tag_list(tags)});
+            WHERE description in ${this.format_tag_list(tags)};
             `
         )
     }
@@ -88,8 +87,8 @@ export class InternshipManager {
                     to_date('${format_date_for_database(application_end_date)}', 'yyyy-MM-DD'), 
                     'application',
                     ${salary},
-                    ${mode},
-                    ${location})
+                    '${mode}',
+                    '${location}')
             RETURNING id
             `
         );
