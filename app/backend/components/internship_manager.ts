@@ -38,4 +38,20 @@ export class InternshipManager {
         }
     }
 
+    public async apply_user_to_internship(internship_id:number, user_email:string) : Promise<boolean | Status> {
+        try {
+            let insert_application = await pool.query(
+                `
+                INSERT INTO student_internship (student_email, internship_id, status)
+                VALUES ('${user_email}', ${internship_id}, 'applied')
+                ON CONFLICT DO NOTHING
+                `
+            )
+            console.log(insert_application.rowCount)
+            return insert_application.rowCount === 1
+        } catch (err) {
+            console.log(`[server]: (query error) (create internship) ${err}`);
+            return Status.error;
+        }
+    }
 }
