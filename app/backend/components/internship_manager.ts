@@ -38,6 +38,12 @@ export class InternshipManager {
         }
     }
 
+    /**
+     * Registers a user application to an internship
+     * @param internship_id id of the internship
+     * @param user_email email of the students that applies
+     * @returns Status.error if the query failed, else true if the tuple has been added else false if the tuple was already present
+     */
     public async apply_user_to_internship(internship_id:number, user_email:string) : Promise<boolean | Status> {
         try {
             let insert_application = await pool.query(
@@ -47,7 +53,6 @@ export class InternshipManager {
                 ON CONFLICT DO NOTHING
                 `
             )
-            console.log(insert_application.rowCount)
             return insert_application.rowCount === 1
         } catch (err) {
             console.log(`[server]: (query error) (create internship) ${err}`);
