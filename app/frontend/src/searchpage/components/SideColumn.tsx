@@ -3,8 +3,10 @@ import '../searchPage.css'
 import {ChangeEvent, useEffect, useState} from 'react'
 import {useNavigate } from 'react-router-dom'
 import { fetch_all_tags, get_internship_list_http_query } from '../handle_search'
+import { useAppState } from '../../appstatecontext/AppStateContext'
 
 function SideColumn ({search_bar_content}:{search_bar_content:string}) {
+	const user_email = useAppState().userEmail as string;
 	const [orderby, setOrderBy] = useState('posted')
 	const [direction, setDirection] = useState('1')
 	const [salary, setSalary] = useState('0')
@@ -27,7 +29,7 @@ function SideColumn ({search_bar_content}:{search_bar_content:string}) {
 	}, []);
 
 	function on_apply_filter() {
-		get_internship_list_http_query(search_bar_content,orderby,direction,salary,duration,mode,selected_tags).then((result) => {
+		get_internship_list_http_query(user_email, search_bar_content,orderby,direction,salary,duration,mode,selected_tags).then((result) => {
 			navigate('/search_page', {state: {result:result, search_bar_content:search_bar_content}})
 		});
 	}

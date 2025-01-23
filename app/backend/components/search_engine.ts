@@ -29,6 +29,7 @@ export class SearchEngine {
 	 * @returns an Array of tuples representing internships matching the parameters or an error Status if the query fails
 	 */
 	public async get_internships (
+		user: string,
 		text: string,
 		orderby: string,
 		ascending: boolean,
@@ -37,7 +38,6 @@ export class SearchEngine {
 		mode: string,
 		tags: string[]
 	) : Promise<Array<InternshipQueryResult> | Status> {
-		
 		try {
 			let internships = await pool.query (
 				`
@@ -51,7 +51,8 @@ export class SearchEngine {
 				FROM internship as I left join tag_internship on I.id=tag_internship.internship_id 
 									left join tag as T on tag_id=T.id 
 									join company as C on C.user_email = I.company_email
-				${tags.length ? 'WHERE I.id in (SELECT internship_id from internship I1 join tag_internship on I1.id=tag_internship.internship_id join tag as T1 on tag_id=T1.id WHERE T1.description in '+this.array_to_sql_list(tags)+')' : ''}
+				WHERE I.id NOT IN (SELECT internship_id FROM student_internship WHERE student_email = '${user}')
+				${tags.length ? 'AND I.id IN (SELECT internship_id from internship I1 join tag_internship on I1.id=tag_internship.internship_id join tag as T1 on tag_id=T1.id WHERE T1.description in '+this.array_to_sql_list(tags)+')' : ''}
 				GROUP BY I.id, I.company_email, I.title, I.description, I.start, I."end", I.published, I.application_end, I.status, C.name
 				HAVING 	date_part('month', AGE(I."end", I.start)) >= ${duration} 
 						AND I.salary >= ${salary} 
