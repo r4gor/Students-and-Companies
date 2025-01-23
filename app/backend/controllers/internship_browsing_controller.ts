@@ -15,6 +15,7 @@ export class InternshipBrowsingController extends Controller {
 
     private async handle_query() {
         let body = this.req.query;
+        let user: string = body.user as string;
         let text: string = (body.text as string).toLowerCase();
         let orderby: string = (body.orderby as string).toLowerCase();
         let ascending: boolean = Number(body.ascending as string) == 0 ? false:true;
@@ -25,6 +26,7 @@ export class InternshipBrowsingController extends Controller {
 		
 		// bad params check
 		if (body == undefined ||
+            user == undefined ||
             text == undefined ||
             orderby == undefined ||
             ascending == undefined ||
@@ -47,7 +49,7 @@ export class InternshipBrowsingController extends Controller {
 			return;
 		}
         
-        let result: Array<any> | Status = await new SearchEngine().get_internships(text,orderby,ascending,salary,duration,mode,tags);
+        let result: Array<any> | Status = await new SearchEngine().get_internships(user,text,orderby,ascending,salary,duration,mode,tags);
         if(result == Status.error) {
             this.res.status(400).json({message: "Internal server error"})
             return;
