@@ -96,6 +96,7 @@ export class InternshipManager {
                 SELECT user_email AS email, first_name, last_name, status FROM 
                 student JOIN student_internship ON user_email = student_email 
                 WHERE internship_id=${id}
+                ORDER BY last_name, first_name
             `).then(res => {
             if (res.rowCount === null) {
                 console.log(`[server]: (error) inside 'fetch_candidates':\nrowCount == null`);
@@ -117,6 +118,7 @@ export class InternshipManager {
     public async fetch_interview_questions(id: number): Promise<Status.error | Array<QuestionType>> {
         return await pool.query(`
             SELECT id, question FROM interview_question WHERE internship_id=${id}
+            ORDER BY id
         `).then(res => {
             if (res.rowCount === null) {
                 console.log(`[server]: (error) inside 'fetch_interview_questions':\nrowCount == null`);
@@ -141,6 +143,7 @@ export class InternshipManager {
             SELECT question_id, answer
             FROM interview_question JOIN reply ON id = question_id 
             WHERE internship_id=${id} AND student_email = ${email}
+            ORDER BY question_id
         `).then(res => {
             if (res.rowCount === null) {
                 console.log(`[server]: (error) inside 'fetch_candidate_replies':\nrowCount == null`);

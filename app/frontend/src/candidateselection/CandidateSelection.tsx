@@ -1,5 +1,5 @@
 import '../main.css';
-import './select_candidates.css';
+import './candidateSelection.css';
 import {TopBar} from '../components/top_bar/top_bar';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -53,7 +53,7 @@ function CandidateRow(id: number, index: number, candidate: CandidateType, set_s
     return (
 		<div key={index} className={container_class()}>
 			<i className="material-icons small" id="interviewed-ico" title="interviewed">check_circle</i>
-			<div id="name">{candidate.first_name} {candidate.last_name}</div>
+			<div id="name">{candidate.last_name} {candidate.first_name}</div>
 			<button type="button" className="std-button small" id="profile">
 			    <a href={profile_url()}>View profile</a>
 			</button>
