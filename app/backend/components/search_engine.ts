@@ -29,14 +29,7 @@ export class SearchEngine {
 	 * @returns an Array of tuples representing internships matching the parameters or an error Status if the query fails
 	 */
 	public async get_internships (
-		user: string,
-		text: string,
-		orderby: string,
-		ascending: boolean,
-		salary: number,
-		duration: number,
-		mode: string,
-		tags: string[]
+		query_params: SearchQueryParams
 	) : Promise<Array<InternshipQueryResult> | Status> {
 		try {
 			let internships = await pool.query (
@@ -51,14 +44,14 @@ export class SearchEngine {
 				FROM internship as I left join tag_internship on I.id=tag_internship.internship_id 
 									left join tag as T on tag_id=T.id 
 									join company as C on C.user_email = I.company_email
-				WHERE I.id NOT IN (SELECT internship_id FROM student_internship WHERE student_email = '${user}')
-				${tags.length ? 'AND I.id IN (SELECT internship_id from internship I1 join tag_internship on I1.id=tag_internship.internship_id join tag as T1 on tag_id=T1.id WHERE T1.description in '+this.array_to_sql_list(tags)+')' : ''}
+				WHERE I.id NOT IN (SELECT internship_id FROM student_internship WHERE student_email = '${query_params.user}')
+				${query_params.tags.length ? 'AND I.id IN (SELECT internship_id from internship I1 join tag_internship on I1.id=tag_internship.internship_id join tag as T1 on tag_id=T1.id WHERE T1.description in '+this.array_to_sql_list(query_params.tags)+')' : ''}
 				GROUP BY I.id, I.company_email, I.title, I.description, I.start, I."end", I.published, I.application_end, I.status, C.name
-				HAVING 	date_part('month', AGE(I."end", I.start)) >= ${duration} 
-						AND I.salary >= ${salary} 
-						AND I.mode in (${this.mode_map[mode as keyof typeof this.mode_map]}) 
-						AND (LOWER(I.title) LIKE '${this.likeable_text(text)}' OR LOWER(I.description) LIKE '${this.likeable_text(text)}')
-				ORDER BY ${this.order_by_map[orderby as keyof typeof this.order_by_map]} ${ascending ? 'ASC' : 'DESC'}
+				HAVING 	date_part('month', AGE(I."end", I.start)) >= ${query_params.duration} 
+						AND I.salary >= ${query_params.salary} 
+						AND I.mode in (${this.mode_map[query_params.mode as keyof typeof this.mode_map]}) 
+						AND (LOWER(I.title) LIKE '${this.likeable_text(query_params.text)}' OR LOWER(I.description) LIKE '${this.likeable_text(query_params.text)}')
+				ORDER BY ${this.order_by_map[query_params.orderby as keyof typeof this.order_by_map]} ${query_params.ascending ? 'ASC' : 'DESC'}
 				`
 			)
 			return internships.rows as InternshipQueryResult[] 
@@ -109,4 +102,15 @@ type InternshipQueryResult = {
 	location: string
 	tags: string
 	applied_students: string
+}
+
+export type SearchQueryParams = {
+	user: string,
+	text: string,
+	orderby: string,
+	ascending: boolean,
+	salary: number,
+	duration: number,
+	mode: string,
+	tags: string[]
 }
