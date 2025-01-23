@@ -1,7 +1,6 @@
 import { Status } from "../utils/status";
 import pool from "../utils/db_pool";
 import { format_date_for_database, get_current_datetime } from "../utils/date_utils";
-import { fork } from "child_process";
 
 type InternshipType = {
     id: number,
@@ -17,9 +16,6 @@ type CandidateType = {
     email: string,
     first_name: string,
     last_name: string,
-    phone_number: number,
-    date_of_birth: Date,
-    cv_ref: string,
     status: string,
 }
 
@@ -30,12 +26,7 @@ type QuestionType = {
 
 type ReplyType = {
     id: number,
-    text: string,
-}
-
-type CandidateRepliesType = {
-    email: string,
-    replies: Array<ReplyType>
+    answer: string,
 }
 
 export class InternshipManager {
@@ -102,8 +93,8 @@ export class InternshipManager {
      */
     public async fetch_candidates(id: number): Promise<Status.error | Array<CandidateType>> {
         return await pool.query(`
-                SELECT s.*, status FROM 
-                student s JOIN student_internship ON user_email = student_email 
+                SELECT user_email AS email, first_name, last_name, status FROM 
+                student JOIN student_internship ON user_email = student_email 
                 WHERE internship_id=${id}
             `).then(res => {
             if (res.rowCount === null) {
@@ -117,45 +108,66 @@ export class InternshipManager {
         });
     }
 
-    public async fetch_form_questions(id: number): Promise<Status.error | Array<QuestionType>> {
+    /**
+     * fetch the interview questions of a given internship
+     * @param id number uniquely identifying the internship
+     * @returns a promise of an array of questions (as defined by QuestionType) 
+     * or Status.error if something went wrong during the fetch
+     */
+    public async fetch_interview_questions(id: number): Promise<Status.error | Array<QuestionType>> {
         return await pool.query(`
             SELECT id, question FROM interview_question WHERE internship_id=${id}
         `).then(res => {
             if (res.rowCount === null) {
-                console.log(`[server]: (error) inside 'fetch_form_questions':\nrowCount == null`);
+                console.log(`[server]: (error) inside 'fetch_interview_questions':\nrowCount == null`);
                 return Status.error;
             }
             return res.rows.map((row) => <QuestionType>row);
         }).catch(err => {
-            console.log(`[server]: (query error) inside 'fetch_form_questions':\n${err}`);
+            console.log(`[server]: (query error) inside 'fetch_interview_questions':\n${err}`);
             return Status.error;
         });
     }
     
-    public async fetch_form_replies(id: number): Promise<Status.error | Array<CandidateRepliesType>> {
+    /**
+     * fetch the replies of a candidate related to the form of an internship
+     * @param id number uniquely identifying the internship
+     * @param email candidate's email 
+     * @returns a promise of an array of replies (as defined by ReplyType) 
+     * or Status.error if something went wrong during the fetch
+     */
+    public async fetch_candidate_replies(id: number, email: string): Promise<Status.error | Array<ReplyType>> {
         return await pool.query(`
-            SELECT student_email, question_id, answer
+            SELECT question_id, answer
             FROM interview_question JOIN reply ON id = question_id 
-            WHERE internship_id=${id}
-            GROUP BY student_email, question_id
+            WHERE internship_id=${id} AND student_email = ${email}
         `).then(res => {
             if (res.rowCount === null) {
-                console.log(`[server]: (error) inside 'fetch_form_replies':\nrowCount == null`);
+                console.log(`[server]: (error) inside 'fetch_candidate_replies':\nrowCount == null`);
                 return Status.error;
             }
-            return res.rows.reduce(((acc, row) => {
-                if (acc.lenth === 0 || acc.at(-1).email !== row.student_email) {
-                    acc.push(<CandidateRepliesType>{
-                        email: row.student_email, 
-                        replies: [<ReplyType>{id:row.question_id, text: row.anser}]
-                    });
-                } else {
-                    acc.at(-1).replies.push(<ReplyType>{id:row.question_id, text: row.anser});
-                }
-                return acc;
-            }), [] as Array<CandidateRepliesType>);
+            return res.rows.map((row) => <ReplyType>row);
         }).catch(err => {
-            console.log(`[server]: (query error) inside 'fetch_form_replies':\n${err}`);
+            console.log(`[server]: (query error) inside 'fetch_candidate_replies':\n${err}`);
+            return Status.error;
+        });
+    }
+
+    /**
+     * fetch the replies of a candidate related to the form of an internship
+     * @param id number uniquely identifying the internship
+     * @param email candidate's email 
+     * @param status candidate's status 
+     * @returns a promise of an array of replies (as defined by ReplyType) 
+     * or Status.error if something went wrong during the fetch
+     */
+    public async set_candidate_status(id: number, email: string, status: string): Promise<Status> {
+        return await pool.query(`
+            UPDATE student_internship SET status='${status}' 
+            WHERE internship_id=${id} AND student_email='${email}'
+        `).then(_ => Status.ok)
+        .catch(err => {
+            console.error(err);
             return Status.error;
         });
     }

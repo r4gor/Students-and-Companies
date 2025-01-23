@@ -43,6 +43,10 @@
     background-color: var(--dark-grey);
 }
 
+.inner-container a {
+    text-decoration: none;
+}
+
 button.icon-content.ok {
     background-color: #93D976;
     border-color: black;
@@ -51,4 +55,8 @@ button.icon-content.ok {
 button.icon-content.no {
     background-color: rgb(238, 44, 44);
     border-color: black;
+}
+
+#candidates i {
+  cursor: pointer;
 }

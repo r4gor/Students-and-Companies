@@ -9,6 +9,7 @@ import SearchPage from './searchpage/SearchPage';
 import InternshipManagement from './internshipmgmt/InternshipManagement';
 import Signup from './signup/Signup';
 import CreateInternship from './createinternship/CreateInternship';
+import CandidateSelectionPage from './candidateselection/candidates.tsx';
 import ErrorPage from './errorpage/ErrorPage';
 import EditProfile from "./editprofile/EditProfile.tsx";
 import { Navigate } from 'react-router-dom';
@@ -77,6 +78,14 @@ createRoot(document.getElementById('root')!).render(
                       element={
                           <ProtectedRoute>
                               <CreateInternship />
+                          </ProtectedRoute>
+                      }
+                  />
+                  <Route
+                      path="/candidates_selection"
+                      element={
+                          <ProtectedRoute>
+                              <CandidateSelectionPage />
                           </ProtectedRoute>
                       }
                   />

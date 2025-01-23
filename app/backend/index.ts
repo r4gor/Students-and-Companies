@@ -6,9 +6,10 @@ import {sign_in_route} from "./routes/sign_in_routes";
 import {notifications_route} from "./routes/notifications_routes";
 import { create_internship_route } from "./routes/internship_creation_routes";
 import { search_internships_route } from "./routes/internship_browsing_routes";
-import cors from "cors";
+import { candidate_selection_route } from "./routes/candidates_selection_routes";
 import sign_up_routes from "./routes/sign_up_routes";
 import edit_profile_routes from "./routes/edit_profile_routes";
+import cors from "cors";
 
 
 const app: Express = express();
@@ -29,6 +30,7 @@ app.use("/api", sign_up_routes);
 app.use("/api", edit_profile_routes);
 app.use("/api/create_internship", create_internship_route);
 app.use("/api/internship_browsing/search_internships", search_internships_route);
+app.use("/api/candidates_selection/", candidate_selection_route);
 
 
 app.listen(port, () => {
