@@ -59,4 +59,21 @@ export class InternshipManager {
             return Status.error;
         }
     }
+
+    public async fetch_user_internships(user:string) : Promise<Array<any> | Status>  {
+        try {
+            let internships = await pool.query(
+                `
+                SELECT title, SI.status
+                FROM student_internship as SI join internship on SI.internship_id = internship."id"
+                WHERE SI.student_email = '${user}'
+                ORDER BY (SI.status = 'finished')
+                `
+            )
+            return internships.rows
+        } catch (err) {
+            console.log(`[server]: (query error) (create internship) ${err}`);
+            return Status.error;
+        }
+    }
 }

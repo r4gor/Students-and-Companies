@@ -1,7 +1,25 @@
+import { useEffect, useState } from "react";
 import { TopBarCentralText } from "../../components/top_bar/top_bar";
 import InternshipComponent from "./InternshipComponent";
+import { useAppState } from "../../appstatecontext/AppStateContext";
+
+type InternshipMgmtInfo = {
+    title:string,
+    status:string
+}
 
 function StudentInternshipmgmt() {
+    const user_email = useAppState().userEmail as string
+    const [internships, setInternships] = useState([] as InternshipMgmtInfo[])
+    useEffect(() => {
+		const fetch_internships = async () => {
+			const response = await fetch_own_internships(user_email)
+			const data = await response.json()
+            console.log(data)
+			setInternships(data)
+		}
+		fetch_internships()
+	}, []);
 
     return (
         <>
@@ -11,15 +29,17 @@ function StudentInternshipmgmt() {
                 <div className="central-container">
                     <div className="box-background">
                         <div className="inner-box-section">
-                            <InternshipComponent title="Internship1" status="applied"></InternshipComponent>
-                            <hr />
-                            <InternshipComponent title="SW eng" status="accepted"></InternshipComponent>
-                            <hr />
-                            <InternshipComponent title="Internship lunghissssssima" status="accepted"></InternshipComponent>
-                            <hr />
-                            <InternshipComponent title="Internship lunghissssssima ancora di più" status="rejected"></InternshipComponent>
-                            <hr />
-                            <InternshipComponent title="Internship2" status="finished"></InternshipComponent>
+                            {
+                                internships.length >= 1 &&
+                                internships.map(internship => 
+                                    (<InternshipComponent title={internship.title} status={internship.status} key={internship.title}></InternshipComponent>
+                                    ))
+                            }
+                            {
+                                internships.length === 0 && (
+                                    <div className="no-internships">Your internship list is empty!</div>
+                                )
+                            }
                         </div>
                     </div>
                 </div>
@@ -27,6 +47,13 @@ function StudentInternshipmgmt() {
         </div>
         </>
     )
+}
+
+function fetch_own_internships(user:string):Promise<Response> {
+    let url = new URL('http://localhost:4000/api/internship_application/fetch_own_internships?user='+user)
+    return fetch(url, { 
+        method: "GET"
+    });
 }
 
 export default StudentInternshipmgmt

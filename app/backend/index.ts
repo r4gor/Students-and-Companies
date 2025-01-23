@@ -30,7 +30,7 @@ app.use("/api", sign_up_routes);
 app.use("/api", edit_profile_routes);
 app.use("/api/create_internship", create_internship_route);
 app.use("/api/internship_browsing/search_internships", search_internships_route);
-app.use("/api/internship_application/apply_to_internship", apply_to_internship_router);
+app.use("/api/internship_application", apply_to_internship_router);
 
 
 app.listen(port, () => {

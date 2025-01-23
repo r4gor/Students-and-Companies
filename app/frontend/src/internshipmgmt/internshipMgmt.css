@@ -2,15 +2,24 @@
     hr { 
         margin: 0;
     }
+
     .box-background {
         width: 75em;
     }
+
+    .no-internships {
+        text-align: center;
+        font-size: 25px;
+        font-weight: 200;
+    }
+
     .internship-component {
+        border: 4px solid var(--dark-grey);
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        padding: 15px 0;
+        padding: 15px 5px;
     }
     .internship-component.terminated {
         background-color: var(--dark-grey);
