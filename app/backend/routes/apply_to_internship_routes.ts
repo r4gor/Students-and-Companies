@@ -3,7 +3,11 @@ import {ApplyToInternshipController} from "../controllers/apply_to_internship_co
 
 const apply_to_internship_router = Router();
 
-apply_to_internship_router.post("/", (req: Request, res: Response) => {
+apply_to_internship_router.post("/apply_to_internship/", (req: Request, res: Response) => {
+    new ApplyToInternshipController(req, res).handle()
+});
+
+apply_to_internship_router.get("/fetch_own_internships/", (req: Request, res: Response) => {
     new ApplyToInternshipController(req, res).handle()
 });
 

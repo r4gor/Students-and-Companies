@@ -6,7 +6,7 @@ function InternshipManagement ()  {
     
     return (
         <>
-        {userType === 'student' && (<StudentInternshipmgmt></StudentInternshipmgmt>)}
+        {userType === 's' && (<StudentInternshipmgmt></StudentInternshipmgmt>)}
         </>
     )
 }
