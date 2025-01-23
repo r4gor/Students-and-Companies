@@ -11,13 +11,15 @@ function StudentInternshipmgmt() {
                 <div className="central-container">
                     <div className="box-background">
                         <div className="inner-box-section">
-                            <InternshipComponent title="Internship1" status="application"></InternshipComponent>
+                            <InternshipComponent title="Internship1" status="applied"></InternshipComponent>
                             <hr />
-                            <InternshipComponent title="Internship2" status="interview"></InternshipComponent>
+                            <InternshipComponent title="SW eng" status="accepted"></InternshipComponent>
                             <hr />
-                            <InternshipComponent title="Internship2" status="ongoing"></InternshipComponent>
+                            <InternshipComponent title="Internship lunghissssssima" status="accepted"></InternshipComponent>
                             <hr />
-                            <InternshipComponent title="Internship2" status="terminated"></InternshipComponent>
+                            <InternshipComponent title="Internship lunghissssssima ancora di più" status="rejected"></InternshipComponent>
+                            <hr />
+                            <InternshipComponent title="Internship2" status="finished"></InternshipComponent>
                         </div>
                     </div>
                 </div>

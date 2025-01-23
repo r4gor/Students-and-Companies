@@ -2,6 +2,9 @@
     hr { 
         margin: 0;
     }
+    .box-background {
+        width: 75em;
+    }
     .internship-component {
         display: flex;
         flex-direction: row;
@@ -20,7 +23,8 @@
     .internship-component #name {
         margin: 5px;
         font-weight: 400;
-        font-size: 30px;
+        font-size: 25px;
+        width: 310px;
     }
     
     .internship-component #id {
@@ -39,14 +43,15 @@
         width: 12px;    
         height: 12px;
         border-radius: 50%;    
+        margin: 0 5px;
     }
-    .internship-component #status span.application {
-        background-color: yellow;
+    .internship-component #status span.applied {
+        background-color: rgb(255, 230, 87);
     }
-    .internship-component #status span.interview, .internship-component #status span.ongoing {
-        background-color: green;
+    .internship-component #status span.accepted {
+        background-color: #93D976;
     }
-    .internship-component #status span.terminated {
-        background-color: red;
+    .internship-component #status span.rejected {
+        background-color: rgb(238, 44, 44);
     }
 }
