@@ -1,6 +1,6 @@
 import '../main.css'
 import './searchPage.css'
-import TopBar from "../components/top_bar/top_bar"
+import {TopBar} from "../components/top_bar/top_bar"
 import { useLocation} from 'react-router-dom'
 import { InternshipInformation } from './utils/internship_information'
 import InternshipPreview from './components/InternshipPreview'
