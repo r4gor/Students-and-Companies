@@ -30,7 +30,7 @@ function SideColumn ({search_bar_content}:{search_bar_content:string}) {
 
 	function on_apply_filter() {
 		get_internship_list_http_query(user_email, search_bar_content,orderby,direction,salary,duration,mode,selected_tags).then((result) => {
-			navigate('/search_page', {state: {result:result, search_bar_content:search_bar_content}})
+			navigate('/search_page/'+search_bar_content, {state: {result:result}})
 		});
 	}
 

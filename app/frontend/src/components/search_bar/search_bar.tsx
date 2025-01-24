@@ -12,7 +12,7 @@ function SearchBar() {
 
 	function perform_search(text:string) {
 		get_internship_list_http_query_no_filters(user_email, text).then((result) => {
-			navigate('/search_page', {state: {result:result, search_bar_content:search_bar_content}})
+			navigate('/search_page/'+text, {state: {result:result}})
 		});
 	}
 
