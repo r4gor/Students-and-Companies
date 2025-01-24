@@ -8,6 +8,7 @@
   --dark-grey:#eaeff1;
   --light-grey:#fbfeff;
   --light-grey-transparent:#fbfeff8c;
+  --error-red:#cc241d
 }
 
 body {
@@ -58,11 +59,18 @@ i {
   text-decoration: none;
 }
 
-.right-group i {
-  cursor: pointer;
-  font-size: 35px;
-  padding: 10px;
+.right-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
+
+.right-group i {
+    cursor: pointer;
+    font-size: 35px;
+    padding: 10px;
+  }
+
 
 .central-container {
   display: flex;
@@ -150,7 +158,7 @@ button.std-button:hover {
 }
 
 button.small {
-	min-width: none;
+	min-width: unset;
 	padding: 7px 7px;
 	border-radius: 20px;
 	border-width: 2px;
