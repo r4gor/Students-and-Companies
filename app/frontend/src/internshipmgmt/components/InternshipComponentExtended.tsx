@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { InternshipInformation } from "../../searchpage/utils/internship_information"
 import { date_to_ddMMyyyy_string, month_diff } from "../../utils/frontend_date_utils"
+import { format_search_parameters } from "../../searchpage/handle_search"
 
 function InternshipComponentExtended({info, position}: {info:InternshipInformation, position:number}) {
     const internship_status_map = { 'application':'application phase',
@@ -88,7 +89,17 @@ function InternshipComponentExtendedOngoing({info}:{info:InternshipInformation})
     }
 
     function on_close_internship() {
-        
+        const navigate = useNavigate()
+        let url = new URL('http://localhost:4000/api/internship_management/close_internship')
+        url.search = format_search_parameters({
+            id: info.id
+        })
+        fetch(url, {
+            method: "GET"
+        }).then(result => {
+            if(result.ok)
+                navigate('/internship_management')
+        });
     } 
 
     return (

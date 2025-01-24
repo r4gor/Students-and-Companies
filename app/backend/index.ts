@@ -9,7 +9,7 @@ import { search_internships_route } from "./routes/internship_browsing_routes";
 import cors from "cors";
 import sign_up_routes from "./routes/sign_up_routes";
 import edit_profile_routes from "./routes/edit_profile_routes";
-import internship_management_router from "./routes/apply_to_internship_routes";
+import internship_management_router from "./routes/internship_management_routes";
 
 
 const app: Express = express();
