@@ -13,7 +13,7 @@ export class InternshipManager {
      * @param application_end_date date after which will not possible to apply to the internship
      * @param start_date start date of the internship
      * @param end_date end date of the internship
-     * @returns Status.ok if the internship has been created successfully, 
+     * @returns an async Promise containing: Status.ok if the internship has been created successfully, 
      * Status.error if an error occurred
      */
     public async create_internship (
@@ -50,7 +50,8 @@ export class InternshipManager {
      * Registers a user application to an internship
      * @param internship_id id of the internship
      * @param user_email email of the students that applies
-     * @returns Status.error if the query failed, else true if the tuple has been added else false if the tuple was already present
+     * @returns an async Promise containing: Status.error if the query failed, 
+     * else true if the tuple has been added else false if the tuple was already present
      */
     public async apply_user_to_internship(internship_id:number, user_email:string) : Promise<boolean | Status> {
         try {
@@ -63,7 +64,7 @@ export class InternshipManager {
             )
             return insert_application.rowCount === 1
         } catch (err) {
-            console.log(`[server]: (query error) (create internship) ${err}`);
+            console.log(`[server]: (query error) (apply to internship) ${err}`);
             return Status.error;
         }
     }
@@ -71,7 +72,8 @@ export class InternshipManager {
     /**
      * Retrieve all student's internships
      * @param student_email user email on which perform the query
-     * @returns an array of database rows matching the request or an error Status if the query fails 
+     * @returns an async Promise containing: an array of database 
+     * rows matching the request or an error Status if the query fails 
      */
     public async fetch_student_internships(student_email:string) : Promise<Array<any> | Status>  {
         try {
@@ -85,7 +87,7 @@ export class InternshipManager {
             )
             return internships.rows
         } catch (err) {
-            console.log(`[server]: (query error) (create internship) ${err}`);
+            console.log(`[server]: (query error) (fetch students internship) ${err}`);
             return Status.error;
         }
     }
@@ -93,7 +95,8 @@ export class InternshipManager {
     /**
      * Retrieve all company's internships
      * @param company_email user email on which perform the query
-     * @returns an array of database rows matching the request or an error Status if the query fails 
+     * @returns an async Promise containing: an array of database rows matching the request 
+     * else an error Status if the query fails 
      */
     public async fetch_company_internships(company_email:string) : Promise<Array<any> | Status>  {
         try {
@@ -110,7 +113,33 @@ export class InternshipManager {
             )
             return internships.rows
         } catch (err) {
-            console.log(`[server]: (query error) (create internship) ${err}`);
+            console.log(`[server]: (query error) (fetch company internship) ${err}`);
+            return Status.error;
+        }
+    }
+
+    /**
+     * Close internship with passed id
+     * @param internship_id internship id to close
+     * @returns a Promise containing an ok Status if the internship has been closed
+     * else an error Status if the query fails
+     */
+    public async close_internship(internship_id:string) : Promise<Status> {
+        try {
+            let result = await pool.query (
+                `
+                UPDATE internship
+                SET status = 'terminated'
+                WHERE "id" = ${internship_id} AND
+                        status = 'ongoing' AND
+                        "end" < to_date('${format_date_for_database(new Date(get_current_datetime()))}', 'YYYY-MM-DD'),
+                `
+            )
+            if(result.rowCount !== 1)
+                throw new Error('violated condition: internship status is not "ongoing" OR internship hasn\'t ended yet.')
+            return Status.ok
+        } catch (err) {
+            console.log(`[server]: (query error) (close internship) ${err}`);
             return Status.error;
         }
     }

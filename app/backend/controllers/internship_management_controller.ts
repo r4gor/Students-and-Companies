@@ -3,7 +3,7 @@ import {AccountManager} from "../components/account_manager";
 import {Status} from "../utils/status";
 import { InternshipManager } from '../components/internship_manager';
 
-export class ApplyToInternshipController extends Controller {
+export class InternshipManagementController extends Controller {
 
     public async handle(): Promise<void> {
         let path = this.req.route.path
@@ -13,6 +13,8 @@ export class ApplyToInternshipController extends Controller {
             this.fetch_students_applications()
         else if(path === '/fetch_company_internships/')
             this.fetch_company_applications()
+        else if(path === '/close_internship/')
+            this.close_internship()
     }
 
     private async add_application() {
@@ -81,6 +83,27 @@ export class ApplyToInternshipController extends Controller {
         }
         else {
             this.res.json(result)
+            return;
+        }
+    }
+
+    private async close_internship() {
+        let body = this.req.query;
+        let internship_id = body.id as string;
+
+        if (body == undefined ||
+            internship_id == undefined
+        ) {
+			this.res.status(400).json({ message: "Bad request" });
+			return;
+		}
+        let result = await new InternshipManager().close_internship(internship_id);
+        if(result == Status.error) {
+            this.res.status(400).json({message: "Internal server error"})
+            return;
+        }
+        else {
+            this.res.status(200).json({message: "Internship closed successfully"})
             return;
         }
     }
