@@ -14,16 +14,19 @@
     }
 
     .internship-component {
-        border: 4px solid var(--dark-grey);
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
         padding: 15px 5px;
     }
-    .internship-component.terminated {
+    .internship-component.odd {
         background-color: var(--dark-grey);
     }
+    .internship-component.terminated {
+        background-color: #b9bdbe;
+    }
+    
     .internship-component .left-group {
         display: flex;
         flex-direction: row;

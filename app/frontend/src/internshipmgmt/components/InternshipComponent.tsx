@@ -1,13 +1,15 @@
 import '../internshipMgmt.css'
 
-function InternshipComponent({title, status}: {title:string,status:string}) {
+function InternshipComponent({title, status, position}: {title:string,status:string, position:number}) {
     const internship_status_map = { 'applied':'waiting for selection',
                                     'accepted':'accepted', 
                                     'rejected': 'rejected', 
                                     'finished': 'terminated'}
     return (
         <>
-        <div className={"internship-component" + (status === 'finished' || status === 'rejected' ? ' terminated':'')}>
+        <div className={"internship-component" + 
+                        (status === 'finished' || status === 'rejected' ? ' terminated':'') + 
+                        (position === 1 ? ' odd':'')}>
             <div className="left-group">
                 <div id="name">{title}</div>
                 <div id="status"><span className={status}></span> {internship_status_map[status as keyof typeof internship_status_map]}</div>

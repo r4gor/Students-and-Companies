@@ -15,7 +15,6 @@ function StudentInternshipmgmt() {
 		const fetch_internships = async () => {
 			const response = await fetch_own_internships(user_email)
 			const data = await response.json()
-            console.log(data)
 			setInternships(data)
 		}
 		fetch_internships()
@@ -31,8 +30,12 @@ function StudentInternshipmgmt() {
                         <div className="inner-box-section">
                             {
                                 internships.length >= 1 &&
-                                internships.map(internship => 
-                                    (<InternshipComponent title={internship.title} status={internship.status} key={internship.title}></InternshipComponent>
+                                internships.map((internship, idx) => 
+                                    (<InternshipComponent   title={internship.title} 
+                                                            status={internship.status} 
+                                                            position={idx} 
+                                                            key={idx}>
+                                    </InternshipComponent>
                                     ))
                             }
                             {
