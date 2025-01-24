@@ -60,7 +60,7 @@ export class InternshipManager {
         }
     }
 
-    public async fetch_user_internships(user:string) : Promise<Array<any> | Status>  {
+    public async fetch_student_internships(user:string) : Promise<Array<any> | Status>  {
         try {
             let internships = await pool.query(
                 `
@@ -68,6 +68,25 @@ export class InternshipManager {
                 FROM student_internship as SI join internship on SI.internship_id = internship."id"
                 WHERE SI.student_email = '${user}'
                 ORDER BY (SI.status = 'finished')
+                `
+            )
+            return internships.rows
+        } catch (err) {
+            console.log(`[server]: (query error) (create internship) ${err}`);
+            return Status.error;
+        }
+    }
+
+    public async fetch_company_internships(user:string) : Promise<Array<any> | Status>  {
+        try {
+            let internships = await pool.query(
+                `
+                SELECT 	I.*, C.name AS company, (SELECT count(*) AS applied_students 
+				                                 FROM student_internship 
+				                                 WHERE internship_id=I.id
+				                                ), null as tags
+                FROM internship as I join company as C on C.user_email = I.company_email
+                WHERE I.company_email = '${user}'
                 `
             )
             return internships.rows
