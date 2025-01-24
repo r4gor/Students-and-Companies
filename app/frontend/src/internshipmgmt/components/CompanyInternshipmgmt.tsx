@@ -11,7 +11,7 @@ function CompanyInternshipmgmt() {
 		const fetch_internships = async () => {
 			const response = await fetch_company_internships(user_email)
 			const data = await response.json()
-			setInternships(data)
+			setInternships(data.map((row:any) => new InternshipInformation(row)))
 		}
 		fetch_internships()
 	}, []);
@@ -27,7 +27,7 @@ function CompanyInternshipmgmt() {
                             {
                                 internships.length >= 1 &&
                                 internships.map((info, idx) => 
-                                    (<InternshipComponentExtended info={info} position={idx}></InternshipComponentExtended>
+                                    (<InternshipComponentExtended key={idx} info={info} position={idx}></InternshipComponentExtended>
                                     ))
                             }
                             {
@@ -48,7 +48,7 @@ function CompanyInternshipmgmt() {
 }
 
 function fetch_company_internships(user:string):Promise<Response> {
-    let url = new URL('http://localhost:4000/api/internship_application/fetch_company_internships?user='+user)
+    let url = new URL('http://localhost:4000/api/internship_management/fetch_company_internships?user='+user)
     return fetch(url, { 
         method: "GET"
     });

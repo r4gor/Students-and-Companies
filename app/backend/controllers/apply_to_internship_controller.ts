@@ -9,8 +9,10 @@ export class ApplyToInternshipController extends Controller {
         let path = this.req.route.path
         if(path === '/apply_to_internship/')
             this.add_application()
-        else if(path === '/fetch_own_internships/')
-            this.fetch_applications()
+        else if(path === '/fetch_students_internships/')
+            this.fetch_students_applications()
+        else if(path === '/fetch_company_internships/')
+            this.fetch_company_applications()
     }
 
     private async add_application() {
@@ -41,7 +43,7 @@ export class ApplyToInternshipController extends Controller {
         }
     }
 
-    private async fetch_applications() {
+    private async fetch_students_applications() {
         let body = this.req.query;
         let user_email = body.user as string;
 
@@ -51,7 +53,28 @@ export class ApplyToInternshipController extends Controller {
 			this.res.status(400).json({ message: "Bad request" });
 			return;
 		}
-        let result = await new InternshipManager().fetch_user_internships(user_email);
+        let result = await new InternshipManager().fetch_student_internships(user_email);
+        if(result == Status.error) {
+            this.res.status(400).json({message: "Internal server error"})
+            return;
+        }
+        else {
+            this.res.json(result)
+            return;
+        }
+    }
+
+    private async fetch_company_applications() {
+        let body = this.req.query;
+        let user_email = body.user as string;
+
+        if (body == undefined ||
+            user_email == undefined
+        ) {
+			this.res.status(400).json({ message: "Bad request" });
+			return;
+		}
+        let result = await new InternshipManager().fetch_company_internships(user_email);
         if(result == Status.error) {
             this.res.status(400).json({message: "Internal server error"})
             return;
