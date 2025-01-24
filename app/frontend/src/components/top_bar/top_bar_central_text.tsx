@@ -1,20 +1,20 @@
 import { useState } from "react"
 import NotificationPanel from "../../notificationpanel/NotificationPanel"
+import './top_bar.css'
+import { HiddenSearchBar } from "../search_bar/search_bar"
 
 function TopBarCentralText ({text}:{text:string}) {
-    const [search_bar_open, setSearchBarOpen] = useState(false)
 
 	return (
 		<>
-		<div className="top_bar">
+		<div className="top-bar-central-text">
 			<div className="top-bar">
 				<div className="logo">
 					S&C
 				</div>
 				<div className="top-central-text">{text}</div>
 				<div className="right-group">
-                    <div className="search-bar-container">a</div>
-					<i className="material-icons">search</i>
+                    <HiddenSearchBar></HiddenSearchBar>
                     <NotificationPanel></NotificationPanel>
 					<i className="material-icons">person</i>
 				</div>
