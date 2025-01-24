@@ -11,6 +11,7 @@ import Signup from './signup/Signup';
 import CreateInternship from './createinternship/CreateInternship';
 import ErrorPage from './errorpage/ErrorPage';
 import EditProfile from "./editprofile/EditProfile.tsx";
+import Single_internship_page from "./single_internship_page/Single_internship_page.tsx";
 import { Navigate } from 'react-router-dom';
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
@@ -57,10 +58,18 @@ createRoot(document.getElementById('root')!).render(
                       }
                   />
                   <Route
-                      path="/profile"
+                      path="/profile/:reqEmail?"
                       element={
                           <ProtectedRoute>
                               <Profile />
+                          </ProtectedRoute>
+                      }
+                  />
+                  <Route
+                      path="/internship/:internshipId?"
+                      element={
+                          <ProtectedRoute>
+                              <Single_internship_page />
                           </ProtectedRoute>
                       }
                   />
