@@ -1,0 +1,15 @@
+.inner-container {
+    padding-left: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.inner-container #name {
+    flex-grow: 1;
+}
+
+#candidates i {
+  cursor: pointer;
+}
