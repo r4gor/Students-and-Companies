@@ -1,4 +1,5 @@
 import { useAppState } from "../appstatecontext/AppStateContext";
+import CompanyInternshipmgmt from "./components/CompanyInternshipmgmt";
 import StudentInternshipmgmt from "./components/StudentInternshipmgmt";
 
 function InternshipManagement ()  {
@@ -7,6 +8,7 @@ function InternshipManagement ()  {
     return (
         <>
         {userType === 's' && (<StudentInternshipmgmt></StudentInternshipmgmt>)}
+        {userType === 'c' && (<CompanyInternshipmgmt></CompanyInternshipmgmt>)}
         </>
     )
 }

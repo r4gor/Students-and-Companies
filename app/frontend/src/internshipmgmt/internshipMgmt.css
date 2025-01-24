@@ -8,9 +8,15 @@
     }
 
     .no-internships {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         text-align: center;
         font-size: 25px;
         font-weight: 200;
+    }
+    .no-internships * {
+        margin: 10px;
     }
 
     .internship-component {
@@ -20,7 +26,7 @@
         align-items: center;
         padding: 15px 5px;
     }
-    .internship-component.odd {
+    .internship-component.odd, .internship-component-extended.odd {
         background-color: var(--dark-grey);
     }
     .internship-component.terminated {
@@ -37,6 +43,11 @@
         font-weight: 400;
         font-size: 25px;
         width: 310px;
+    }
+
+    .internship-component #type {
+        font-weight: 200;
+        font-size: 20px;
     }
     
     .internship-component #id {
@@ -57,13 +68,25 @@
         border-radius: 50%;    
         margin: 0 5px;
     }
-    .internship-component #status span.applied {
+    .internship-component #status span.applied, .internship-component #status span.application, .internship-component #status span.interview {
         background-color: rgb(255, 230, 87);
     }
-    .internship-component #status span.accepted {
+    .internship-component #status span.accepted, .internship-component #status span.ongoing {
         background-color: #93D976;
     }
     .internship-component #status span.rejected {
         background-color: rgb(238, 44, 44);
+    }
+
+    .internship-component-extension {
+        display: flex;
+        flex-direction: row;
+        padding: 10px;
+    }
+
+    .internship-component-extended .info-element {
+        font-size: 18px;
+        font-weight: 200;
+        margin: 0 10px;
     }
 }
