@@ -3,7 +3,7 @@ import SearchBar from "../search_bar/search_bar";
 import NotificationPanel from "../../notificationpanel/NotificationPanel";
 import NavBar from "../nav_bar/NavBar";
 
-function TopBar () {
+export function TopBar () {
 
     return (
         <>
@@ -23,5 +23,3 @@ function TopBar () {
         </>
     )
 }
-
-export default TopBar
