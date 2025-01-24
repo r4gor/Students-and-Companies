@@ -1,8 +1,7 @@
 import '../main.css';
 import './candidateSelection.css';
-import {TopBar} from '../components/top_bar/top_bar';
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 
 type CandidateType = {
     email: string,
@@ -16,14 +15,19 @@ type QuestionType = {
     text: string,
 }
 
-// type ReplyType = {
-//     id: number,
-//     answer: string,
-// }
-
-function CandidateRow(id: number, index: number, candidate: CandidateType, set_status: Function) {
+function CandidateRow(
+    id: number,
+    index: number,
+    candidate: CandidateType,
+    questions: Array<QuestionType>,
+    set_status: Function) {
+     
     const is_interviewed: boolean = false;
-    
+    const state = {
+        candidate: candidate,
+        questions: questions,
+    };
+
     function container_class(): string {
         return "inner-container" + (is_interviewed ? " intervied" : "")
     }
@@ -36,8 +40,12 @@ function CandidateRow(id: number, index: number, candidate: CandidateType, set_s
         return "std-button icon-content" + (candidate.status === "rejected" ? " no" : "");
     }
 
-    function profile_url(): string {
+    function profile_path(): string {
         return `/profiles/${candidate.email}`
+    }
+
+    function interview_form_path(): string {
+        return `/candidates_selection/${id}/form/${candidate.email}`
     }
 
     function handle_click_button_accept() {
@@ -55,9 +63,12 @@ function CandidateRow(id: number, index: number, candidate: CandidateType, set_s
 			<i className="material-icons small" id="interviewed-ico" title="interviewed">check_circle</i>
 			<div id="name">{candidate.last_name} {candidate.first_name}</div>
 			<button type="button" className="std-button small" id="profile">
-			    <a href={profile_url()}>View profile</a>
+			    <Link to={profile_path()} target="_blank">View profile</Link>
 			</button>
-			<button type="button" className="std-button small" id="form">Open interview form</button>
+			<button type="button" className="std-button small" id="form">
+			    {/*NOTE: target="_blank" deletes state => do not use it!*/}
+			    <Link to={interview_form_path()} state={state}>Open interview form</Link> 
+			</button>
 			<div className="selector-button-container">
 				<button type="button" className={button_accept_class()} id="profile" onClick={() => handle_click_button_accept()}>
 				    <i className="material-icons">check</i>
@@ -70,14 +81,14 @@ function CandidateRow(id: number, index: number, candidate: CandidateType, set_s
     );
 }
 
-function CandidateSelectionPage() {
+function CandidateSelection() {
     const [candidates, setCandidates] = useState([] as Array<CandidateType>);
     const [questions, setQuestions] = useState([] as Array<QuestionType>);
 
-    const location = useLocation();
-    const state = (location.state === null || location.state === undefined) ? {} : location.state;
-    const internship_id: number = state.internship_id === undefined ? 1 : state.internship_id;
-    const internship_title: string = state.internship_title === undefined ? 'Title' : state.internship_title;
+    const params = useParams();
+    const state = useLocation().state === null ? {} : useLocation().state;
+    const internship_id: number = params.internship_id === undefined ? 1 : Number.parseInt(params.internship_id);
+    const internship_title: string = state === undefined || state.internship_title === undefined ? 'Title' : state.internship_title;
 
     async function fetch_candidates(): Promise<void> {
         console.log('fetching candidates for internship ' + internship_id);
@@ -137,37 +148,30 @@ function CandidateSelectionPage() {
     
     return (
         <>
-            <div className="main-flex-container">
-                <TopBar></TopBar>
-    			<div className="central-container">
-    				<div className="box-background">
-    					<div className="inner-box-section top-inner-box-section">
-    						<div id="name">{internship_title}</div>
-    						<div id="type"> 
-    						    Internship #{Intl.NumberFormat("en-IN",{minimumIntegerDigits: 6, useGrouping: false}).format(internship_id)}
-    						</div>
-    						<div className="button-container">
-    							<button type="button" className="std-button" id="cv">
-    							    End Interview Phase
-    							</button>
-    						</div>
-    					</div>
-    					<div className="inner-box-section" id="candidates">
-    						<div className="box-composite-description">
-    							<div className="box-description">
-    								Candidates
-    							</div>
-    							<i className="material-icons" onClick={() => fetch_candidates()}>
-    							    sync
-    							</i>
-    						</div>
-    					    {candidates.map((c, i) => CandidateRow(internship_id, i, c, set_candidate_status))}
-    					</div>
-    				</div>
-    			</div>
-            </div>
+			<div className="inner-box-section top-inner-box-section">
+				<div id="name">{internship_title}</div>
+				<div id="type"> 
+				    Internship #{Intl.NumberFormat("en-IN",{minimumIntegerDigits: 6, useGrouping: false}).format(internship_id)}
+				</div>
+				<div className="button-container">
+					<button type="button" className="std-button" id="cv">
+					    End Interview Phase
+					</button>
+				</div>
+			</div>
+			<div className="inner-box-section" id="candidates">
+				<div className="box-composite-description">
+					<div className="box-description">
+						Candidates
+					</div>
+					<i className="material-icons" onClick={() => fetch_candidates()}>
+					    sync
+					</i>
+				</div>
+			    {candidates.map((c, i) => CandidateRow(internship_id, i, c, questions, set_candidate_status))}
+			</div>
         </>
     )
 }
 
-export default CandidateSelectionPage;
+export default CandidateSelection;
