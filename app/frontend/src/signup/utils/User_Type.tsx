@@ -25,7 +25,7 @@ const User_Type = ({ setUserType, setUniversity}) => {
         setLocalUserType(selectedType);
         setUserType(selectedType);
 
-        if (selectedType === "student") {
+        if (selectedType === "s") {
             fetchStudentOptions();
         }
     }
@@ -38,14 +38,14 @@ const User_Type = ({ setUserType, setUniversity}) => {
                 </div>
                 <select name="type" id="type" onChange={handleUserTypeChange}>
                     <option></option>
-                    <option value="company">Company</option>
-                    <option value="university">University</option>
-                    <option value="student">Student</option>
+                    <option value="c">Company</option>
+                    <option value="u">University</option>
+                    <option value="s">Student</option>
                 </select>
             </div>
 
             {/*Render second select box if "Student" is selected*/}
-            {localUserType === "student" && (
+            {localUserType === "s" && (
                 <div className="input-container" id="university">
                     <div id="label">Select university:</div>
                     <select

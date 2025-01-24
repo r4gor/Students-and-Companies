@@ -27,7 +27,7 @@ function Signup () {
             alert("Select user type!");
             return;
         }
-        if (userType === "student" && !university) {
+        if (userType === "s" && !university) {
             alert("Select university!");
             return;
         }
