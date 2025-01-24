@@ -53,7 +53,7 @@ function StudentInternshipmgmt() {
 }
 
 function fetch_own_internships(user:string):Promise<Response> {
-    let url = new URL('http://localhost:4000/api/internship_application/fetch_student_internships?user='+user)
+    let url = new URL('http://localhost:4000/api/internship_management/fetch_student_internships?user='+user)
     return fetch(url, { 
         method: "GET"
     });

@@ -16,7 +16,7 @@ function InternshipPreview ({
     function on_apply_to_internship() {
         if(applied)
             return
-        let url = new URL('http://localhost:4000/api/internship_application/apply_to_internship')
+        let url = new URL('http://localhost:4000/api/internship_management/apply_to_internship')
         url.search = format_search_parameters({
             internship_id: info.id,
             user_email: user_email
