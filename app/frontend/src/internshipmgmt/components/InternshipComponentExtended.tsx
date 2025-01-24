@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"
 import { InternshipInformation } from "../../searchpage/utils/internship_information"
 import { date_to_ddMMyyyy_string, month_diff } from "../../utils/frontend_date_utils"
 
@@ -49,7 +50,7 @@ function render_sub_components(info:InternshipInformation) {
         case 'ongoing':
             return (<InternshipComponentExtendedOngoing info={info}></InternshipComponentExtendedOngoing>)
         case 'terminated':
-            return (<InternshipComponentExtendedTerminated info={info}></InternshipComponentExtendedTerminated>)
+            return (<InternshipComponentExtendedTerminated></InternshipComponentExtendedTerminated>)
     }
 }
 
@@ -63,11 +64,17 @@ function InternshipComponentExtendedApplication({info}:{info:InternshipInformati
 }
 
 function InternshipComponentExtendedInterview({info}:{info:InternshipInformation}) {
+    const navigate = useNavigate()
+
+    function on_select_candidates() {
+        navigate(`/candidates_selection/${info.id}`, {state: {internship_title: info.title}})
+    }
+
     return (
         <>
         <div className="info-element" id="candidates">{info.applied_students} candidate{info.applied_students === 1 ? '':'s'}</div>
         <div className="button-container">
-            <button type="button" className="std-button">Select candidates</button>
+            <button type="button" className="std-button" onClick={on_select_candidates}>Select candidates</button>
         </div>
         </>
     )
@@ -75,22 +82,29 @@ function InternshipComponentExtendedInterview({info}:{info:InternshipInformation
 
 function InternshipComponentExtendedOngoing({info}:{info:InternshipInformation}) {
     let is_ended = ((new Date()) >= info.end_date)
+
+    function on_open_complaint() {
+        //TODO:add implementation
+    }
+
+    function on_close_internship() {
+        
+    } 
+
     return (
         <>
         <div className="info-element" id="ends in">{is_ended ? 'Ended': 'Ends in '+ month_diff(new Date(),info.end_date)+' months'}</div>
         <div className="button-container">
-            <button type="button" className="std-button">Open complaint</button>
-            {is_ended && <button type="button" className="std-button">Close internship</button>}
+            <button type="button" className="std-button" onClick={on_open_complaint}>Open complaint</button>
+            {is_ended && <button type="button" className="std-button" onClick={on_close_internship}>Close internship</button>}
         </div>
         </>
     )
 }
 
-function InternshipComponentExtendedTerminated({info}:{info:InternshipInformation}) {
+function InternshipComponentExtendedTerminated() {
     return (
         <>
-        <div className="button-container">
-        </div>
         </>
     )
 }

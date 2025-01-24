@@ -29,7 +29,7 @@
     .internship-component.odd, .internship-component-extended.odd {
         background-color: var(--dark-grey);
     }
-    .internship-component.terminated {
+    .internship-component.terminated, .internship-component-extended.terminated {
         background-color: #b9bdbe;
     }
     

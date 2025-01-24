@@ -28,7 +28,15 @@ export class InternshipManager {
             await pool.query(
                 `
                 INSERT INTO internship (company_email, title, description, start, "end", published, application_end, status)
-                VALUES ('${email}', '${title}', '${description}', to_date('${format_date_for_database(start_date)}', 'YYYY-MM-DD'), to_date('${format_date_for_database(end_date)}', 'YYYY-MM-DD'), to_date('${format_date_for_database(new Date(get_current_datetime()))}', 'YYYY-MM-DD'), to_date('${format_date_for_database(application_end_date)}', 'YYYY-MM-DD'), 'application')
+                VALUES ('${email}', 
+                        '${title}', 
+                        '${description}', 
+                        to_date('${format_date_for_database(start_date)}', 'YYYY-MM-DD'), 
+                        to_date('${format_date_for_database(end_date)}', 'YYYY-MM-DD'), 
+                        to_date('${format_date_for_database(new Date(get_current_datetime()))}', 'YYYY-MM-DD'), 
+                        to_date('${format_date_for_database(application_end_date)}', 'YYYY-MM-DD'), 
+                        'application'
+                )
                 `
             );
             return Status.ok;
@@ -60,13 +68,18 @@ export class InternshipManager {
         }
     }
 
-    public async fetch_student_internships(user:string) : Promise<Array<any> | Status>  {
+    /**
+     * Retrieve all student's internships
+     * @param student_email user email on which perform the query
+     * @returns an array of database rows matching the request or an error Status if the query fails 
+     */
+    public async fetch_student_internships(student_email:string) : Promise<Array<any> | Status>  {
         try {
             let internships = await pool.query(
                 `
                 SELECT title, SI.status
                 FROM student_internship as SI join internship on SI.internship_id = internship."id"
-                WHERE SI.student_email = '${user}'
+                WHERE SI.student_email = '${student_email}'
                 ORDER BY (SI.status = 'finished')
                 `
             )
@@ -77,7 +90,12 @@ export class InternshipManager {
         }
     }
 
-    public async fetch_company_internships(user:string) : Promise<Array<any> | Status>  {
+    /**
+     * Retrieve all company's internships
+     * @param company_email user email on which perform the query
+     * @returns an array of database rows matching the request or an error Status if the query fails 
+     */
+    public async fetch_company_internships(company_email:string) : Promise<Array<any> | Status>  {
         try {
             let internships = await pool.query(
                 `
@@ -86,7 +104,8 @@ export class InternshipManager {
 				                                 WHERE internship_id=I.id
 				                                ), null as tags
                 FROM internship as I join company as C on C.user_email = I.company_email
-                WHERE I.company_email = '${user}'
+                WHERE I.company_email = '${company_email}'
+                ORDER BY (I.status = 'terminated')
                 `
             )
             return internships.rows
