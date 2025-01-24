@@ -9,7 +9,7 @@ function InternshipComponent({title, status, position}: {title:string,status:str
         <>
         <div className={"internship-component" + 
                         (status === 'finished' || status === 'rejected' ? ' terminated':'') + 
-                        (position === 1 ? ' odd':'')}>
+                        (position%2 === 1 ? ' odd':'')}>
             <div className="left-group">
                 <div id="name">{title}</div>
                 <div id="status"><span className={status}></span> {internship_status_map[status as keyof typeof internship_status_map]}</div>
