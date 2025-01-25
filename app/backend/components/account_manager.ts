@@ -3,6 +3,7 @@ import {Status} from "../utils/status";
 import {QueryResult} from "pg";
 import {saveBase64ToFile} from "../utils/exportBase64ToFile";
 import fs from "fs/promises";
+import {SuggestionManager} from "./suggestion_manager";
 
 export class AccountManager {
 
@@ -265,7 +266,11 @@ export class AccountManager {
                     WHERE tu.user_email = $1
                 `;
                 const result = await pool.query(tagsQuery, [email]);
-                return result.rows.map(row => row.description);
+
+                let tags = result.rows.map(row => row.description);
+                await new SuggestionManager().suggest_student_to_companies(tags, email);
+
+                return tags;
             } catch (error) {
                 await pool.query('ROLLBACK'); // Rollback the transaction on error
                 console.error('Error in add_tag_to_user:', error);
