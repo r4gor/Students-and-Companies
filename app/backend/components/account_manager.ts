@@ -265,10 +265,13 @@ export class AccountManager {
                     LEFT JOIN "tag" t ON tu.tag_id = t.id
                     WHERE tu.user_email = $1
                 `;
-                const result = await pool.query(tagsQuery, [email]);
+                const tagsResult = await pool.query(tagsQuery, [email]);
 
-                let tags = result.rows.map(row => row.description);
-                await new SuggestionManager().suggest_student_to_companies(tags, email);
+                let tags = tagsResult.rows.map(row => row.description);
+
+
+                if( await this.isStudent(email) )
+                    await new SuggestionManager().suggest_student_to_companies(tags, email);
 
                 return tags;
             } catch (error) {
@@ -281,6 +284,23 @@ export class AccountManager {
             throw new Error('Invalid email or tag');
         }
     }
+
+    private async isStudent(email: string): Promise<boolean> {
+        const query = `
+        SELECT 
+            CASE 
+                WHEN user_type = 's' THEN true
+                ELSE false
+            END AS is_student
+        FROM 
+            public."user"
+        WHERE 
+            email = $1;
+    `;
+        const result = await pool.query(query, [email]);
+        return result.rows.length > 0 ? result.rows[0].is_student : false;
+    }
+
 
     public async remove_tag_from_user(email: string, tag: string): Promise<string[]> {
         if (email && tag) {
