@@ -2,6 +2,7 @@ import "../../main.css"
 import SearchBar from "../search_bar/search_bar";
 import NotificationPanel from "../../notificationpanel/NotificationPanel";
 import NavBar from "../nav_bar/NavBar";
+import UserDropdown from "../user_dropdown/UserDropdown";
 
 export function TopBar () {
 
@@ -15,7 +16,7 @@ export function TopBar () {
 					<SearchBar></SearchBar>
 					<div className="right-group">
 						<NotificationPanel></NotificationPanel>
-						<i className="material-icons">person</i>
+						<UserDropdown></UserDropdown>
 					</div>
 				</div>
 				<NavBar></NavBar>
