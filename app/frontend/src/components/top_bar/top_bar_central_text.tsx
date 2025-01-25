@@ -1,7 +1,7 @@
-import { useState } from "react"
 import NotificationPanel from "../../notificationpanel/NotificationPanel"
 import './top_bar.css'
 import { HiddenSearchBar } from "../search_bar/search_bar"
+import UserDropdown from "../user_dropdown/UserDropdown"
 
 function TopBarCentralText ({text}:{text:string}) {
 
@@ -16,7 +16,7 @@ function TopBarCentralText ({text}:{text:string}) {
 				<div className="right-group">
                     <HiddenSearchBar></HiddenSearchBar>
                     <NotificationPanel></NotificationPanel>
-					<i className="material-icons">person</i>
+					<UserDropdown></UserDropdown>
 				</div>
 			</div>
 		</div>
