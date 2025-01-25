@@ -52,17 +52,17 @@ export class InternshipManager {
     public async get_internship(internshipId: string): Promise<any[]> {
         let internshipsQuery = `
             SELECT
-                i.id,
+                i.id AS id,
                 i.company_email AS company,
-                i.title,
-                i.description,
-                TO_CHAR(i.published, 'YYYY-MM-DD') AS post_date,
-                TO_CHAR(i.application_end, 'YYYY-MM-DD') AS application_end_date,
-                TO_CHAR(i.start, 'YYYY-MM-DD') AS start_date,
-                TO_CHAR(i."end", 'YYYY-MM-DD') AS end_date,
-                i.salary,
-                i.mode,
-                i.location,
+                i.title AS title,
+                i.description AS description,
+                TO_CHAR(i.published, 'YYYY-MM-DD') AS published,
+                TO_CHAR(i.application_end, 'YYYY-MM-DD') AS application_end,
+                TO_CHAR(i.start, 'YYYY-MM-DD') AS start,
+                TO_CHAR(i."end", 'YYYY-MM-DD') AS "end",
+                i.salary AS salary,
+                i.mode AS mode,
+                i.location AS location,
                 COALESCE(STRING_AGG(DISTINCT t.description, ' '), '') AS tags,
                 COUNT(DISTINCT si.student_email) AS applied_students
             FROM
