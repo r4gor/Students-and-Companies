@@ -14,9 +14,15 @@
     .question {
         margin-bottom: 10px;
     }
-    .reply {
+    textarea {
         margin-bottom: 30px;
+        font-family: inherit;
+        font-weight: 200;
         width: 100%;
+        min-height: 30px;
+        border: 2px solid var(--dark-grey);
+        border-radius: 8px;
+        resize: vertical;
     }
 }
 
