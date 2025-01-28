@@ -1,6 +1,6 @@
 import '../main.css'
 import './signin.css'
-import { useState, ChangeEvent } from 'react'; 
+import {useState, ChangeEvent, useEffect} from 'react';
 // import  { redirect } from 'react-router-dom';
 import { useNavigate } from "react-router";
 import { useAppState } from '../appstatecontext/AppStateContext';
@@ -12,7 +12,16 @@ function Signin() {
 		const [credentialsError, setCredentialsError] = useState('');
 
 		let navigate = useNavigate();
-		
+		let appState = useAppState();
+
+		// Redirect to profile if authenticated
+		useEffect(() => {
+			if (appState.isAuthenticated && appState.userEmail && appState.userType) {
+				navigate("/home");
+			}
+		}, [appState]);
+
+
     return (
         <>
 			<div className='signin'>
@@ -60,7 +69,7 @@ function Signin() {
 			</div>
         </>
     )
-    
+
 	async function handle_login() {
 		const data = {
 			email: email,
@@ -74,21 +83,22 @@ function Signin() {
 			},
 			body: JSON.stringify(data) // Convert JSON data to a string and set it as the request body
 		};
-		
+
 		await fetch("http://localhost:4000/api/sign_in", options)
 		.then(response => {
-			if(response.ok) { 
-				useAppState().setUserEmail(email);
-				useAppState().setIsAuthenticated(true);
-				response.json().then((data) => useAppState().setUserType(data.user_type))
-				navigate("/index"); 
-			} 
-			else { 
-				response.json()
-				.then((data) => {
-					setCredentialsError(data.message)
+			if (response.ok) {
+				response.json().then((data) => {
+					appState.setUserType(data.user_type);
+					appState.setUserEmail(email);
+					appState.setIsAuthenticated(true);
 				})
-		 	}
+				// navigate("/home");
+			} else {
+				response.json()
+					.then((data) => {
+						setCredentialsError(data.message)
+					})
+			}
 		})
 		.catch(console.error)
 	}
