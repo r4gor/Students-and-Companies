@@ -247,6 +247,54 @@ export class InternshipManager {
     }
 
     /**
+     * Fetches all the accepted candidates email of passed internship
+     * @param internship_id target internship
+     * @returns a Promise containing an array of strings,
+     * else an error status if the query fails
+     */
+    public async fetch_internship_accepted_candidates(internship_id:string) : Promise<string[] | Status>  {
+        try {
+            let result = await pool.query(
+                `
+                SELECT student_email
+                FROM student_internship
+                WHERE internship_id = $1 AND status = 'accepted'
+                `,[internship_id]
+            )
+            return result.rows.map(tuple => tuple.student_email)
+        } catch (err) {
+            console.log(`[server]: (query error) (fetch company internship) ${err}`);
+            return Status.error;
+        }
+    }
+
+    /**
+     * Close the interview phase of passed internship by changing its status
+     * @param internship_id internship to update
+     * @returns an async Promise containing: an ok Status if the internship is updated
+     * an error Status if an error occurs in the query
+     */
+    public async close_interview_phase(internship_id:string) : Promise<Status> {
+        try {
+            let result = await pool.query(
+                `
+                UPDATE internship
+                SET status = 'interview'
+                WHERE "id" = $1
+                `,
+                [internship_id]
+            )
+            if(result.rowCount !== 1)
+                throw new Error('Internship doesn\'t exists')
+            return Status.ok
+        }
+        catch(err) {
+            console.log(`[server]: (query error) (close internship) ${err}`);
+            return Status.error;
+        }
+    }
+
+    /**
      * Close internship with passed id
      * @param internship_id internship id to close
      * @returns a Promise containing an ok Status if the internship has been closed
@@ -272,6 +320,21 @@ export class InternshipManager {
         }
     }
 
+    public async get_internship_name(internship_id:string) : Promise<string | Status>  {
+        try {
+            let result = await pool.query(
+                `
+                SELECT title
+                FROM internship
+                WHERE "id" = $1
+                `,[internship_id]
+            )
+            return result.rows[0].title
+        } catch (err) {
+            console.log(`[server]: (query error) (fetch company internship) ${err}`);
+            return Status.error;
+        }
+    }
     /**
      * fetch all candididates related to a given internship
      * @param id number uniquely identifying the internship
