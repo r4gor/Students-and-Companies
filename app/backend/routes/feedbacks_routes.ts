@@ -3,7 +3,7 @@ import FeedbackController from '../controllers/feedbacks_controller';
 
 export const feedbacks_route = Router();
 
-feedbacks_route.get('/fetch', (req, res) => {
+feedbacks_route.get('/fetch/questions', (req, res) => {
     new FeedbackController(req, res).fetch_feedback_questions();
 });
 
