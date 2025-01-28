@@ -74,7 +74,7 @@ createRoot(document.getElementById('root')!).render(
                       }
                   />
                   <Route
-                      path="/search_page"
+                      path="/search_page/:query?"
                       element={
                           <ProtectedRoute>
                               <SearchPage />

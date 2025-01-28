@@ -1,5 +1,5 @@
 import { Status } from '../utils/status';
-import { SearchEngine } from '../components/search_engine';
+import { SearchEngine, SearchQueryParams } from '../components/search_engine';
 import { Controller } from './controller'
 
 export class InternshipBrowsingController extends Controller {
@@ -15,39 +15,36 @@ export class InternshipBrowsingController extends Controller {
 
     private async handle_query() {
         let body = this.req.query;
-        let text: string = (body.text as string).toLowerCase();
-        let orderby: string = (body.orderby as string).toLowerCase();
-        let ascending: boolean = Number(body.ascending as string) == 0 ? false:true;
-        let salary: number = Number(body.salary)
-        let duration: number = Number(body.duration)
-        let mode: string = (body.mode as string).toLowerCase();
-        let tags: string[] = body.tags !== '' ? (body.tags as string).split(' ') as string[] : [];
+        let query_params: SearchQueryParams = {
+            user:       body.user as string,
+            text:       (body.text as string).toLowerCase(),
+            orderby:    (body.orderby as string).toLowerCase(),
+            ascending:  Number(body.ascending as string) == 0 ? false:true,
+            salary:     Number(body.salary),
+            duration:   Number(body.duration),
+            mode:       (body.mode as string).toLowerCase(),
+            tags:       body.tags !== '' ? (body.tags as string).split(' ') as string[] : []
+        }
 		
 		// bad params check
 		if (body == undefined ||
-            text == undefined ||
-            orderby == undefined ||
-            ascending == undefined ||
-            salary == undefined ||
-            duration == undefined ||
-            mode == undefined ||
-            tags == undefined
+            Object.values(query_params).reduce((acc,val) => val == undefined || acc,false)
         ) {
 			this.res.status(400).json({ message: "Bad request" });
 			return;
 		}
         
-        if (!SearchEngine.order_by_valid_values.includes(orderby)) {
-			this.res.status(400).json({ message: "Invalid order by parameter: " + orderby });
+        if (!SearchEngine.order_by_valid_values.includes(query_params.orderby)) {
+			this.res.status(400).json({ message: "Invalid order by parameter: " + query_params.orderby });
 			return;
 		}
 
-        if (!SearchEngine.mode_valid_values.includes(mode)) {
-			this.res.status(400).json({ message: "Invalid mode parameter: " + mode });
+        if (!SearchEngine.mode_valid_values.includes(query_params.mode)) {
+			this.res.status(400).json({ message: "Invalid mode parameter: " + query_params.mode });
 			return;
 		}
         
-        let result: Array<any> | Status = await new SearchEngine().get_internships(text,orderby,ascending,salary,duration,mode,tags);
+        let result: Array<any> | Status = await new SearchEngine().get_internships(query_params);
         if(result == Status.error) {
             this.res.status(400).json({message: "Internal server error"})
             return;
