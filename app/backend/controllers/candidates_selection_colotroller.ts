@@ -57,7 +57,23 @@ export class CandidateSelectionController extends Controller {
         if (result === Status.error) {
             this.res.status(500).json({ message: `Error setting status to '${status}' for candidate '${student_email}' in internship '${internship_id}'`});
         } else {
-            console.dir(result);
+            this.res.status(200).json(JSON.stringify(result));
+        }
+    }
+
+    async post_candidate_replies(): Promise<void> {
+        if (this.req.body.replies === undefined || this.req.body.email === undefined) {
+            this.res.status(400).json({ message: `Bad request: missing field`})
+            return;
+        }
+        
+        let student_email: string = this.req.body.email;
+        let replies: Array<{id:number, answer:string}> = this.req.body.replies;
+        let result: Status = await this.internshipManager.post_candidate_replies(student_email, replies);
+
+        if (result === Status.error) {
+            this.res.status(500).json({ message: `Error posting replies for candidate '${student_email}'`});
+        } else {
             this.res.status(200).json(JSON.stringify(result));
         }
     }

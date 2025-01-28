@@ -20,8 +20,31 @@ type ReplyType = {
     answer: string,
 }
 
+function Module(index: number, question: QuestionType, init_reply: string, set_reply: Function) {
+    const [_, setReply] = useState(init_reply);
+    const question_index = Intl.NumberFormat("en-IN",{minimumIntegerDigits: 2}).format(index+1);
+    
+    return (
+        <div key={index} className="module" >
+            <div className="question">{question_index}. {question.text}</div>
+            <textarea 
+                className="reply" 
+                wrap="soft"
+                cols={80}
+                rows={4}
+                defaultValue={init_reply}
+                // value={reply}
+                onChange={(e) => {
+                    setReply(e.target.value);
+                    set_reply(question.id, e.target.value);
+                }}>
+            </textarea>
+        </div>
+    )
+}
+
 function InterviewForm() {
-    const [replies, setReplies] = useState([] as Array<ReplyType>);
+    const [replies, setReplies] = useState(new Map<number, string>());
 
     const params = useParams();
     const state = useLocation().state === undefined || useLocation().state === null ? {} : useLocation().state;
@@ -38,12 +61,43 @@ function InterviewForm() {
                 console.dir(res);
                 return;
             }
-            res.json().then(data => setReplies(JSON.parse(data) as Array<ReplyType>))
-        })
+            res.json().then(data => setReplies(
+                (JSON.parse(data) as Array<ReplyType>)
+                .reduce((acc, reply) => {
+                    acc.set(reply.id, reply.answer);
+                    return acc;
+                }, new Map<number, string>())
+            ));
+        }).catch(console.error)
     }
 
-    console.log(useLocation());    
-    
+    async function post_replies(): Promise<void> {
+		const options = {
+			method: 'POST',
+			headers: {
+    			'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+			    email: candidate.email,
+			    replies: [...replies.entries()].map(value => ({id:value[0], answer:value[1]}))
+			})
+		};
+        await fetch(`http://localhost:4000/api/candidates_selection/post/replies`, options)
+        .then(res => {
+            if(!res.ok) {
+                console.dir(res);
+                return;
+            }
+            console.log('replies posted!')
+        }).catch(console.error)
+    }
+
+    function set_reply(id: number, value: string) {
+        setReplies(replies.set(id, value));
+    }
+
+    useEffect(() => {fetch_replies()}, []);
+
     return (
         <>
     		<div className="inner-box-section top-inner-box-section">
@@ -55,9 +109,19 @@ function InterviewForm() {
     			    Candidate {candidate.first_name} {candidate.last_name} ({email})
     			</div>
     		</div>
+    	    <div className="inner-box-section">
+        	    {questions.map((q,i) => {
+        	        let reply = replies.has(q.id) ? replies.get(q.id) as string : "";
+        	        return Module(i, q, reply, set_reply);
+        	    })}
+        	    <div className="submit-container">
+    				<button type="button" className="std-button" id="submit" onClick={() => post_replies()}>
+    				    submit
+    				</button>
+        	    </div>
+    	    </div>
     	</>
     )
 }
 
 export default InterviewForm;
-

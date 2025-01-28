@@ -89,7 +89,7 @@ export class InternshipManager {
      * fetch all candididates related to a given internship
      * @param id number uniquely identifying the internship
      * @returns a promise of an array of candidates (as defined by CandidateType) 
-     * or Status.error if something went wrong during the fetch
+     * or Status.error if something went wrong during the query
      */
     public async fetch_candidates(id: number): Promise<Status.error | Array<CandidateType>> {
         return await pool.query(`
@@ -113,11 +113,11 @@ export class InternshipManager {
      * fetch the interview questions of a given internship
      * @param id number uniquely identifying the internship
      * @returns a promise of an array of questions (as defined by QuestionType) 
-     * or Status.error if something went wrong during the fetch
-     */
-    public async fetch_interview_questions(id: number): Promise<Status.error | Array<QuestionType>> {
+     * or Status.error if something went wrong during the query
+     */    
+     public async fetch_interview_questions(id: number): Promise<Status.error | Array<QuestionType>> {
         return await pool.query(`
-            SELECT id, question FROM interview_question WHERE internship_id=${id}
+            SELECT id, question AS text FROM interview_question WHERE internship_id=${id}
             ORDER BY id
         `).then(res => {
             if (res.rowCount === null) {
@@ -136,13 +136,13 @@ export class InternshipManager {
      * @param id number uniquely identifying the internship
      * @param email candidate's email 
      * @returns a promise of an array of replies (as defined by ReplyType) 
-     * or Status.error if something went wrong during the fetch
+     * or Status.error if something went wrong during the query
      */
     public async fetch_candidate_replies(id: number, email: string): Promise<Status.error | Array<ReplyType>> {
         return await pool.query(`
-            SELECT question_id, answer
+            SELECT id, answer
             FROM interview_question JOIN reply ON id = question_id 
-            WHERE internship_id=${id} AND student_email = ${email}
+            WHERE internship_id=${id} AND student_email='${email}'
             ORDER BY question_id
         `).then(res => {
             if (res.rowCount === null) {
@@ -162,13 +162,51 @@ export class InternshipManager {
      * @param email candidate's email 
      * @param status candidate's status 
      * @returns a promise of an array of replies (as defined by ReplyType) 
-     * or Status.error if something went wrong during the fetch
+     * or Status.error if something went wrong during the query
      */
     public async set_candidate_status(id: number, email: string, status: string): Promise<Status> {
         return await pool.query(`
             UPDATE student_internship SET status='${status}' 
             WHERE internship_id=${id} AND student_email='${email}'
         `).then(_ => Status.ok)
+        .catch(err => {
+            console.error(err);
+            return Status.error;
+        });
+    }
+    
+    /**
+     * fetch the replies of a candidate related to the form of an internship
+     * @param email candidate's email 
+     * @param replies array of replyType about the answers give a the interview form 
+     * @returns a promise of the result of the query
+     */
+    public async post_candidate_replies(email: string, replies:Array<ReplyType>): Promise<Status> {
+        let query = 
+        `CREATE TEMPORARY TABLE reply_updates (
+            question_id INTEGER NOT NULL,
+            student_email VARCHAR(255) NOT NULL,
+            answer TEXT NOT NULL
+        );\n` 
+        + replies.map((reply) => `
+            INSERT INTO reply_updates (question_id, student_email, answer)
+            VALUES (${reply.id}, '${email}', '${reply.answer}');\n
+        `).join("")
+        + `
+            MERGE INTO reply r
+            USING reply_updates u
+            ON r.question_id = u.question_id AND r.student_email = u.student_email
+            WHEN MATCHED THEN 
+                UPDATE SET answer = u.answer
+            WHEN NOT MATCHED THEN 
+                INSERT (question_id, student_email, answer)
+                VALUES (u.question_id, u.student_email, u.answer);
+
+            DROP TABLE reply_updates; 
+        `;
+        console.log(query)
+        return await pool.query(query)
+        .then(_ => Status.ok)
         .catch(err => {
             console.error(err);
             return Status.error;
