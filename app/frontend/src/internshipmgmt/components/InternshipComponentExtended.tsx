@@ -83,13 +83,14 @@ function InternshipComponentExtendedInterview({info}:{info:InternshipInformation
 
 function InternshipComponentExtendedOngoing({info}:{info:InternshipInformation}) {
     let is_ended = ((new Date()) >= info.end_date)
+    const navigate = useNavigate()
+
 
     function on_open_complaint() {
         //TODO:add implementation
     }
 
     function on_close_internship() {
-        const navigate = useNavigate()
         let url = new URL('http://localhost:4000/api/internship_management/close_internship')
         url.search = format_search_parameters({
             id: info.id
@@ -114,8 +115,13 @@ function InternshipComponentExtendedOngoing({info}:{info:InternshipInformation})
 }
 
 function InternshipComponentExtendedTerminated() {
+    function on_leave_feedback() {
+        //TODO: add implementation
+    }
+
     return (
         <>
+        <button type="button" className="std-button" onClick={on_leave_feedback}>Leave feedback</button>
         </>
     )
 }
