@@ -5,6 +5,13 @@ function InternshipComponent({title, status, position}: {title:string,status:str
                                     'accepted':'accepted', 
                                     'rejected': 'rejected', 
                                     'finished': 'terminated'}
+    function on_open_complaint() {
+        //TODO: add implementation
+    }
+
+    function on_leave_feedback() {
+        //TODO: add implementation
+    }
     return (
         <>
         <div className={"internship-component" + 
@@ -14,7 +21,8 @@ function InternshipComponent({title, status, position}: {title:string,status:str
                 <div id="name">{title}</div>
                 <div id="status"><span className={status}></span> {internship_status_map[status as keyof typeof internship_status_map]}</div>
             </div>
-            {status === 'accepted' && (<button type="button" className="std-button small" id="profile">Open complaint</button>)}
+            {status === 'accepted' && (<button type="button" className="std-button small" id="complaint" onClick={on_open_complaint}>Open complaint</button>)}
+            {status === 'finished' && (<button type="button" className="std-button small" id="feedback" onClick={on_leave_feedback}>Leave feedback</button>)}
         </div>
         </>
     )
