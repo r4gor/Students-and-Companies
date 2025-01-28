@@ -1,0 +1,33 @@
+.inner-container {
+    padding-left: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.inner-container #name {
+    flex-grow: 1;
+}
+
+.module {
+    .question {
+        margin-bottom: 10px;
+    }
+    textarea {
+        margin-bottom: 30px;
+        font-family: inherit;
+        font-weight: 200;
+        width: 100%;
+        min-height: 30px;
+        border: 2px solid var(--dark-grey);
+        border-radius: 8px;
+        resize: vertical;
+    }
+}
+
+.submit-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}

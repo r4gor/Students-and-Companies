@@ -3,17 +3,23 @@ import './signup.css'
 import Email_Input from "./utils/Email_Input.tsx";
 import User_Type from "./utils/User_Type.tsx";
 import {ChangeEvent, useState} from "react";
-import { useAppState } from '../appstatecontext/AppStateContext'; // Import the custom hook
+import { useAppState } from '../appstatecontext/AppStateContext';
+import {Navigate} from "react-router-dom"; // Import the custom hook
 
 
 function Signup () {
     // Shared app state
-    const {userEmail, isAuthenticated, userType, setUserType, setUserEmail, setIsAuthenticated} = useAppState();
+    const {isAuthenticated, userEmail, userType, setUserType, setUserEmail, setIsAuthenticated} = useAppState();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
     const [university, setUniversity] = useState('');
+
+    // Redirect to profile if authenticated
+    if (isAuthenticated && userEmail && userType) {
+        return <Navigate to="/profile" replace />;
+    }
 
 
     const handleSignup = async () => {
@@ -60,69 +66,65 @@ function Signup () {
         } else {
             setUserEmail(email);
             setIsAuthenticated(true);
-            window.location.href = '/profile';
+            window.location.href = '/edit_profile';
         }
     };
 
-    if (userEmail && isAuthenticated) {
-        window.location.href = '/edit_profile';
 
-    } else {
-        return (
-            <>
-                <div className='signup'>
-                    <div className="main-flex-container">
-                        <div className="central-container">
-                            <div id="title">
-                                Welcome to <b>S&C</b>
-                            </div>
-                            <div className="main-content-container">
-
-                                <User_Type setUserType={setUserType} setUniversity={setUniversity}/>
-
-                                <Email_Input setEmail={setEmail}/>
-
-                                <div className="input-container" id="password">
-                                    <div id="label">
-                                        Password
-                                    </div>
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        id="password"
-                                        value={password}
-                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                                    />
-                                </div>
-                                <div className="input-container" id="rep-password">
-                                    <div id="label">
-                                        Repeat Password
-                                    </div>
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        id="rep-password"
-                                        value={repeatPassword}
-                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setRepeatPassword(e.target.value)}
-                                    />
-                                </div>
-                                <div className="button-container">
-                                    <button
-                                        type="button"
-                                        id="signup"
-                                        onClick={handleSignup}
-                                    >
-                                        Sign Up
-                                    </button>
-                                </div>
-                            </div>
-
+    return (
+        <>
+            <div className='signup'>
+                <div className="main-flex-container">
+                    <div className="central-container">
+                        <div id="title">
+                            Welcome to <b>S&C</b>
                         </div>
+                        <div className="main-content-container">
+
+                            <User_Type setUserType={setUserType} setUniversity={setUniversity}/>
+
+                            <Email_Input setEmail={setEmail}/>
+
+                            <div className="input-container" id="password">
+                                <div id="label">
+                                    Password
+                                </div>
+                                <input
+                                    type="password"
+                                    name="password"
+                                    id="password"
+                                    value={password}
+                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                                />
+                            </div>
+                            <div className="input-container" id="rep-password">
+                                <div id="label">
+                                    Repeat Password
+                                </div>
+                                <input
+                                    type="password"
+                                    name="password"
+                                    id="rep-password"
+                                    value={repeatPassword}
+                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setRepeatPassword(e.target.value)}
+                                />
+                            </div>
+                            <div className="button-container">
+                                <button
+                                    type="button"
+                                    id="signup"
+                                    onClick={handleSignup}
+                                >
+                                    Sign Up
+                                </button>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-            </>
-        )
-    }
+            </div>
+        </>
+    )
 }
 
 export default Signup

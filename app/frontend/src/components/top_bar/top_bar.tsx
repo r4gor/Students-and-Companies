@@ -3,7 +3,7 @@ import SearchBar from "../search_bar/search_bar";
 import NotificationPanel from "../../notificationpanel/NotificationPanel";
 
 export function TopBar () {
-	
+
     return (
         <>
 			<div className="top_bar">
@@ -32,7 +32,7 @@ export function TopBarCentralText ({text}:{text:string}) {
 				</div>
 				<div className="top-central-text">{text}</div>
 				<div className="right-group">
-					<i className="material-icons">search</i>	
+					<i className="material-icons">search</i>
 					<i className="material-icons">notifications_none</i>
 					<i className="material-icons">person</i>
 				</div>
