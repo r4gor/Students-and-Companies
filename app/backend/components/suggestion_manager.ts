@@ -34,4 +34,35 @@ export class SuggestionManager {
         }
 
     }
+
+    public async suggest_internship_to_students(tags: string[], internshipId: string, internshipTitle: string): Promise<void> {
+        if (!tags.length) return;
+
+        // Query to fetch students who match at least one tag
+        const query = `
+            SELECT DISTINCT u.email
+            FROM public."user" u
+                     INNER JOIN public.tag_user tu ON u.email = tu.user_email
+                     INNER JOIN public.tag t ON tu.tag_id = t.id
+            WHERE u.user_type = 's'
+              AND t.description = ANY ($1::text[])
+        `;
+
+        try {
+            const result = await pool.query(query, [tags]);
+            const students = result.rows;
+
+            if (students.length === 0) return;
+
+            const receivers = students.map((student) => student.email);
+            const title = `New Internship Opportunity: ${internshipTitle}`;
+            const content = `An internship matching your interests is available. [View details](/internship/${internshipId})`;
+
+            // Post notifications to students
+            await new NotificationManager().post_notifications(receivers, title, content, undefined);
+        } catch (err) {
+            console.error("Error in suggest_internship_to_students:", err);
+        }
+    }
+
 }
