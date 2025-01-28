@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import '../internshipMgmt.css'
 
 function InternshipComponent({id,title, status, position}: {id:string,title:string,status:string, position:number}) {
@@ -5,8 +6,9 @@ function InternshipComponent({id,title, status, position}: {id:string,title:stri
                                     'accepted':'accepted', 
                                     'rejected': 'rejected', 
                                     'finished': 'terminated'}
+    const navigate = useNavigate()
     function on_open_complaint() {
-        //TODO: add implementation
+        navigate('/open_complaint/'+id)
     }
 
     function on_leave_feedback() {
