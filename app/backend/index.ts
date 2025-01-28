@@ -13,7 +13,7 @@ import cors from "cors";
 import internship_management_router from "./routes/internship_management_routes";
 import profile_routes from "./routes/profile_routes";
 import single_internship_routes from "./routes/single_internship_routes";
-import complaint_router from "routes/complaints_routes";
+import complaint_router from "./routes/complaints_routes";
 
 const app: Express = express();
 const port: string = process.env.PORT || "4001";

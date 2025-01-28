@@ -1,5 +1,5 @@
-import pool from "utils/db_pool";
-import { Status } from "utils/status";
+import pool from "../utils/db_pool";
+import { Status } from "../utils/status";
 
 export class ComplaintManager {
 

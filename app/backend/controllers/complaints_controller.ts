@@ -1,6 +1,6 @@
-import { ComplaintManager } from "components/complaint_manager";
+import { ComplaintManager } from "../components/complaint_manager";
 import { Controller } from "./controller";
-import { Status } from "utils/status";
+import { Status } from "../utils/status";
 
 export class ComplaintController extends Controller {
     public async handle(): Promise<void> {
