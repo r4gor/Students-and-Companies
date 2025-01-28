@@ -24,17 +24,20 @@ function CompanyInternshipmgmt() {
                 <div className="central-container">
                     <div className="box-background">
                         <div className="inner-box-section">
+                            <div className="no-internships">
+                                <a href={'/create_internship'}><button type="button" className="std-button">Create new internship</button></a>
+                            </div>
                             {
                                 internships.length >= 1 &&
-                                internships.map((info, idx) => 
-                                    (<InternshipComponentExtended key={idx} info={info} position={idx}></InternshipComponentExtended>
+                                internships.map((info, idx) =>
+                                    (<InternshipComponentExtended key={idx} info={info}
+                                                                  position={idx}></InternshipComponentExtended>
                                     ))
                             }
                             {
                                 internships.length === 0 && (
                                     <div className="no-internships">
                                         <div id="content">Your internship list is empty!</div>
-                                        <button type="button" className="std-button">Create</button>
                                     </div>
                                 )
                             }
@@ -47,7 +50,7 @@ function CompanyInternshipmgmt() {
     )
 }
 
-function fetch_company_internships(user:string):Promise<Response> {
+function fetch_company_internships(user: string): Promise<Response> {
     let url = new URL('http://localhost:4000/api/internship_management/fetch_company_internships?user='+user)
     return fetch(url, { 
         method: "GET"
