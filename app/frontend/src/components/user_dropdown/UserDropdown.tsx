@@ -30,7 +30,7 @@ function UserDropdown() {
                 <div className="user-dropdown-wrapper">
                     <div className="user-dropdown-panel" >
                         <div className="user-dropdown-header">
-                            <div id="email">{user_email}</div>
+                            <div id="email"><a href={'/profile/' + user_email}>{user_email}</a></div>
                             <div id="type">{user_type_map[user_type as keyof typeof user_type_map]} account</div>
                             <hr/>
                         </div>

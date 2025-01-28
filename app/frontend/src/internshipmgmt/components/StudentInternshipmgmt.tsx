@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { TopBarCentralText } from "../../components/top_bar/top_bar";
+import TopBarCentralText from "../../components/top_bar/top_bar_central_text.tsx";
 import InternshipComponent from "./InternshipComponent";
 import { useAppState } from "../../appstatecontext/AppStateContext";
 

@@ -36,13 +36,14 @@ function SearchBar() {
 								onKeyDown={(e) => handle_search_input(e, search_bar_content, navigate)}
 						/>
 						<div className="search-icon-div">
-                            <i className="material-icons" onClick={() => perform_search(search_bar_content,navigate)}>search</i>
-                        </div>
+							<i className="material-icons"
+							   onClick={() => perform_search(search_bar_content, navigate)}>search</i>
+						</div>
 					</div>
 				</div>
 			</div>
-        </>
-    )
+		</>
+	)
 }
 
 export function HiddenSearchBar() {
@@ -71,7 +72,7 @@ function perform_search(text:string, navigate:NavigateFunction) {
 	});
 }
 
-function handle_search_input(evt:any, text:string, navigate:NavigateFunction) {
+function handle_search_input(evt:any, text:string, navigate: NavigateFunction) {
 	if(evt.key === 'Enter') {
 		perform_search(text,navigate)
 	}
