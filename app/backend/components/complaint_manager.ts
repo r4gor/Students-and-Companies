@@ -44,7 +44,7 @@ export class ComplaintManager {
             await pool.query(
                 `
                 INSERT INTO complaint (user_email, internship_id, description, recipient)
-                VALUES ($1, $2, $3)
+                VALUES ($1, $2, $3, $4)
                 `, [user_email, internship_id, description, recipient]
             )
             return Status.ok

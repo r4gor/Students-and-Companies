@@ -5,6 +5,7 @@ import './createInternship.css'
 import { useAppState } from '../appstatecontext/AppStateContext';
 import FormField from './components/FormField';
 import ConfirmDialog from './components/ConfirmDialog';
+import { format_search_parameters } from '../searchpage/handle_search.ts';
 
 function CreateInternship ()  {
 	const user_email = useAppState().userEmail;
@@ -148,22 +149,6 @@ async function post_internship(parameters: Object): Promise<Response> {
         method: "POST"
     });
 }
-//TODO: merge with the one in branch dev_internship_browsing
-/**
- * Converts a set of parameters into a URL query
- * @param parameters parameters Object to be converted
- * @param allow_empty default to true, allows to pass empty parameters (such as empty strings)
- * @returns string that contains all parameters formatted as a URL query
- */
-function format_search_parameters(parameters: Object, allow_empty:boolean=true) : string {
-    let search_params: URLSearchParams = new URLSearchParams();
-    Object.entries(parameters).forEach(([key, value]: [any,any]) => {
-        if (!!value || allow_empty) {
-            search_params.append(key, value);
-        }
-    });
-    return search_params.toString();
-} 
 
 export default CreateInternship
 
