@@ -16,6 +16,7 @@ import ErrorPage from './errorpage/ErrorPage';
 import EditProfile from "./editprofile/EditProfile.tsx";
 import Single_internship_page from "./single_internship_page/Single_internship_page.tsx";
 import { Navigate } from 'react-router-dom';
+import About from "./about/About.tsx";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     const {isAuthenticated, userEmail, userType, setUserType, setUserEmail, setIsAuthenticated} = useAppState();
@@ -109,6 +110,14 @@ createRoot(document.getElementById('root')!).render(
                       element={
                           <ProtectedRoute>
                               <InternshipManagement />
+                          </ProtectedRoute>
+                      }
+                  />
+                  <Route
+                      path="/about"
+                      element={
+                          <ProtectedRoute>
+                              <About />
                           </ProtectedRoute>
                       }
                   />
