@@ -3,7 +3,7 @@ import './profile.css'
 import {useAppState} from "../appstatecontext/AppStateContext.tsx";
 import {ChangeEvent, useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import {TopBarCentralText} from "../components/top_bar/top_bar.tsx";
+import TopBarCentralText from "../components/top_bar/top_bar_central_text.tsx";
 
 function Profile ()  {
 
@@ -405,7 +405,7 @@ function Profile ()  {
 
                                 {userEmail === profileUserEmail ? (
                                     <>
-                                        <a href={'edit_profile'}>
+                                        <a href={'/edit_profile'}>
                                             <button type="button" className="std-button" id="edit_profile">
                                                 Edit Profile
                                             </button>

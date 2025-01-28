@@ -1,6 +1,6 @@
 import '../main.css'
 import './Single_internship_page.css'
-import {TopBarCentralText} from "../components/top_bar/top_bar.tsx";
+import TopBarCentralText from "../components/top_bar/top_bar_central_text.tsx";
 import InternshipPreview from "../searchpage/components/InternshipPreview.tsx";
 import {InternshipInformation} from "../searchpage/utils/internship_information.ts";
 import {useParams} from "react-router-dom";

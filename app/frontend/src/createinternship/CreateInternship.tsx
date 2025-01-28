@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from 'react'
-import { TopBarCentralText } from '../components/top_bar/top_bar'
+import TopBarCentralText from '../components/top_bar/top_bar_central_text.tsx'
 import '../main.css'
 import './createInternship.css'
 import { useAppState } from '../appstatecontext/AppStateContext';
