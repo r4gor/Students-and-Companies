@@ -1,6 +1,6 @@
 import '../internshipMgmt.css'
 
-function InternshipComponent({title, status, position}: {title:string,status:string, position:number}) {
+function InternshipComponent({id,title, status, position}: {id:string,title:string,status:string, position:number}) {
     const internship_status_map = { 'applied':'waiting for selection',
                                     'accepted':'accepted', 
                                     'rejected': 'rejected', 
