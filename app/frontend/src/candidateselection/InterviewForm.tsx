@@ -2,6 +2,7 @@ import '../main.css';
 import './interviewForm.css';
 import { useState, useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
+import { useNavigate } from "react-router";
 
 type CandidateType = {
     email: string,
@@ -45,6 +46,7 @@ function Module(index: number, question: QuestionType, init_reply: string, set_r
 function InterviewForm() {
     const [replies, setReplies] = useState(new Map<number, string>());
 
+    const navigate = useNavigate();
     const params = useParams();
     const state = useLocation().state === undefined || useLocation().state === null ? {} : useLocation().state;
     const internship_id: number = params.internship_id === undefined ? 1 : Number.parseInt(params.internship_id);
@@ -87,7 +89,9 @@ function InterviewForm() {
                 console.dir(res);
                 return;
             }
-            console.log('replies posted!')
+            console.log('replies posted!');
+            navigate("../");
+            
         }).catch(console.error)
     }
 
