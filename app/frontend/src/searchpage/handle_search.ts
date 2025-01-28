@@ -37,7 +37,7 @@ async function fetch_internship_list(parameters: Object): Promise<Response> {
  * @param allow_empty default to true, allows to pass empty parameters (such as empty strings)
  * @returns string that contains all parameters formatted as a URL query
  */
-function format_search_parameters(parameters: Object, allow_empty:boolean=true) : string {
+export function format_search_parameters(parameters: Object, allow_empty:boolean=true) : string {
     let search_params: URLSearchParams = new URLSearchParams();
     Object.entries(parameters).forEach(([key, value]: [any,any]) => {
         if (!!value || allow_empty) {
