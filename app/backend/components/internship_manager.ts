@@ -1,6 +1,7 @@
 import { Status } from "../utils/status";
 import pool from "../utils/db_pool";
 import { format_date_for_database, get_current_datetime } from "../utils/date_utils";
+import {SuggestionManager} from "./suggestion_manager";
 
 type InternshipType = {
     id: number,
@@ -60,6 +61,8 @@ export class InternshipManager {
             if(!tags.length)
                 return Status.ok;
             await this.insert_new_tags(result.rows[0].id,tags)
+
+            await new SuggestionManager().suggest_internship_to_students(tags, result.rows[0].id, result.rows[0].title)
             return Status.ok
         } catch (err) {
             console.log(`[server]: (query error) (create internship) ${err}`);
@@ -115,7 +118,7 @@ export class InternshipManager {
                     ${salary},
                     '${mode}',
                     '${location}')
-            RETURNING id
+            RETURNING id, title
             `
         );
     }
