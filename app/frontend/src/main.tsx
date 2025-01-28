@@ -9,6 +9,9 @@ import SearchPage from './searchpage/SearchPage';
 import InternshipManagement from './internshipmgmt/InternshipManagement';
 import Signup from './signup/Signup';
 import CreateInternship from './createinternship/CreateInternship';
+import CandidatesHeader from './candidateselection/CandidatesHeader';
+import CandidateSelection from './candidateselection/CandidateSelection';
+import InterviewForm from './candidateselection/InterviewForm';
 import ErrorPage from './errorpage/ErrorPage';
 import EditProfile from "./editprofile/EditProfile.tsx";
 import Single_internship_page from "./single_internship_page/Single_internship_page.tsx";
@@ -89,6 +92,18 @@ createRoot(document.getElementById('root')!).render(
                           </ProtectedRoute>
                       }
                   />
+                  <Route
+                      path="/candidates_selection/:internship_id"
+                      element={<ProtectedRoute><CandidatesHeader /></ProtectedRoute>}>
+                      <Route
+                          index path=""
+                          element={<ProtectedRoute><CandidateSelection /></ProtectedRoute>}
+                      />
+                      <Route
+                          path="form/:candidate_email"
+                          element={<ProtectedRoute><InterviewForm /></ProtectedRoute>}
+                      />
+                  </Route>
                   <Route
                       path="/internship_management"
                       element={
