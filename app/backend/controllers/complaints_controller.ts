@@ -47,7 +47,9 @@ export class ComplaintController extends Controller {
         let university_email:string = body.email
         let internship_id:number = Number(body.internship_id)
         let description:string = body.description
-        let result = await new ComplaintManager().post_complaint(university_email, internship_id, description)
+        let recipient = body.recipient === undefined ? null : body.recipient
+
+        let result = await new ComplaintManager().post_complaint(university_email, internship_id, description, recipient)
 
         if(result == Status.error) {
             this.res.status(400).json({message: "Internal server error"})
