@@ -9,7 +9,7 @@ export class InternshipManagementController extends Controller {
         let path = this.req.route.path
         if(path === '/apply_to_internship/')
             this.add_application()
-        else if(path === '/fetch_students_internships/')
+        else if(path === '/fetch_student_internships/')
             this.fetch_students_applications()
         else if(path === '/fetch_company_internships/')
             this.fetch_company_applications()
