@@ -1,3 +1,103 @@
 .create-internship {
-    
+    .inner-box-section {
+        padding: 60px 100px;
+    }
+    .inner-box-section input {
+        border: 2px solid var(--dark-grey);
+        border-radius: 8px;
+        font-family: inherit;
+        font-weight: 200;
+        width: 35%;
+        min-height: 30px;
+    }
+    .inner-box-section input[type=text] {
+        transition: 0.2s;
+    }
+
+    .inner-box-section input[type=text]:focus {
+        border: 2px solid var(--top-cyan);
+    }
+
+    .inner-box-section input[type=date] {
+        padding: 5px;
+        font-weight: 500;
+        width: fit-content;
+    }
+
+    .inner-box-section #label {
+        font-weight: 500;
+        margin: 10px 0;
+    }
+
+    .inner-box-section textarea {
+        font-family: inherit;
+        font-weight: 200;
+        width: 100%;
+        min-height: 30px;
+        border: 2px solid var(--dark-grey);
+        border-radius: 8px;
+        resize: vertical;
+    }
+
+    .inner-box-section .error-label {
+        margin: 3px 0;
+        font-size: 13px;
+        color: var(--no-red);
+    }
+    .inner-box-section .select-wrapper {
+        border: 2px solid var(--dark-grey);
+        border-radius: 8px;
+        width: 35%;
+        margin: 5px 0;
+    }
+    .inner-box-section select {
+        font-family: Roboto, sans-serif;
+        font-weight: 400;
+        background-color: var(--light-grey);
+        cursor: pointer;
+        border: none;
+        padding: 5px;
+        width: 100%;
+        border-radius: 8px;
+    }
+
+    dialog {
+        background-color: transparent;
+        border: none;
+    }
+    dialog::backdrop {
+        background: hsl(0 0% 0% / 30%);
+    }
+    .dialog-container {
+        border: 5px solid var(--dark-grey);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+        min-width: 30em;
+    }
+    .dialog-container .title {
+        width: 100%;
+        text-align: center;
+        font-weight: 500;
+        font-size: 20px;
+        padding: 15px;
+        border-radius: 10px 10px 0 0;
+        background-color: var(--top-cyan);
+    } 
+    .dialog-container .content {
+        border-radius: 0 0 10px 10px;
+        width: 100%;
+        background-color: var(--light-grey);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .dialog-container .content .description {
+        margin: 15px;
+    }
+    .dialog-container .content .std-button {
+        margin: 10px;
+    }
 }
