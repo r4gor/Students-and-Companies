@@ -1,0 +1,27 @@
+.inner-container {
+    padding-left: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.inner-container #name {
+    flex-grow: 1;
+}
+
+.module {
+    .question {
+        margin-bottom: 10px;
+    }
+    .reply {
+        margin-bottom: 30px;
+        width: 100%;
+    }
+}
+
+.submit-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}
