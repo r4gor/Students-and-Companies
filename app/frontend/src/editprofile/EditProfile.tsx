@@ -32,7 +32,7 @@ function EditProfile() {
             return;
         }
 
-        if (userType === "student") {
+        if (userType === "s") {
             if (!firstName || !lastName || !phoneNumber || !dateOfBirth || !password || !repeatPassword) {
                 alert("Please fill in all required fields!");
                 return;
@@ -55,7 +55,7 @@ function EditProfile() {
                 payload.cv = await toBase64(cv);
             }
 
-        } else if (userType === "company" || userType === "university") {
+        } else if (userType === "c" || userType === "u") {
             if (!name || !address || !phoneNumber || !website) {
                 alert("Please fill in all required fields!");
                 return;
@@ -119,7 +119,7 @@ function EditProfile() {
                 let data = await response.json();
                 console.log(data);
                 if (data){
-                    if(userType === "student"){
+                    if(userType === "s"){
                         setFirstName(data[0].first_name || '');
                         setLastName(data[0].last_name || '');
                         setPhoneNumber(data[0].phone_number || '');
@@ -155,7 +155,7 @@ function EditProfile() {
                         Edit Profile
                     </div>
                     <div className="main-content-container">
-                        {userType === "student" && (
+                        {userType === "s" && (
                             <>
                                 <div className="input-container">
                                     <label>First Name</label>
@@ -199,7 +199,7 @@ function EditProfile() {
                             </>
                         )}
 
-                        {(userType === "company" || userType === "university") && (
+                        {(userType === "c" || userType === "u") && (
                             <>
                                 <div className="input-container">
                                     <label>Name</label>
