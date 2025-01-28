@@ -135,7 +135,7 @@ function CreateInternship ()  {
 					</div>
 				</div>
 			</div>
-			<ConfirmDialog visible={internship_created} redirect='/internships'></ConfirmDialog>
+			<ConfirmDialog visible={internship_created} redirect='/internship_management'></ConfirmDialog>
         </div>
         </>
     )

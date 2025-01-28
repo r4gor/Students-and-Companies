@@ -93,6 +93,18 @@ createRoot(document.getElementById('root')!).render(
                       }
                   />
                   <Route
+                      path="/candidates_selection/:internship_id"
+                      element={<ProtectedRoute><CandidatesHeader /></ProtectedRoute>}>
+                      <Route
+                          index path=""
+                          element={<ProtectedRoute><CandidateSelection /></ProtectedRoute>}
+                      />
+                      <Route
+                          path="form/:candidate_email"
+                          element={<ProtectedRoute><InterviewForm /></ProtectedRoute>}
+                      />
+                  </Route>
+                  <Route
                       path="/internship_management"
                       element={
                           <ProtectedRoute>
