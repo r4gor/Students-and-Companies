@@ -1,15 +1,32 @@
 import { InternshipInformation } from "../utils/internship_information"
 import {date_diff_to_sentence, date_to_ddMMyyyy_string, month_diff} from "../../utils/frontend_date_utils"
+import { useAppState } from "../../appstatecontext/AppStateContext";
+import { format_search_parameters } from "../handle_search";
+import { useState } from "react";
 
 function InternshipPreview ({
     info
 }:{
     info:InternshipInformation
 }) {
+    const user_email = useAppState().userEmail;
     let post_date = date_diff_to_sentence(info.post_date)
+    const [applied, setApplied] = useState(false)
 
     function on_apply_to_internship() {
-        //TODO: add implementation
+        if(applied)
+            return
+        let url = new URL('http://localhost:4000/api/internship_management/apply_to_internship')
+        url.search = format_search_parameters({
+            internship_id: info.id,
+            user_email: user_email
+        })
+        fetch(url, {
+            method: "POST"
+        }).then(result => {
+            if(result.status === 200)
+                setApplied(true)
+        });
     }
     return (
         <>
@@ -34,7 +51,7 @@ function InternshipPreview ({
             </div>
             <div className="apply-container">
                 <div className="button-container">
-                    <button type="button" className="std-button" id="apply" onClick={on_apply_to_internship}>Apply</button>
+                    <button type="button" className={"std-button" + (applied ? ' applied':'')} id="apply" onClick={on_apply_to_internship}>{applied ? 'Applied':'Apply'}</button>
                 </div>
                 <div className="application-expire">application closes: {date_to_ddMMyyyy_string(info.application_end_date)}
                 </div>
@@ -46,3 +63,7 @@ function InternshipPreview ({
 }
 
 export default InternshipPreview
+
+function setState(arg0: boolean): [any, any] {
+    throw new Error("Function not implemented.");
+}

@@ -95,4 +95,10 @@
         grid-row: 2;
         grid-column: 2;
     }    
+    button.std-button.applied {
+        cursor: default;
+        border: 3px solid var(--text-grey);
+        background-color: rgb(187, 187, 187);
+        color: var(--light-grey);
+    }
 }

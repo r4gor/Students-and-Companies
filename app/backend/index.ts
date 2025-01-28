@@ -9,6 +9,7 @@ import { search_internships_route } from "./routes/internship_browsing_routes";
 import cors from "cors";
 import sign_up_routes from "./routes/sign_up_routes";
 import edit_profile_routes from "./routes/edit_profile_routes";
+import internship_management_router from "./routes/internship_management_routes";
 import profile_routes from "./routes/profile_routes";
 import single_internship_routes from "./routes/single_internship_routes";
 
@@ -30,6 +31,7 @@ app.use("/api", sign_up_routes);
 app.use("/api", edit_profile_routes);
 app.use("/api/create_internship", create_internship_route);
 app.use("/api/internship_browsing/search_internships", search_internships_route);
+app.use("/api/internship_management", internship_management_router);
 app.use("/api", profile_routes);
 app.use("/api", single_internship_routes);
 
