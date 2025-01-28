@@ -6,7 +6,7 @@ function About() {
     return (
         <>
             <div className="about">
-                <TopBarCentralText text={'Profile'}></TopBarCentralText>
+                <TopBarCentralText text={'About'}></TopBarCentralText>
                 <div className="central-container">
                     <div className="box-background">
                         <p>

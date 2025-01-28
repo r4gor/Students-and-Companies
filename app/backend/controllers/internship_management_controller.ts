@@ -2,7 +2,7 @@ import {Controller} from './controller'
 import {AccountManager} from "../components/account_manager";
 import {Status} from "../utils/status";
 import { InternshipManager } from '../components/internship_manager';
-import { NotificationManager } from 'components/notification_manager';
+import { NotificationManager } from '../components/notification_manager';
 
 export class InternshipManagementController extends Controller {
 
