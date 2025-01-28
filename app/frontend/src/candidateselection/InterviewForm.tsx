@@ -28,7 +28,6 @@ function Module(index: number, question: QuestionType, init_reply: string, set_r
         <div key={index} className="module" >
             <div className="question">{question_index}. {question.text}</div>
             <textarea 
-                className="reply" 
                 wrap="soft"
                 cols={80}
                 rows={4}

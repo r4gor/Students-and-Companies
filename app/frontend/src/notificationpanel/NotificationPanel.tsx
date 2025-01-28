@@ -2,7 +2,7 @@ import "../main.css"
 import "./notification_panel.css"
 
 import {useAppState} from "../appstatecontext/AppStateContext"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type NotificationType = {
     id: number,
@@ -63,7 +63,7 @@ function NotificationPanel ()  {
     const email = useAppState().userEmail;
     const [notifications, setNotifications] = useState([] as Array<NotificationType>);
 	const [visible, setVisible] = useState(false);
-	const [unreadNotifications, setUnreadNotifications] = useState(true);
+	const [unreadNotifications, setUnreadNotifications] = useState(false);
 	
 	function toggle_notifications() {
 		if (!visible) {
@@ -81,7 +81,7 @@ function NotificationPanel ()  {
             }
             res.json().then((data) => {
                 let nots = JSON.parse(data) as Array<NotificationType>;
-                setUnreadNotifications(nots.some(n => !n.read));
+                setUnreadNotifications(!nots.every(n => n.read));
                 if (nots.length > notifications.length) {
                     setNotifications(nots);
                 }
@@ -117,6 +117,8 @@ function NotificationPanel ()  {
         })
         .catch(err => console.error(err));
     }
+
+    useEffect(() => {fetch_notifications()}, []);
 
     return ( 
         <>
