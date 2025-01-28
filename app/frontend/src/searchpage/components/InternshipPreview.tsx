@@ -35,7 +35,7 @@ function InternshipPreview ({
                 <div id="name">{info.title}</div>
                 <div id="post-date">posted {post_date}</div>
             </div>
-            <a href="" target="_blank" id="type"><i className="material-icons">apartment</i>{info.company}</a>
+            <a href={`/profile/${info.company_email}`} target="_blank" id="type"><i className="material-icons">apartment</i>{info.company}</a>
             <div id="tags">{
                 info.tags !== null && info.tags.map((content:any) => 
                     <div className="tag" key={content}>{content}</div>
@@ -63,7 +63,3 @@ function InternshipPreview ({
 }
 
 export default InternshipPreview
-
-function setState(arg0: boolean): [any, any] {
-    throw new Error("Function not implemented.");
-}
