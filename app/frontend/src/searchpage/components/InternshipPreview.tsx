@@ -10,6 +10,7 @@ function InternshipPreview ({
     info:InternshipInformation
 }) {
     const user_email = useAppState().userEmail;
+    const userType = useAppState().userType;
     let post_date = date_diff_to_sentence(info.post_date)
     const [applied, setApplied] = useState(false)
 
@@ -51,7 +52,7 @@ function InternshipPreview ({
             </div>
             <div className="apply-container">
                 <div className="button-container">
-                    <button type="button" className={"std-button" + (applied ? ' applied':'')} id="apply" onClick={on_apply_to_internship}>{applied ? 'Applied':'Apply'}</button>
+                    {userType === 's' && <button type="button" className={"std-button" + (applied ? ' applied':'')} id="apply" onClick={on_apply_to_internship}>{applied ? 'Applied':'Apply'}</button>}
                 </div>
                 <div className="application-expire">application closes: {date_to_ddMMyyyy_string(info.application_end_date)}
                 </div>
