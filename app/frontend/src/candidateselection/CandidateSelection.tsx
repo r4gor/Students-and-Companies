@@ -15,17 +15,19 @@ type QuestionType = {
     text: string,
 }
 
-function CandidateRow(
+function CandidateRow(params: {
     id: number,
     index: number,
     candidate: CandidateType,
+    internship_title: string,
     questions: Array<QuestionType>,
-    set_status: Function) {
+    set_status: Function}) {
      
     const is_interviewed: boolean = false;
     const state = {
-        candidate: candidate,
-        questions: questions,
+        candidate: params.candidate,
+        questions: params.questions,
+        internship_title: params.internship_title,
     };
 
     function container_class(): string {
@@ -33,35 +35,35 @@ function CandidateRow(
     }
 
     function button_accept_class(): string {
-        return "std-button icon-content" + (candidate.status === "accepted" ? " ok" : "");
+        return "std-button icon-content" + (params.candidate.status === "accepted" ? " ok" : "");
     }
     
     function button_reject_class(): string {
-        return "std-button icon-content" + (candidate.status === "rejected" ? " no" : "");
+        return "std-button icon-content" + (params.candidate.status === "rejected" ? " no" : "");
     }
 
     function profile_path(): string {
-        return `/profiles/${candidate.email}`
+        return `/profiles/${params.candidate.email}`
     }
 
     function interview_form_path(): string {
-        return `/candidates_selection/${id}/form/${candidate.email}`
+        return `/candidates_selection/${params.id}/form/${params.candidate.email}`
     }
 
     function handle_click_button_accept() {
-        let status = candidate.status === "accepted" ? "applied" : "accepted";
-        set_status(id, index, status);
+        let status = params.candidate.status === "accepted" ? "applied" : "accepted";
+        params.set_status(params.id, params.index, status);
     }
     
     function handle_click_button_reject() {
-        let status = candidate.status === "rejected" ? "applied" : "rejected";
-        set_status(id, index, status);
+        let status = params.candidate.status === "rejected" ? "applied" : "rejected";
+        params.set_status(params.id, params.index, status);
     }
     
     return (
-		<div key={index} className={container_class()}>
+		<div key={params.index} className={container_class()}>
 			<i className="material-icons small" id="interviewed-ico" title="interviewed">check_circle</i>
-			<div id="name">{candidate.last_name} {candidate.first_name}</div>
+			<div id="name">{params.candidate.last_name} {params.candidate.first_name}</div>
 			<button type="button" className="std-button small" id="profile">
 			    <Link to={profile_path()} target="_blank">View profile</Link>
 			</button>
@@ -168,7 +170,14 @@ function CandidateSelection() {
 					    sync
 					</i>
 				</div>
-			    {candidates.map((c, i) => CandidateRow(internship_id, i, c, questions, set_candidate_status))}
+			    {candidates.map((c, i) => CandidateRow({
+			        id: internship_id, 
+			        index: i, 
+			        candidate: c, 
+			        internship_title: internship_title, 
+			        questions: questions, 
+			        set_status: set_candidate_status
+			    }))}
 			</div>
         </>
     )
