@@ -12,9 +12,13 @@ export class InternshipCreationController extends Controller {
         let application_end_date: Date = new Date(body.application_end_date as string);
         let start_date: Date = new Date(body.start_date as string);
         let end_date: Date = new Date(body.end_date as string);
+		let salary: number = Number(body.salary as string);
+		let mode: string = body.mode as string;
+		let location: string = body.location as string;
+		let tags: string[] = body.tags === undefined ? [] : (body.tags as string).split(' ')
 		
 		// bad params check
-		if (body == undefined) {
+		if (body === undefined) {
 			this.res.status(400).json({ message: "Bad request" });
 			return;
 		}
@@ -22,8 +26,18 @@ export class InternshipCreationController extends Controller {
 			this.res.status(400).json({ message: "Invalid dates"});
 			return;
 		}
-
-		let result = await new InternshipManager().create_internship(email, title, description, application_end_date, start_date, end_date);
+		if(tags.length)
+			tags.forEach((tag) => tag=tag.toLowerCase())
+		let result = await new InternshipManager().create_internship(email, 
+																		title, 
+																		description, 
+																		application_end_date, 
+																		start_date,
+																		end_date,
+																		tags,
+																		salary,
+																		mode,
+																		location);
 		if (result == Status.ok) {
 			this.res.status(200).json({ message: "Internship added successfully"});
 		} else {
