@@ -15,6 +15,10 @@ internship_management_router.get("/fetch_company_internships/", (req: Request, r
     new InternshipManagementController(req, res).handle()
 });
 
+internship_management_router.get("/close_interview_phase/", (req: Request, res: Response) => {
+    new InternshipManagementController(req, res).handle()
+});
+
 internship_management_router.get("/close_internship/", (req: Request, res: Response) => {
     new InternshipManagementController(req, res).handle()
 });

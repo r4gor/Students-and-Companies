@@ -13,6 +13,8 @@ export class InternshipManagementController extends Controller {
             this.fetch_students_applications()
         else if(path === '/fetch_company_internships/')
             this.fetch_company_applications()
+        else if(path === '/close_interview_phase/')
+            this.close_interview_phase()
         else if(path === '/close_internship/')
             this.close_internship()
     }
@@ -83,6 +85,27 @@ export class InternshipManagementController extends Controller {
         }
         else {
             this.res.json(result)
+            return;
+        }
+    }
+
+    private async close_interview_phase() {
+        let body = this.req.query;
+        let internship_id = body.id as string;
+
+        if (body == undefined ||
+            internship_id == undefined
+        ) {
+			this.res.status(400).json({ message: "Bad request" });
+			return;
+		}
+        let result = await new InternshipManager().close_interview_phase(internship_id);
+        if(result == Status.error) {
+            this.res.status(400).json({message: "Internal server error"})
+            return;
+        }
+        else {
+            this.res.status(200).json({message: "Internship interview phase closed successfully"})
             return;
         }
     }
