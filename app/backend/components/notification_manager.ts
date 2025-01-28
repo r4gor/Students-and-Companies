@@ -47,15 +47,13 @@ export class NotificationManager {
         content: string,
         sender: string | undefined, 
     ): Promise<Status> {
-        let sender_col = ", sender";
         if (sender === undefined) {
             sender = ", 'SYSTEM'";
-            sender_col = "";
         } else {
             sender = `, '${sender}'`;
         }
-        let query: string = receivers.map((email, _) => 
-            `INSERT INTO Notification (user_email, title, body, read${sender_col}) 
+        let query: string = receivers.map((email, _) =>
+            `INSERT INTO Notification (user_email, title, body, read, sender)
              VALUES ('${email}', '${title}', '${content}', FALSE${sender});`
         ).join('\n');
         return await pool.query(query)
