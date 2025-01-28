@@ -33,11 +33,11 @@ function SearchBar() {
 								placeholder="Search for an internship..."
 								value={search_bar_content}
 								onChange={(e:ChangeEvent<HTMLInputElement>) => setSearchBarContent(e.target.value)}
-								onKeyDown={(e) => handle_search_input(e, search_bar_content, navigate)}
+								onKeyDown={(e) => handle_search_input(e, search_bar_content)}
 						/>
 						<div className="search-icon-div">
 							<i className="material-icons"
-							   onClick={() => perform_search(search_bar_content, navigate)}>search</i>
+							   onClick={() => perform_search(search_bar_content)}>search</i>
 						</div>
 					</div>
 				</div>
@@ -67,6 +67,7 @@ export function HiddenSearchBar() {
 }
 
 function perform_search(text:string, navigate:NavigateFunction) {
+	// @ts-ignore
 	get_internship_list_http_query_no_filters(text).then((result) => {
 		navigate('/search_page', {state: {result:result, search_bar_content:text}})
 	});
