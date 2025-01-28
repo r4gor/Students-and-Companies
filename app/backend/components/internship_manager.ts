@@ -38,4 +38,55 @@ export class InternshipManager {
         }
     }
 
+    public async get_company_internships(companyEmail: string): Promise<any[]> {
+        let internshipsQuery = `
+            SELECT *
+            FROM "internship"
+            WHERE company_email = $1 AND application_end > now()
+        `;
+
+        let result = await pool.query(internshipsQuery, [companyEmail]);
+
+        return result.rows;
+    }
+    public async get_internship(internshipId: string): Promise<any[]> {
+        let internshipsQuery = `
+            SELECT
+                i.id AS id,
+                i.company_email AS company,
+                i.title AS title,
+                i.description AS description,
+                TO_CHAR(i.published, 'YYYY-MM-DD') AS published,
+                TO_CHAR(i.application_end, 'YYYY-MM-DD') AS application_end,
+                TO_CHAR(i.start, 'YYYY-MM-DD') AS start,
+                TO_CHAR(i."end", 'YYYY-MM-DD') AS "end",
+                i.salary AS salary,
+                i.mode AS mode,
+                i.location AS location,
+                COALESCE(STRING_AGG(DISTINCT t.description, ' '), '') AS tags,
+                COUNT(DISTINCT si.student_email) AS applied_students
+            FROM
+                internship i
+                    LEFT JOIN
+                tag_internship ti ON i.id = ti.internship_id
+                    LEFT JOIN
+                tag t ON ti.tag_id = t.id
+                    LEFT JOIN
+                student_internship si ON i.id = si.internship_id
+            WHERE
+                i.id = $1
+            GROUP BY
+                i.id;
+        `;
+
+        let result = await pool.query(internshipsQuery, [internshipId]);
+
+        if (result.rows.length > 0) {
+            return result.rows[0];
+        }
+        else
+            return [];
+    }
+
+
 }
