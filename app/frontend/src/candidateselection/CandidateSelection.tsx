@@ -149,7 +149,8 @@ function CandidateSelection() {
     }, []);
     
     return (
-        <>
+        <>  
+        <div className="candidate-selection">
 			<div className="inner-box-section top-inner-box-section">
 				<div id="name">{internship_title}</div>
 				<div id="type"> 
@@ -166,7 +167,7 @@ function CandidateSelection() {
 					<div className="box-description">
 						Candidates
 					</div>
-					<i className="material-icons" onClick={() => fetch_candidates()}>
+					<i className="material-icons" onClick={() => fetch_candidates()} id='sync'>
 					    sync
 					</i>
 				</div>
@@ -179,6 +180,7 @@ function CandidateSelection() {
 			        set_status: set_candidate_status
 			    }))}
 			</div>
+        </div>
         </>
     )
 }
