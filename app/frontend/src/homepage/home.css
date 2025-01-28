@@ -1,0 +1,68 @@
+.home-page {
+    .central-buttons-div button {
+        font-weight: bold;
+        font-size: 35px;
+        min-height: 160px;
+        min-width: 250px;
+        margin: 0px 20px;
+        border: none;
+        border-radius: 13px;
+    }
+    
+    button#Engineering {
+        background-color: #52585A;
+        color: white;
+        transition-duration: 0.3s;
+    }
+
+    button#Engineering:hover {
+        border: 5px solid #52585A;
+        background-color: var(--light-grey);
+        color: #52585A;
+    }
+    
+    button#Design {
+        background-color: #9CD0E0;
+        color: #52585A;
+        transition-duration: 0.3s;
+    }
+
+    button#Design:hover {
+        border: 5px solid #9CD0E0;
+        background-color: var(--light-grey);
+        color: #9CD0E0;
+    }
+      
+    button#Architecture {
+        background-color: #CCDADF;
+        color: black;
+        transition-duration: 0.3s;
+    }
+
+    button#Architecture:hover {
+        border: 5px solid #CCDADF;
+        background-color: var(--light-grey);
+        color: #CCDADF;
+    }
+    
+    .central-container {
+        flex-direction: column;
+    }
+    
+    .central-text {
+        padding-bottom: 10px;
+        padding-right: 20px;
+        padding-left: 20px;
+        font-size: 40px;
+        font-weight: bold;
+        letter-spacing: -1px;
+        background-image: url(../images/line.png);
+        background-repeat: no-repeat;
+        background-position: bottom right;
+        background-size: 140px;
+    }
+    
+    .central-buttons-div {
+    margin: 60px 20px;
+    }    
+}

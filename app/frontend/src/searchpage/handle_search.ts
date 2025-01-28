@@ -1,5 +1,6 @@
-export async function get_internship_list_http_query_no_filters (text: string) : Promise<Array<any>> {
+export async function get_internship_list_http_query_no_filters (user:string, text: string) : Promise<Array<any>> {
     let parameters = {
+        user: user,
         text: text,
         orderby: 'posted',
         ascending: '1',
@@ -12,6 +13,7 @@ export async function get_internship_list_http_query_no_filters (text: string) :
 }
 
 export async function get_internship_list_http_query (
+    user: string,
     text: string,
     orderby: string,
     ascending: string,
@@ -20,7 +22,7 @@ export async function get_internship_list_http_query (
     mode: string,
     tags: string[]
 ) {
-    return (await fetch_internship_list({text,orderby,ascending,salary,duration,mode,tags})).json()
+    return (await fetch_internship_list({user,text,orderby,ascending,salary,duration,mode,tags})).json()
 }
 
 async function fetch_internship_list(parameters: Object): Promise<Response> {
@@ -37,7 +39,7 @@ async function fetch_internship_list(parameters: Object): Promise<Response> {
  * @param allow_empty default to true, allows to pass empty parameters (such as empty strings)
  * @returns string that contains all parameters formatted as a URL query
  */
-function format_search_parameters(parameters: Object, allow_empty:boolean=true) : string {
+export function format_search_parameters(parameters: Object, allow_empty:boolean=true) : string {
     let search_params: URLSearchParams = new URLSearchParams();
     Object.entries(parameters).forEach(([key, value]: [any,any]) => {
         if (!!value || allow_empty) {

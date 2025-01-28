@@ -1,0 +1,29 @@
+import NotificationPanel from "../../notificationpanel/NotificationPanel"
+import './top_bar.css'
+import { HiddenSearchBar } from "../search_bar/search_bar"
+import UserDropdown from "../user_dropdown/UserDropdown"
+import NavBar from "../nav_bar/NavBar.tsx";
+
+function TopBarCentralText ({text}:{text:string}) {
+
+	return (
+		<>
+		<div className="top-bar-central-text">
+			<div className="top-bar">
+				<div className="logo">
+					S&C
+				</div>
+				<div className="top-central-text">{text}</div>
+				<div className="right-group">
+                    <HiddenSearchBar></HiddenSearchBar>
+                    <NotificationPanel></NotificationPanel>
+					<UserDropdown></UserDropdown>
+				</div>
+			</div>
+			<NavBar></NavBar>
+		</div>
+		</>
+	)
+}
+
+export default TopBarCentralText
