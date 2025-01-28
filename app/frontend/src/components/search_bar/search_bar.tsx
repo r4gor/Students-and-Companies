@@ -3,10 +3,24 @@ import { NavigateFunction, useNavigate } from 'react-router'
 import { get_internship_list_http_query_no_filters } from '../../searchpage/handle_search'
 import '../../main.css'
 import './search_bar.css'
+import { useAppState } from '../../appstatecontext/AppStateContext'
 
 function SearchBar() {
+	const user_email = useAppState().userEmail as string;
 	const [search_bar_content, setSearchBarContent] = useState('')
 	const navigate = useNavigate();
+
+	function perform_search(text:string) {
+		get_internship_list_http_query_no_filters(user_email, text).then((result) => {
+			navigate('/search_page/'+text, {state: {result:result}})
+		});
+	}
+
+	function handle_search_input(evt:any, text:string) {
+		if(evt.key === 'Enter') {
+			perform_search(text)
+		}
+	}
 
     return (
         <>
@@ -22,8 +36,8 @@ function SearchBar() {
 								onKeyDown={(e) => handle_search_input(e, search_bar_content, navigate)}
 						/>
 						<div className="search-icon-div">
-							<i className="material-icons" onClick={() => perform_search(search_bar_content,navigate)}>search</i>	
-						</div>
+                            <i className="material-icons" onClick={() => perform_search(search_bar_content,navigate)}>search</i>
+                        </div>
 					</div>
 				</div>
 			</div>
@@ -38,10 +52,10 @@ export function HiddenSearchBar() {
 	return (
 		<>
 		<div className={'input-bar'+ (search_bar_open ? '': ' hidden')}>
-			<input type="text" 
-					name="search" 
-					id="search" 
-					placeholder="Search..." 
+			<input type="text"
+					name="search"
+					id="search"
+					placeholder="Search..."
 					onChange={(e:ChangeEvent<HTMLInputElement>) => setSearchBarContent(e.target.value)}
 					onKeyDown={(e) => handle_search_input(e, search_bar_content, navigate)}/>
 			<i className="material-icons" onClick={() => perform_search(search_bar_content, navigate)}>search</i>
