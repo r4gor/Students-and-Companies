@@ -1,0 +1,92 @@
+.internship-mgmt {
+    hr { 
+        margin: 0;
+    }
+
+    .box-background {
+        width: 75em;
+    }
+
+    .no-internships {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        font-size: 25px;
+        font-weight: 200;
+    }
+    .no-internships * {
+        margin: 10px;
+    }
+
+    .internship-component {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 5px;
+    }
+    .internship-component.odd, .internship-component-extended.odd {
+        background-color: var(--dark-grey);
+    }
+    .internship-component.terminated, .internship-component-extended.terminated {
+        background-color: #b9bdbe;
+    }
+    
+    .internship-component .left-group {
+        display: flex;
+        flex-direction: row;
+        align-items: baseline;
+    }
+    .internship-component #name {
+        margin: 5px;
+        font-weight: 400;
+        font-size: 25px;
+        width: 310px;
+    }
+
+    .internship-component #type {
+        font-weight: 200;
+        font-size: 20px;
+    }
+    
+    .internship-component #id {
+        font-weight: 200;
+        font-size: 17px;
+    }
+
+    .internship-component #status {
+        font-weight: 200;
+        font-size: 20px;
+        margin: 10px;
+    }
+
+    .internship-component #status span {
+        display: inline-block;
+        width: 12px;    
+        height: 12px;
+        border-radius: 50%;    
+        margin: 0 5px;
+    }
+    .internship-component #status span.applied, .internship-component #status span.application, .internship-component #status span.interview {
+        background-color: rgb(255, 230, 87);
+    }
+    .internship-component #status span.accepted, .internship-component #status span.ongoing {
+        background-color: #93D976;
+    }
+    .internship-component #status span.rejected {
+        background-color: rgb(238, 44, 44);
+    }
+
+    .internship-component-extension {
+        display: flex;
+        flex-direction: row;
+        padding: 10px;
+    }
+
+    .internship-component-extended .info-element {
+        font-size: 18px;
+        font-weight: 200;
+        margin: 0 10px;
+    }
+}

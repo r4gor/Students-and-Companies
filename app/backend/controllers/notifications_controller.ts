@@ -12,7 +12,7 @@ export class NotificationController extends Controller {
         if (result === Status.error) {
             this.res.status(400).json({ message: `Error fetching notifications for user '${email}'`});
         } else {
-            console.dir(result);
+            // console.dir(result);
             this.res.status(200).json(JSON.stringify(result));
         }
     }

@@ -3,6 +3,6 @@ import { InternshipCreationController } from '../controllers/internship_creation
 
 export const create_internship_route = Router();
 
-create_internship_route.put('/', (req, res) => {
+create_internship_route.post('/', (req, res) => {
     new InternshipCreationController(req,res).handle();
 });

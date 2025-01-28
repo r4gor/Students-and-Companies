@@ -1,0 +1,39 @@
+.user-dropdown-wrapper {
+    z-index: 1000;
+    position: fixed;
+    top: 90px;
+    right: 2.2em;
+    min-width: 15em;
+
+    hr {
+        margin-block-end: 0;
+    }
+
+    .user-dropdown-panel {
+        background-color: var(--dark-grey);
+        max-height: 300px;
+        padding: 15px;
+        border-radius: 10px;
+        overflow: auto;
+    }
+    
+    .user-dropdown-header #email {
+        font-size: 18px;
+        font-weight: 500;
+    }
+    .user-dropdown-header #type {
+        font-size: 15px;
+        font-weight: 200;
+        margin: 3px 0;
+    }
+    
+    .user-dropdown-content .menu-button {
+        cursor: pointer;
+        padding: 10px;
+        transition-duration: 0.2s;
+    }
+
+    .user-dropdown-content .menu-button:hover {
+        background-color: var(--light-grey-transparent);
+    }
+}
