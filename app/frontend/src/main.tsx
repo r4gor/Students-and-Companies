@@ -16,6 +16,7 @@ import ErrorPage from './errorpage/ErrorPage';
 import EditProfile from "./editprofile/EditProfile.tsx";
 import Single_internship_page from "./single_internship_page/Single_internship_page.tsx";
 import { Navigate } from 'react-router-dom';
+import OpenComplaint from './opencomplaint/open_complaint.tsx';
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     const {isAuthenticated, userEmail, userType, setUserType, setUserEmail, setIsAuthenticated} = useAppState();
@@ -109,6 +110,14 @@ createRoot(document.getElementById('root')!).render(
                       element={
                           <ProtectedRoute>
                               <InternshipManagement />
+                          </ProtectedRoute>
+                      }
+                  />
+                  <Route
+                      path="/open_complaint/:internship_id?"
+                      element={
+                          <ProtectedRoute>
+                              <OpenComplaint />
                           </ProtectedRoute>
                       }
                   />
