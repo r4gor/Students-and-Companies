@@ -2,6 +2,7 @@ import { Status } from "../utils/status";
 import pool from "../utils/db_pool";
 import { format_date_for_database, get_current_datetime } from "../utils/date_utils";
 import { fork } from "child_process";
+import { platform } from "os";
 
 export class InternshipManager {
 
@@ -114,6 +115,32 @@ export class InternshipManager {
             return internships.rows
         } catch (err) {
             console.log(`[server]: (query error) (fetch company internship) ${err}`);
+            return Status.error;
+        }
+    }
+
+    /**
+     * Close the interview phase of passed internship by changing its status
+     * @param internship_id internship to update
+     * @returns an async Promise containing: an ok Status if the internship is updated
+     * an error Status if an error occurs in the query
+     */
+    public async close_interview_phase(internship_id:string) {
+        try {
+            let result = await pool.query( 
+                `
+                UPDATE internship
+                SET status = 'interview'
+                WHERE "id" = $1
+                `,
+                [internship_id]
+            )
+            if(result.rowCount !== 1)
+                throw new Error('Internship doesn\'t exists')
+            return Status.ok
+        }   
+        catch(err) {
+            console.log(`[server]: (query error) (close internship) ${err}`);
             return Status.error;
         }
     }
