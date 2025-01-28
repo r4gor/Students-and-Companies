@@ -18,3 +18,7 @@ candidate_selection_route.get('/fetch/replies/:internship_id/:student_email', (r
 candidate_selection_route.post('/post/status', (req: Request, res:Response) => {
     new CandidateSelectionController(req, res).set_candidate_status();
 });
+
+candidate_selection_route.post('/post/replies', (req: Request, res:Response) => {
+    new CandidateSelectionController(req, res).post_candidate_replies();
+});

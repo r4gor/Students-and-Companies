@@ -10,6 +10,18 @@
     flex-grow: 1;
 }
 
-#candidates i {
-  cursor: pointer;
+.module {
+    .question {
+        margin-bottom: 10px;
+    }
+    .reply {
+        margin-bottom: 30px;
+        width: 100%;
+    }
+}
+
+.submit-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
 }
