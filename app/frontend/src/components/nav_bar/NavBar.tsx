@@ -9,7 +9,7 @@ function NavBar () {
         <div className="nav-bar">
             <Link to={'/home'} className='nav-bar-link'>Home</Link>
             {(user_type === 'c' || user_type === 's') && <Link to={'/internship_management'} className='nav-bar-link'>Internships</Link>}
-            {(user_type === 'u') && <Link to={'/'} className='nav-bar-link'>Complaints</Link>}
+            {(user_type === 'u') && <Link to={'/manage_complaints'} className='nav-bar-link'>Complaints</Link>}
             <Link to={'/about'} className='nav-bar-link'>About</Link>
         </div>
         </>

@@ -4,6 +4,7 @@ import InternshipComponent from "./InternshipComponent";
 import { useAppState } from "../../appstatecontext/AppStateContext";
 
 type InternshipMgmtInfo = {
+    id:string,
     title:string,
     status:string
 }
@@ -15,6 +16,7 @@ function StudentInternshipmgmt() {
 		const fetch_internships = async () => {
 			const response = await fetch_own_internships(user_email)
 			const data = await response.json()
+            console.log(data)
 			setInternships(data)
 		}
 		fetch_internships()
@@ -31,7 +33,8 @@ function StudentInternshipmgmt() {
                             {
                                 internships.length >= 1 &&
                                 internships.map((internship, idx) => 
-                                    (<InternshipComponent   title={internship.title} 
+                                    (<InternshipComponent   id={internship.id}
+                                                            title={internship.title} 
                                                             status={internship.status} 
                                                             position={idx} 
                                                             key={idx}>

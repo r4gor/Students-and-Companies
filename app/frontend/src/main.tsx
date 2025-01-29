@@ -16,6 +16,8 @@ import ErrorPage from './errorpage/ErrorPage';
 import EditProfile from "./editprofile/EditProfile.tsx";
 import Single_internship_page from "./single_internship_page/Single_internship_page.tsx";
 import { Navigate } from 'react-router-dom';
+import OpenComplaint from './complaint/open_complaint.tsx';
+import ManageComplaints from './complaint/manage_complaints.tsx';
 import About from "./about/About.tsx";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
@@ -118,6 +120,22 @@ createRoot(document.getElementById('root')!).render(
                       element={
                           <ProtectedRoute>
                               <About />
+                          </ProtectedRoute>
+                      }
+                  />
+                  <Route
+                      path="/open_complaint/:internship_id?"
+                      element={
+                          <ProtectedRoute>
+                              <OpenComplaint />
+                          </ProtectedRoute>
+                      }
+                  />
+                  <Route
+                      path="/manage_complaints"
+                      element={
+                          <ProtectedRoute>
+                              <ManageComplaints />
                           </ProtectedRoute>
                       }
                   />
