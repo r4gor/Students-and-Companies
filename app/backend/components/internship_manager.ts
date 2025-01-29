@@ -397,6 +397,15 @@ export class InternshipManager {
         });
     }
 
+    // public async fetch_user_feedbacks_state(email: string): Promise<Status.error | Map<number, boolean>> {
+    //     return await pool.query(`
+    //         SELECT id, state FROM ("user" LEFT JOIN feedback ON email = user_email WHERE email='${email}')
+    //     `).catch(err => {
+    //         console.error(err);
+    //         return Status.error;
+    //     })
+    // }
+
     public async fetch_feedback_questions(user_type: string): Promise<Status.error | Array<QuestionType>> {
         return await pool.query(`
             SELECT id, question AS text FROM feedback_question 
