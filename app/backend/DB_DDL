@@ -239,3 +239,9 @@ create table public.feedback
 alter table public.feedback
     owner to "postgres-user";
 
+INSERT INTO feedback_question (designated_user_type, question) VALUES ('s', 'Rate your internship experience.');
+INSERT INTO feedback_question (designated_user_type, question) VALUES ('s', 'Are you satisfied with the mentorship?');
+INSERT INTO feedback_question (designated_user_type, question) VALUES ('c', 'Rate the soft skills displayed by the students.');
+INSERT INTO feedback_question (designated_user_type, question) VALUES ('c', 'How do you evaluate the previous knowledge of the students?');
+
+
