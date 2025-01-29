@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom"
 import { InternshipInformation } from "../../searchpage/utils/internship_information"
 import { date_to_ddMMyyyy_string, month_diff } from "../../utils/frontend_date_utils"
 import { format_search_parameters } from "../../searchpage/handle_search"
+import FeedbackPopup from "./FeedbackPopup"
+import { useState } from "react"
 
 function InternshipComponentExtended({info, position}: {info:InternshipInformation, position:number}) {
     const internship_status_map = { 'application':'application phase',
@@ -51,7 +53,7 @@ function render_sub_components(info:InternshipInformation) {
         case 'ongoing':
             return (<InternshipComponentExtendedOngoing info={info}></InternshipComponentExtendedOngoing>)
         case 'terminated':
-            return (<InternshipComponentExtendedTerminated></InternshipComponentExtendedTerminated>)
+            return (<InternshipComponentExtendedTerminated info={info}></InternshipComponentExtendedTerminated>)
     }
 }
 
@@ -114,14 +116,21 @@ function InternshipComponentExtendedOngoing({info}:{info:InternshipInformation})
     )
 }
 
-function InternshipComponentExtendedTerminated() {
+function InternshipComponentExtendedTerminated({info}:{info:InternshipInformation}) {
+    const [visibleFeedbackPopup, setVisibleFeedbackPopup] = useState(false);
     function on_leave_feedback() {
-        //TODO: add implementation
+        setVisibleFeedbackPopup(true);
+        console.log('clicked leave feedback');
     }
 
     return (
         <>
-        <button type="button" className="std-button" onClick={on_leave_feedback}>Leave feedback</button>
+            <button type="button" className="std-button" onClick={on_leave_feedback}>Leave feedback</button>
+            {visibleFeedbackPopup && <FeedbackPopup 
+                id={info.id} 
+                title={info.title}
+                setVisible={setVisibleFeedbackPopup}
+            />}
         </>
     )
 }
