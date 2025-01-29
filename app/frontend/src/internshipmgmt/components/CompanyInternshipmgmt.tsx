@@ -24,11 +24,13 @@ function CompanyInternshipmgmt() {
                 <div className="central-container">
                     <div className="box-background">
                         <div className="inner-box-section">
-                            <div className="no-internships">
-                                <a href={'/create_internship'}><button type="button" className="std-button">Create new internship</button></a>
-                            </div>
                             {
                                 internships.length >= 1 &&
+                                (<div className="new-internship-container">
+                                    <a href={'/create_internship'}><button type="button" className="std-button">Create new internship</button></a>
+                                </div>)
+                            } 
+                            {   internships.length >=1 &&
                                 internships.map((info, idx) =>
                                     (<InternshipComponentExtended key={idx} info={info}
                                                                   position={idx}></InternshipComponentExtended>
@@ -38,6 +40,7 @@ function CompanyInternshipmgmt() {
                                 internships.length === 0 && (
                                     <div className="no-internships">
                                         <div id="content">Your internship list is empty!</div>
+                                        <a href={'/create_internship'}><button type="button" className="std-button">Create new internship</button></a>
                                     </div>
                                 )
                             }
