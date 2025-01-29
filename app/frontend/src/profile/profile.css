@@ -3,6 +3,7 @@
     .central-container {
         background-color: var(--dark-grey);
         height: 100vh;
+        align-items: flex-start;
     }
 
     .top-inner-box-section #name {

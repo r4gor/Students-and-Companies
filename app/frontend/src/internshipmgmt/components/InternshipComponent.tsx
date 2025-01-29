@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import '../internshipMgmt.css';
 import FeedbackPopup from './FeedbackPopup';
+import { useNavigate } from 'react-router-dom'
 
 function InternshipComponent({id, title, status, position}: {id:string, title:string, status:string, position:number}) {
     const [visibleFeedbackPopup, setVisibleFeedbackPopup] = useState(false);
@@ -8,8 +9,9 @@ function InternshipComponent({id, title, status, position}: {id:string, title:st
                                     'accepted':'accepted', 
                                     'rejected': 'rejected', 
                                     'finished': 'terminated'}
+    const navigate = useNavigate()
     function on_open_complaint() {
-        //TODO: add implementation
+        navigate('/open_complaint/'+id)
     }
 
     function on_leave_feedback() {

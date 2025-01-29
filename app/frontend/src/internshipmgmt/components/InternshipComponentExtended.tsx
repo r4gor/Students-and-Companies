@@ -89,7 +89,7 @@ function InternshipComponentExtendedOngoing({info}:{info:InternshipInformation})
 
 
     function on_open_complaint() {
-        //TODO:add implementation
+        navigate('/open_complaint/'+info.id)
     }
 
     function on_close_internship() {

@@ -2,9 +2,13 @@ create type public.internship_status as enum ('application', 'interview', 'ongoi
 
 alter type public.internship_status owner to "postgres-user";
 
-create type student_internship_status as enum ('applied', 'accepted', 'rejected', 'finished');
+create type public.student_internship_status as enum ('applied', 'accepted', 'rejected', 'finished', 'rejected_offer', 'ongoing');
 
-alter type student_internship_status owner to "postgres-user";
+alter type public.student_internship_status owner to "postgres-user";
+
+create type public.user_type as enum ('student', 'university', 'company');
+
+alter type public.user_type owner to "postgres-user";
 
 create table public."user"
 (
@@ -113,7 +117,8 @@ create table public.complaint
     internship_id integer
         constraint complaint_internship_id_fk
             references public.internship,
-    description   text not null
+    description   text not null,
+    recipient     varchar(255)
 );
 
 alter table public.complaint
@@ -140,6 +145,7 @@ create table public.tag
     id          integer generated always as identity
         primary key,
     description varchar(255) not null
+        unique
 );
 
 alter table public.tag
