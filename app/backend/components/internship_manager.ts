@@ -54,15 +54,18 @@ export class InternshipManager {
         tags: string[],
         salary: number,
         mode: string,
-        location: string
+        location: string,
+        questions: string[]
     ) : Promise<Status> {
         try {
             let result = await this.create_internship_inside_db(email,title,description,application_end_date,start_date,end_date, salary, mode, location)
+            
             if(!tags.length)
                 return Status.ok;
-            await this.insert_new_tags(result.rows[0].id,tags)
-
-            await new SuggestionManager().suggest_internship_to_students(tags, result.rows[0].id, result.rows[0].title)
+            let id = result.rows[0].id
+            await this.insert_new_tags(id,tags)
+            await this.insert_interview_questions(id, questions)
+            await new SuggestionManager().suggest_internship_to_students(tags, id, result.rows[0].title)
             return Status.ok
         } catch (err) {
             console.log(`[server]: (query error) (create internship) ${err}`);
@@ -74,18 +77,18 @@ export class InternshipManager {
         return pool.query (
             `
             INSERT INTO tag (description)
-            VALUES ${this.format_tag_list(tags,true)}
+            VALUES ${this.format_array_for_db(tags,true)}
             ON CONFLICT DO NOTHING;
 
             INSERT INTO tag_internship
             SELECT id, ${internship_id} as internship_id
             FROM tag
-            WHERE description in ${this.format_tag_list(tags)};
+            WHERE description in ${this.format_array_for_db(tags)};
             `
         )
     }
 
-    private format_tag_list(tags:string[], middle_parentheses=false): string {
+    private format_array_for_db(tags:string[], middle_parentheses=false): string {
         if(middle_parentheses)
             return "('"+ tags.join("'),('") + "')"
         else
@@ -121,6 +124,26 @@ export class InternshipManager {
             RETURNING id, title
             `
         );
+    }
+
+    private async insert_interview_questions(internship_id:string, questions:string[]) {
+        try {
+            for(let idx in questions) {
+                await pool.query(
+                    `
+                    INSERT INTO interview_question (internship_id, question)
+                    VALUES ($1,$2)
+                    `,
+                    [internship_id, questions[idx]]
+                )
+            }
+            
+            return Status.ok
+        }
+        catch(err) {
+            console.log(`[server]: (query error) (close internship) ${err}`);
+            return Status.error;
+        }
     }
 
     public async get_company_internships(companyEmail: string): Promise<any[]> {
@@ -308,7 +331,11 @@ export class InternshipManager {
                 SET status = 'terminated'
                 WHERE "id" = ${internship_id} AND
                         status = 'ongoing' AND
-                        "end" < to_date('${format_date_for_database(new Date(get_current_datetime()))}', 'YYYY-MM-DD'),
+                        "end" < to_date('${format_date_for_database(new Date(get_current_datetime()))}', 'YYYY-MM-DD');
+                
+                UPDATE student_internship
+                SET status = 'finished'
+                WHERE status = 'ongoing' AND internship_id = ${internship_id}
                 `
             )
             if(result.rowCount !== 1)
