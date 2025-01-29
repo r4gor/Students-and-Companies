@@ -21,7 +21,7 @@ export class InternshipManagementController extends Controller {
                 this.update_offer();
                 break;
             case '/close_interview_phase/':
-                this.close_internship();
+                this.close_interview_phase();
                 break;
             case '/close_internship/':
                 this.close_internship();
