@@ -1,0 +1,39 @@
+.open-complaint {
+    .inner-box-section #label {
+        font-weight: 500;
+        margin: 10px 0;
+    }
+
+    .inner-box-section textarea {
+        font-family: inherit;
+        font-weight: 200;
+        width: 100%;
+        min-height: 30px;
+        border: 2px solid var(--dark-grey);
+        border-radius: 8px;
+        resize: vertical;
+    }
+
+    .inner-box-section select {
+        font-family: Roboto, sans-serif;
+        font-weight: 400;
+        margin: 5px 0;
+        background-color: var(--dark-grey);
+        border-radius: 10px;
+        cursor: pointer;
+        border: none;
+        width: 30%;
+        padding: 5px;
+    }
+    .buttons-container {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .inner-box-section .error-label {
+        margin: 3px 0;
+        font-size: 13px;
+        color: var(--no-red);
+    }
+}
