@@ -462,4 +462,31 @@ export class InternshipManager {
             return Status.error;
         });
     }
+
+    /**
+     * Updates an application offer according to passed accepted value
+     * @param internship_id target internship
+     * @param student_email email of student taking the decision
+     * @param accepted set to true if the student accepted, false otherwise
+     * @returns a Promise containing an ok Status if the offer is updated
+     * else an error Status if the query fails or doesn't update anything
+     */
+    public async update_offer(internship_id:string, student_email:string, accepted:boolean) : Promise<Status> {
+        let decision = accepted ? 'ongoing' : 'rejected_offer'
+        try {
+            let result = await pool.query (
+                `
+                UPDATE student_internship
+                SET status = $1
+                WHERE student_email = $2 AND internship_id = $3
+                `,[decision, student_email, internship_id]
+            )
+            if(result.rowCount !== 1)
+                throw new Error('Internship or student doesn\'t exists')
+            return Status.ok
+        } catch (err) {
+            console.log(`[server]: (query error) (fetch company internship) ${err}`);
+            return Status.error;
+        }
+    }
 }

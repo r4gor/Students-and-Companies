@@ -1,5 +1,4 @@
 import {Controller} from './controller'
-import {AccountManager} from "../components/account_manager";
 import {Status} from "../utils/status";
 import { InternshipManager } from '../components/internship_manager';
 import { NotificationManager } from '../components/notification_manager';
@@ -8,16 +7,26 @@ export class InternshipManagementController extends Controller {
 
     public async handle(): Promise<void> {
         let path = this.req.route.path
-        if(path === '/apply_to_internship/')
-            this.add_application()
-        else if(path === '/fetch_student_internships/')
-            this.fetch_students_applications()
-        else if(path === '/fetch_company_internships/')
-            this.fetch_company_applications()
-        else if(path === '/close_interview_phase/')
-            this.close_interview_phase()
-        else if(path === '/close_internship/')
-            this.close_internship()
+        switch (path) {
+            case '/apply_to_internship/':
+                this.add_application();
+                break;
+            case '/fetch_student_internships/':
+                this.fetch_students_applications();
+                break;
+            case '/fetch_company_internships/':
+                this.fetch_company_applications();
+                break;
+            case '/update_offer/':
+                this.update_offer();
+                break;
+            case '/close_interview_phase/':
+                this.close_internship();
+                break;
+            case '/close_internship/':
+                this.close_internship();
+                break;
+        }
     }
 
     private async add_application() {
@@ -123,6 +132,31 @@ export class InternshipManagementController extends Controller {
             this.res.status(200).json({message: "Internship interview phase closed successfully"})
             return;
         }
+    }
+
+    private async update_offer() {
+        let body = this.req.query;
+        if (body == undefined ||
+            body.internship_id === undefined ||
+            body.student_email === undefined ||
+            body.accepted === undefined
+        ) {
+			this.res.status(400).json({ message: "Bad request" });
+			return;
+		}
+
+        let internship_id:string = body.internship_id as string
+        let student_email:string = body.student_email as string
+        let accepted:boolean = Number(body.accepted) === 1 ? true : false
+        
+        let result = await new InternshipManager().update_offer(internship_id,student_email,accepted)
+
+        if(result === Status.error) {
+            this.res.status(400).json({message: "Internal server error"})
+            return;
+        }
+        this.res.status(200).json({message: "Internship offer updated successfully"})
+        return;
     }
 
     private async close_internship() {
