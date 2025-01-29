@@ -81,8 +81,10 @@ function FeedbackPopup(params: {id: number, title: string, setVisible: Function}
 
     function handle_button_right() {
         if (atFinalRating()) {
-            post_feedback();
-            params.setVisible(false);
+            if (canSubmit()) {
+                post_feedback();
+                params.setVisible(false);
+            }
         } else {
             setCurrentQuestion(questions[index+1].text);
             setIndex(index + 1);
@@ -121,9 +123,7 @@ function FeedbackPopup(params: {id: number, title: string, setVisible: Function}
             <hr/>
             <div className='popup-container'>
                 <div className='popup-question' id='description'>
-                    {`${index}. ${currentQuestion}`}
-                    <br/>
-                    {'(from 1: very little, to 5: very much)'}
+                    {`${currentQuestion} (from 1: very little, to 5: very much)`}
                 </div>
                 <div className='rating-wrapper'>
                     <RadioButtonGroup 
@@ -132,6 +132,7 @@ function FeedbackPopup(params: {id: number, title: string, setVisible: Function}
                         setValue={onRatingChange} 
                     />
                 </div>
+                <div className='counter' id='description'>{`${index+1}/${questions.length}`}</div>
             </div>
             <div className='button-group'>
                 <button type='button' className='std-button' onClick={handle_button_close}>
@@ -165,10 +166,14 @@ function RadioButtonGroup(params: {
                     checked={params.value === i}
                     onChange={e => params.setValue(params.index, e)}
                 />
-                <label id='name'>{i}</label>
+                <label id='description'>{i}</label>
             </div>
         ))
     )
 }
 
 export default FeedbackPopup;
+
+
+// TODO: change color 'leave feedback'
+// TODO: check same behaviour about feedbacks for both students and companies
