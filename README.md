@@ -13,23 +13,23 @@
 ```
 cd app/backend
 ```
+
+Build the docker image:
+```
+docker-compose build
+```
+
 If you are running for the first time
 ```
 docker-compose up -d
 ```
-After you have run docker compose the first time, it is not necessary to use docker-compose as the container is created locally.
-To run the container:
-```
-docker start postgres_container
-```
+
 To check container status:
 ```
 docker ps -a
 ```
 
-Now the database is up and running on port 5432. 
-All the database files will be saved in app/backend/models/db (these are files that should not be touched as are generated and used by postgres).
-
+Now the database is up and running on port 5432.
 
 ### Backend server
 ```
