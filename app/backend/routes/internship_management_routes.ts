@@ -7,6 +7,10 @@ internship_management_router.post("/apply_to_internship/", (req: Request, res: R
     new InternshipManagementController(req, res).handle()
 });
 
+internship_management_router.post("/update_offer/", (req: Request, res: Response) => {
+    new InternshipManagementController(req, res).handle()
+});
+
 internship_management_router.get("/fetch_student_internships/", (req: Request, res: Response) => {
     new InternshipManagementController(req, res).handle()
 });
