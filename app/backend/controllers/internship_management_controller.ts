@@ -144,12 +144,13 @@ export class InternshipManagementController extends Controller {
 			this.res.status(400).json({ message: "Bad request" });
 			return;
 		}
+        console.log(body);
 
         let internship_id:string = body.internship_id as string
         let student_email:string = body.student_email as string
-        let accepted:boolean = Number(body.accepted) === 1 ? true : false
+        let accepted:boolean = Number(body.accepted) === 1
         
-        let result = await new InternshipManager().update_offer(internship_id,student_email,accepted)
+        let result = await new InternshipManager().update_offer(Number(internship_id),student_email,accepted)
 
         if(result === Status.error) {
             this.res.status(400).json({message: "Internal server error"})

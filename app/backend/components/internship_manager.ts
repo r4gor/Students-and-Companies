@@ -207,7 +207,7 @@ export class InternshipManager {
         try {
             let internships = await pool.query(
                 `
-                SELECT SI.internship_id, title, SI.status
+                SELECT SI.internship_id, title, SI.status, internship.status as internship_status
                 FROM student_internship as SI join internship on SI.internship_id = internship."id"
                 WHERE SI.student_email = '${student_email}'
                 ORDER BY (SI.status = 'finished')
@@ -471,7 +471,7 @@ export class InternshipManager {
      * @returns a Promise containing an ok Status if the offer is updated
      * else an error Status if the query fails or doesn't update anything
      */
-    public async update_offer(internship_id:string, student_email:string, accepted:boolean) : Promise<Status> {
+    public async update_offer(internship_id:number, student_email:string, accepted:boolean) : Promise<Status> {
         let decision = accepted ? 'ongoing' : 'rejected_offer'
         try {
             let result = await pool.query (
@@ -485,7 +485,7 @@ export class InternshipManager {
                 throw new Error('Internship or student doesn\'t exists')
             return Status.ok
         } catch (err) {
-            console.log(`[server]: (query error) (fetch company internship) ${err}`);
+            console.log(`[server]: (query error) (update offer) ${err}`);
             return Status.error;
         }
     }
