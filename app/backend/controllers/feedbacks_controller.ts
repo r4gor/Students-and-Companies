@@ -38,17 +38,18 @@ class FeedbacksController extends Controller {
             this.res.status(400).json({ message: "Missing request body" });
             return;
         }
-        if (body.feedback === undefined) {
-            this.res.status(400).json({ message: "Missing field 'feedback'" });
+        if (body.feedbacks === undefined) {
+            this.res.status(400).json({ message: "Missing field 'feedbacks'" });
             return;
         }
 
-        let feedback = <FeedbackType>body.feedback;
-        let result = await this.manager.post_feedback(feedback);
+        let feedbacks = <Array<FeedbackType>>body.feedbacks;
+        let result = await this.manager.post_feedback(feedbacks);
 
         if (result === Status.error) {
-            this.res.status(500).json({ message: `Error posting feedback of user '${feedback.user_email}' related to internship '${feedback.internship_id}' (question '${feedback.question_id}')`});
+            this.res.status(500).json({ message: `Error posting feedbacks of user '${feedbacks[0].user_email}' related to internship '${feedbacks[0].internship_id}'`});
         } else {
+            console.dir(result);
             this.res.status(200).json(JSON.stringify(result));
         }
     }

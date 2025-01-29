@@ -3,16 +3,6 @@ import pool from "../utils/db_pool";
 import { format_date_for_database, get_current_datetime } from "../utils/date_utils";
 import {SuggestionManager} from "./suggestion_manager";
 
-type InternshipType = {
-    id: number,
-    email: string,
-    title: string,
-    description: string,
-    application_end_date: Date,
-    start_date: Date,
-    end_date: Date
-}
-
 type CandidateType = {
     email: string,
     first_name: string,
@@ -214,7 +204,7 @@ export class InternshipManager {
         try {
             let internships = await pool.query(
                 `
-                SELECT SI.internship_id, title, SI.status
+                SELECT SI.internship_id AS id, title, SI.status
                 FROM student_internship as SI join internship on SI.internship_id = internship."id"
                 WHERE SI.student_email = '${student_email}'
                 ORDER BY (SI.status = 'finished')
@@ -409,25 +399,26 @@ export class InternshipManager {
 
     public async fetch_feedback_questions(user_type: string): Promise<Status.error | Array<QuestionType>> {
         return await pool.query(`
-            SELECT id, questions AS text FROM feedback_question 
-            WHERE designed_user_type='${user_type}'
+            SELECT id, question AS text FROM feedback_question 
+            WHERE designated_user_type='${user_type}'
         `).then(res => {
             if (res.rowCount === null) {
-                console.log(`[server]: (error) inside 'fetch_interview_questions':\nrowCount == null`);
+                console.log(`[server]: (error) inside 'fetch_feedback_questions':\nrowCount == null`);
                 return Status.error;
             }
             return res.rows.map((row) => <QuestionType>row);
         }).catch(err => {
-            console.log(`[server]: (query error) inside 'fetch_interview_questions':\n${err}`);
+            console.log(`[server]: (query error) inside 'fetch_feedback_questions':\n${err}`);
             return Status.error;
         });
     }
 
-    public async post_feedback(fb: FeedbackType): Promise<Status> {
-        return await pool.query(`
-            INSERT INTO feedback (question_id, internshi_id, user_email, rating)
-            VALUES (${fb.question_id}, ${fb.internship_id}, '${fb.user_email}', ${fb.rating});
-        `).then(_ => Status.ok)
+    public async post_feedback(feedbacks: Array<FeedbackType>): Promise<Status> {
+        let query = feedbacks.map((f) => `
+            INSERT INTO feedback (question_id, internship_id, user_email, rating)
+            VALUES (${f.question_id}, ${f.internship_id}, '${f.user_email}', ${f.rating});
+        `).join("\n");
+        return await pool.query(query).then(_ => Status.ok)
         .catch(err => {
             console.error(err);
             return Status.error;

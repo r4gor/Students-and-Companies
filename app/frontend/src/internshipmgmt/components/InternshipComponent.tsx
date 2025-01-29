@@ -1,6 +1,9 @@
-import '../internshipMgmt.css'
+import { useState } from 'react';
+import '../internshipMgmt.css';
+import FeedbackPopup from './FeedbackPopup';
 
-function InternshipComponent({id,title, status, position}: {id:string,title:string,status:string, position:number}) {
+function InternshipComponent({id, title, status, position}: {id:string, title:string, status:string, position:number}) {
+    const [visibleFeedbackPopup, setVisibleFeedbackPopup] = useState(false);
     const internship_status_map = { 'applied':'waiting for selection',
                                     'accepted':'accepted', 
                                     'rejected': 'rejected', 
@@ -10,8 +13,10 @@ function InternshipComponent({id,title, status, position}: {id:string,title:stri
     }
 
     function on_leave_feedback() {
-        //TODO: add implementation
+        setVisibleFeedbackPopup(true);
+        console.log('clicked leave feedback');
     }
+    
     return (
         <>
         <div className={"internship-component" + 
@@ -22,8 +27,13 @@ function InternshipComponent({id,title, status, position}: {id:string,title:stri
                 <div id="status"><span className={status}></span> {internship_status_map[status as keyof typeof internship_status_map]}</div>
             </div>
             {status === 'accepted' && (<button type="button" className="std-button small" id="complaint" onClick={on_open_complaint}>Open complaint</button>)}
-            {status === 'finished' && (<button type="button" className="std-button small" id="feedback" onClick={on_leave_feedback}>Leave feedback</button>)}
+            {status === 'finished' && (<button type="button" className="std-button small" id="feedback" onClick={() => on_leave_feedback()}>Leave feedback</button>)}
         </div>
+        {visibleFeedbackPopup && <FeedbackPopup 
+            id={Number.parseInt(id)} 
+            title={title}
+            setVisible={setVisibleFeedbackPopup}
+            />}
         </>
     )
 }
