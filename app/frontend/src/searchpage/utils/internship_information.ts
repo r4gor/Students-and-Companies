@@ -1,6 +1,7 @@
 export class InternshipInformation {
     public id: number
     public company: string
+    public company_email: string
     public title: string
     public description: string
     public post_date: Date
@@ -18,6 +19,7 @@ export class InternshipInformation {
         raw_object: {
             id: string
             company: string
+            company_email: string
             title: string
             description: string
             start: string
@@ -34,6 +36,7 @@ export class InternshipInformation {
     ) {
         this.id = Number(raw_object.id)
         this.company = raw_object.company,
+        this.company_email = raw_object.company_email,
         this.title = raw_object.title,
         this.description = raw_object.description,
         this.post_date = new Date(raw_object.published),

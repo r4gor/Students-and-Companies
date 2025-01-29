@@ -10,14 +10,21 @@ export class ComplaintManager {
      */
     public async get_complaints(university_email:string) : Promise<Array<any> | Status> {
         try {
+
             let internships = await pool.query(
                 `
-                SELECT user_email INTO this_uni_students
-                FROM student join student_internship as SI on student.user_email = SI.student_email
-                WHERE university_email = $1 AND complaint.internship_id = SI.internship_id;
                 SELECT *
                 FROM complaint
-                WHERE user_email in this_uni_students OR recipient in this_uni_students 
+                WHERE user_email in (
+                    SELECT user_email
+                    FROM student join student_internship as SI on student.user_email = SI.student_email
+                    WHERE university_email = $1 AND complaint.internship_id = SI.internship_id
+                ) 
+                OR recipient in (
+                    SELECT user_email
+                    FROM student join student_internship as SI on student.user_email = SI.student_email
+                    WHERE university_email = $1 AND complaint.internship_id = SI.internship_id
+                ) 
                 `, [university_email]
             )
             return internships.rows
