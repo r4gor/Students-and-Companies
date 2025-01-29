@@ -4,9 +4,10 @@ import InternshipComponent from "./InternshipComponent";
 import { useAppState } from "../../appstatecontext/AppStateContext";
 
 type InternshipMgmtInfo = {
-    id:string,
+    internship_id:string,
     title:string,
-    status:string
+    status:string,
+    internship_status:string
 }
 
 function StudentInternshipmgmt() {
@@ -33,9 +34,10 @@ function StudentInternshipmgmt() {
                             {
                                 internships.length >= 1 &&
                                 internships.map((internship, idx) => 
-                                    (<InternshipComponent   id={internship.id}
+                                    (<InternshipComponent   id={internship.internship_id}
                                                             title={internship.title} 
-                                                            status={internship.status} 
+                                                            status={internship.status}
+                                                            internship_status={ internship.internship_status }
                                                             position={idx} 
                                                             key={idx}>
                                     </InternshipComponent>
