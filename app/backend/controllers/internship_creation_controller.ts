@@ -22,7 +22,6 @@ export class InternshipCreationController extends Controller {
 			this.res.status(400).json({ message: "Bad request" });
 			return;
 		}
-
 		let email: string =  body.email as string;
         let title: string = body.title as string;
         let description: string = body.description as string;
@@ -34,7 +33,6 @@ export class InternshipCreationController extends Controller {
 		let location: string = body.location as string;
 		let tags: string[] = body.tags === undefined ? [] : (body.tags as string).split(' ')
 		let questions: string[] = body.questions === undefined ? [] : (body.questions as string).split('\n')
-		
 		// bad params check
 		
 		if (start_date >= end_date || application_end_date >= start_date || application_end_date >= end_date) {

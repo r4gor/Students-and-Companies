@@ -128,13 +128,13 @@ export class InternshipManager {
 
     private async insert_interview_questions(internship_id:string, questions:string[]) {
         try {
-            for(let question in questions) {
+            for(let idx in questions) {
                 await pool.query(
                     `
                     INSERT INTO interview_question (internship_id, question)
                     VALUES ($1,$2)
                     `,
-                    [internship_id, question]
+                    [internship_id, questions[idx]]
                 )
             }
             
