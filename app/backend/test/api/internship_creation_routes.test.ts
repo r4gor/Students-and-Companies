@@ -1,8 +1,16 @@
-let base_url = 'http://localhost:4000/api/internship_creation/create_internship'
+import {server, app} from '../../index'
+import request from "supertest";
 
-describe('Create internship', () =>{
+let base_url = '/api/internship_creation/create_internship/'
+
+describe('Create internship', () => {
+    afterAll(() => {
+        server.closeIdleConnections()
+        server.closeAllConnections()
+        server.close()
+    })
+
     test('Bad request if end date past start date', async () => {
-        let url = new URL(base_url)
         let parameters = {
             email: 'test_email',
             title: 'test internship',
@@ -13,20 +21,45 @@ describe('Create internship', () =>{
             salary: 0,
             mode: 'presence',
             location: 'test',
-            tags: ''
+            tags: '',
+            questions: 'test'
         }
-        url.search = format_search_params(parameters)
-        let api_result = await fetch(url, {
-            method: "POST"
-        })
+        let api_result = await request(app).post(base_url).query(parameters)
         expect(api_result.status).toBe(400)
     })
-})
 
-function format_search_params(parameters:Object) {
-    let search_params = new URLSearchParams()
-    Object.entries(parameters).forEach(([key, value]: [any,any]) => {
-        search_params.append(key, value);
-    });
-    return search_params.toString()
-}
+    test('Bad request if any missing parameters', async () => {
+        let parameters = {
+            email: 'test_email',
+            title: 'test internship',
+            application_end_date: new Date(2024,3,1),
+            start_date: new Date(2024,4,1),
+            end_date: new Date(2024,6,1),
+            salary: 0,
+            mode: 'presence',
+            location: 'test',
+            tags: '',
+            questions: 'test'
+        }
+        let api_result = await request(app).post(base_url).query(parameters);
+        expect(api_result.status).toBe(400)
+    })
+
+    test('Success if all parameters and correct dates', async () => {
+        let parameters = {
+            email: 'test_email@email.com',
+            title: 'test internship',
+            description: 'test description',
+            application_end_date: new Date(2024,3,1),
+            start_date: new Date(2024,4,1),
+            end_date: new Date(2024,6,1),
+            salary: 0,
+            mode: 'presence',
+            location: 'test',
+            tags: '',
+            questions: 'test'
+        }
+        let api_result = await request(app).post(base_url).query(parameters);
+        expect(api_result.status).toBe(200)
+    })
+})

@@ -6,7 +6,6 @@ export class InternshipCreationController extends Controller {
 
   	public async handle(): Promise<void> {
 		let body = this.req.query;
-		
 		if (body === undefined ||
 			body.email === undefined ||
 			body.title === undefined ||
