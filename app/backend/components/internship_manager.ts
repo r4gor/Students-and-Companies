@@ -331,7 +331,11 @@ export class InternshipManager {
                 SET status = 'terminated'
                 WHERE "id" = ${internship_id} AND
                         status = 'ongoing' AND
-                        "end" < to_date('${format_date_for_database(new Date(get_current_datetime()))}', 'YYYY-MM-DD'),
+                        "end" < to_date('${format_date_for_database(new Date(get_current_datetime()))}', 'YYYY-MM-DD');
+                
+                UPDATE student_internship
+                SET status = 'finished'
+                WHERE status = 'ongoing' AND internship_id = ${internship_id}
                 `
             )
             if(result.rowCount !== 1)
