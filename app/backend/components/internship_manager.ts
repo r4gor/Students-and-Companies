@@ -30,6 +30,13 @@ type ReplyType = {
     answer: string,
 }
 
+export type FeedbackType = {
+    question_id: number,
+    internship_id: number,
+    user_email: string,
+    rating: number
+}
+
 export class InternshipManager {
 
     /**
@@ -59,7 +66,7 @@ export class InternshipManager {
     ) : Promise<Status> {
         try {
             let result = await this.create_internship_inside_db(email,title,description,application_end_date,start_date,end_date, salary, mode, location)
-            
+
             if(!tags.length)
                 return Status.ok;
             let id = result.rows[0].id
@@ -137,7 +144,7 @@ export class InternshipManager {
                     [internship_id, questions[idx]]
                 )
             }
-            
+
             return Status.ok
         }
         catch(err) {
@@ -515,5 +522,32 @@ export class InternshipManager {
             console.log(`[server]: (query error) (update offer) ${err}`);
             return Status.error;
         }
+    }
+
+    public async fetch_feedback_questions(user_type: string): Promise<Status.error | Array<QuestionType>> {
+        return await pool.query(`
+            SELECT id, questions AS text FROM feedback_question 
+            WHERE designed_user_type='${user_type}'
+        `).then(res => {
+            if (res.rowCount === null) {
+                console.log(`[server]: (error) inside 'fetch_interview_questions':\nrowCount == null`);
+                return Status.error;
+            }
+            return res.rows.map((row) => <QuestionType>row);
+        }).catch(err => {
+            console.log(`[server]: (query error) inside 'fetch_interview_questions':\n${err}`);
+            return Status.error;
+        });
+    }
+
+    public async post_feedback(fb: FeedbackType): Promise<Status> {
+        return await pool.query(`
+            INSERT INTO feedback (question_id, internshi_id, user_email, rating)
+            VALUES (${fb.question_id}, ${fb.internship_id}, '${fb.user_email}', ${fb.rating});
+        `).then(_ => Status.ok)
+        .catch(err => {
+            console.error(err);
+            return Status.error;
+        });
     }
 }

@@ -89,4 +89,21 @@
         font-weight: 200;
         margin: 0 10px;
     }
+
+    .popup-wrapper {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        background: var(--light-gray);
+        
+        .popup-container {
+            display: flex;
+            flex-direction: column;
+        }
+        .button-group {
+            display: flex;
+            flex-direction: row;
+            
+        }
+    }
 }
