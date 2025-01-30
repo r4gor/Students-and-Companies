@@ -232,7 +232,7 @@ export class InternshipManager {
         try {
             let internships = await pool.query(
                 `
-                SELECT SI.internship_id AS id, title, SI.status, internship.status AS internship_status
+                SELECT SI.internship_id, title, SI.status, internship.status AS internship_status
                 FROM student_internship as SI join internship on SI.internship_id = internship."id"
                 WHERE SI.student_email = '${student_email}'
                 ORDER BY (SI.status = 'finished')
