@@ -1,241 +1,943 @@
-create type public.internship_status as enum ('application', 'interview', 'ongoing', 'terminated');
+--
+-- PostgreSQL database dump
+--
 
-alter type public.internship_status owner to "postgres-user";
+-- Dumped from database version 17.2 (Debian 17.2-1.pgdg120+1)
+-- Dumped by pg_dump version 17.1
 
-create type public.student_internship_status as enum ('applied', 'accepted', 'rejected', 'finished', 'rejected_offer', 'ongoing');
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
 
-alter type public.student_internship_status owner to "postgres-user";
+--
+-- Name: internship_status; Type: TYPE; Schema: public; Owner: postgres-user
+--
 
-create type public.user_type as enum ('student', 'university', 'company');
-
-alter type public.user_type owner to "postgres-user";
-
-create table public."user"
-(
-    email     varchar(255) not null
-        primary key,
-    password  varchar(255) not null,
-    user_type char         not null
+CREATE TYPE public.internship_status AS ENUM (
+    'application',
+    'interview',
+    'ongoing',
+    'terminated'
 );
 
-alter table public."user"
-    owner to "postgres-user";
 
-create table public.university
-(
-    user_email   varchar(255) not null
-        primary key
-        constraint university_user_email_fk
-            references public."user",
-    name         varchar(255),
-    address      varchar(255),
-    website      varchar(255),
-    phone_number varchar(15)
+ALTER TYPE public.internship_status OWNER TO "postgres-user";
+
+--
+-- Name: student_internship_status; Type: TYPE; Schema: public; Owner: postgres-user
+--
+
+CREATE TYPE public.student_internship_status AS ENUM (
+    'applied',
+    'accepted',
+    'rejected',
+    'finished',
+    'rejected_offer',
+    'ongoing'
 );
 
-alter table public.university
-    owner to "postgres-user";
 
-create table public.student
-(
-    user_email       varchar(255) not null
-        primary key
-        constraint student_user_email_fk
-            references public."user",
-    university_email varchar(255)
-        constraint student_user_email_fk_2
-            references public."user",
-    first_name       varchar(255),
-    last_name        varchar(255),
-    phone_number     varchar(15),
-    date_of_birth    date,
-    cv               varchar(255)
+ALTER TYPE public.student_internship_status OWNER TO "postgres-user";
+
+--
+-- Name: user_type; Type: TYPE; Schema: public; Owner: postgres-user
+--
+
+CREATE TYPE public.user_type AS ENUM (
+    'student',
+    'university',
+    'company'
 );
 
-alter table public.student
-    owner to "postgres-user";
 
-create table public.company
-(
-    user_email   varchar(255) not null
-        primary key
-        constraint company_user_email_fk
-            references public."user",
-    name         varchar(255),
-    address      varchar(255),
-    website      varchar(255),
-    phone_number varchar(15)
+ALTER TYPE public.user_type OWNER TO "postgres-user";
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: company; Type: TABLE; Schema: public; Owner: postgres-user
+--
+
+CREATE TABLE public.company (
+    user_email character varying(255) NOT NULL,
+    name character varying(255),
+    address character varying(255),
+    website character varying(255),
+    phone_number character varying(15)
 );
 
-alter table public.company
-    owner to "postgres-user";
 
-create table public.internship
-(
-    id              integer generated always as identity
-        primary key,
-    company_email   varchar(255)
-        constraint internship_user_email_fk
-            references public."user",
-    title           varchar(255) not null,
-    description     text,
-    start           date,
-    "end"           date,
-    published       date,
+ALTER TABLE public.company OWNER TO "postgres-user";
+
+--
+-- Name: complaint; Type: TABLE; Schema: public; Owner: postgres-user
+--
+
+CREATE TABLE public.complaint (
+    id integer NOT NULL,
+    user_email character varying(255),
+    internship_id integer,
+    description text NOT NULL,
+    recipient character varying(255)
+);
+
+
+ALTER TABLE public.complaint OWNER TO "postgres-user";
+
+--
+-- Name: complaint_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE public.complaint ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.complaint_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: feedback; Type: TABLE; Schema: public; Owner: postgres-user
+--
+
+CREATE TABLE public.feedback (
+    id integer NOT NULL,
+    user_email character varying(255),
+    question_id integer,
+    internship_id integer,
+    rating integer,
+    CONSTRAINT feedback_rating_check CHECK (((rating >= 1) AND (rating <= 5)))
+);
+
+
+ALTER TABLE public.feedback OWNER TO "postgres-user";
+
+--
+-- Name: feedback_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE public.feedback ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.feedback_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: feedback_question; Type: TABLE; Schema: public; Owner: postgres-user
+--
+
+CREATE TABLE public.feedback_question (
+    id integer NOT NULL,
+    designated_user_type character(1) NOT NULL,
+    question text NOT NULL
+);
+
+
+ALTER TABLE public.feedback_question OWNER TO "postgres-user";
+
+--
+-- Name: feedback_question_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE public.feedback_question ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.feedback_question_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: internship; Type: TABLE; Schema: public; Owner: postgres-user
+--
+
+CREATE TABLE public.internship (
+    id integer NOT NULL,
+    company_email character varying(255),
+    title character varying(255) NOT NULL,
+    description text,
+    start date,
+    "end" date,
+    published date,
     application_end date,
-    status          internship_status,
-    salary          integer,
-    mode            varchar(255),
-    location        varchar(255)
+    status public.internship_status,
+    salary integer,
+    mode character varying(255),
+    location character varying(255)
 );
 
-alter table public.internship
-    owner to "postgres-user";
 
-create table public.student_internship
-(
-    student_email varchar(255) not null
-        constraint student_internship_user_email_fk
-            references public."user",
-    internship_id integer      not null
-        constraint student_internship_internship_id_fk
-            references public.internship,
-    status        student_internship_status,
-    primary key (student_email, internship_id)
+ALTER TABLE public.internship OWNER TO "postgres-user";
+
+--
+-- Name: internship_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE public.internship ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.internship_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
 );
 
-alter table public.student_internship
-    owner to "postgres-user";
 
-create table public.complaint
-(
-    id            integer generated always as identity
-        primary key,
-    user_email    varchar(255)
-        constraint complaint_user_email_fk
-            references public."user",
-    internship_id integer
-        constraint complaint_internship_id_fk
-            references public.internship,
-    description   text not null,
-    recipient     varchar(255)
+--
+-- Name: interview_question; Type: TABLE; Schema: public; Owner: postgres-user
+--
+
+CREATE TABLE public.interview_question (
+    id integer NOT NULL,
+    internship_id integer,
+    question text NOT NULL
 );
 
-alter table public.complaint
-    owner to "postgres-user";
 
-create table public.notification
-(
-    id         integer generated always as identity
-        primary key,
-    user_email varchar(255)
-        constraint notification_user_email_fk
-            references public."user",
-    title      varchar(255),
-    body       text,
-    read       boolean default false,
-    sender     varchar(255)
+ALTER TABLE public.interview_question OWNER TO "postgres-user";
+
+--
+-- Name: interview_question_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE public.interview_question ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.interview_question_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
 );
 
-alter table public.notification
-    owner to "postgres-user";
 
-create table public.tag
-(
-    id          integer generated always as identity
-        primary key,
-    description varchar(255) not null
-        unique
+--
+-- Name: notification; Type: TABLE; Schema: public; Owner: postgres-user
+--
+
+CREATE TABLE public.notification (
+    id integer NOT NULL,
+    user_email character varying(255),
+    title character varying(255),
+    body text,
+    read boolean DEFAULT false,
+    sender character varying(255)
 );
 
-alter table public.tag
-    owner to "postgres-user";
 
-create table public.tag_user
-(
-    tag_id     integer      not null
-        constraint tag_user_tag_id_fk
-            references public.tag,
-    user_email varchar(255) not null
-        constraint tag_user_user_email_fk
-            references public."user",
-    primary key (tag_id, user_email)
+ALTER TABLE public.notification OWNER TO "postgres-user";
+
+--
+-- Name: notification_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE public.notification ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.notification_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
 );
 
-alter table public.tag_user
-    owner to "postgres-user";
 
-create table public.tag_internship
-(
-    tag_id        integer not null
-        constraint tag_internship_tag_id_fk
-            references public.tag,
-    internship_id integer not null
-        constraint tag_internship_internship_id_fk
-            references public.internship,
-    primary key (tag_id, internship_id)
+--
+-- Name: reply; Type: TABLE; Schema: public; Owner: postgres-user
+--
+
+CREATE TABLE public.reply (
+    student_email character varying(255) NOT NULL,
+    question_id integer NOT NULL,
+    answer text NOT NULL
 );
 
-alter table public.tag_internship
-    owner to "postgres-user";
 
-create table public.interview_question
-(
-    id            integer generated always as identity
-        primary key,
-    internship_id integer
-        constraint interview_question_internship_id_fk
-            references public.internship,
-    question      text not null
+ALTER TABLE public.reply OWNER TO "postgres-user";
+
+--
+-- Name: student; Type: TABLE; Schema: public; Owner: postgres-user
+--
+
+CREATE TABLE public.student (
+    user_email character varying(255) NOT NULL,
+    university_email character varying(255),
+    first_name character varying(255),
+    last_name character varying(255),
+    phone_number character varying(15),
+    date_of_birth date,
+    cv character varying(255)
 );
 
-alter table public.interview_question
-    owner to "postgres-user";
 
-create table public.reply
-(
-    student_email varchar(255) not null
-        constraint reply_user_email_fk
-            references public."user",
-    question_id   integer      not null
-        constraint reply_interview_question_id_fk
-            references public.interview_question,
-    answer        text         not null,
-    primary key (student_email, question_id)
+ALTER TABLE public.student OWNER TO "postgres-user";
+
+--
+-- Name: student_internship; Type: TABLE; Schema: public; Owner: postgres-user
+--
+
+CREATE TABLE public.student_internship (
+    student_email character varying(255) NOT NULL,
+    internship_id integer NOT NULL,
+    status public.student_internship_status
 );
 
-alter table public.reply
-    owner to "postgres-user";
 
-create table public.feedback_question
-(
-    id                   integer generated always as identity
-        primary key,
-    designated_user_type char not null,
-    question             text not null
+ALTER TABLE public.student_internship OWNER TO "postgres-user";
+
+--
+-- Name: tag; Type: TABLE; Schema: public; Owner: postgres-user
+--
+
+CREATE TABLE public.tag (
+    id integer NOT NULL,
+    description character varying(255) NOT NULL
 );
 
-alter table public.feedback_question
-    owner to "postgres-user";
 
-create table public.feedback
-(
-    id            integer generated always as identity
-        primary key,
-    user_email    varchar(255)
-        constraint feedback_user_email_fk
-            references public."user",
-    question_id   integer
-        constraint feedback_feedback_question_id_fk
-            references public.feedback_question,
-    internship_id integer
-        constraint feedback_internship_id_fk
-            references public.internship,
-    rating        integer
-        constraint feedback_rating_check
-            check ((rating >= 1) AND (rating <= 5))
+ALTER TABLE public.tag OWNER TO "postgres-user";
+
+--
+-- Name: tag_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE public.tag ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.tag_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
 );
 
-alter table public.feedback
-    owner to "postgres-user";
+
+--
+-- Name: tag_internship; Type: TABLE; Schema: public; Owner: postgres-user
+--
+
+CREATE TABLE public.tag_internship (
+    tag_id integer NOT NULL,
+    internship_id integer NOT NULL
+);
+
+
+ALTER TABLE public.tag_internship OWNER TO "postgres-user";
+
+--
+-- Name: tag_user; Type: TABLE; Schema: public; Owner: postgres-user
+--
+
+CREATE TABLE public.tag_user (
+    tag_id integer NOT NULL,
+    user_email character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public.tag_user OWNER TO "postgres-user";
+
+--
+-- Name: university; Type: TABLE; Schema: public; Owner: postgres-user
+--
+
+CREATE TABLE public.university (
+    user_email character varying(255) NOT NULL,
+    name character varying(255),
+    address character varying(255),
+    website character varying(255),
+    phone_number character varying(15)
+);
+
+
+ALTER TABLE public.university OWNER TO "postgres-user";
+
+--
+-- Name: user; Type: TABLE; Schema: public; Owner: postgres-user
+--
+
+CREATE TABLE public."user" (
+    email character varying(255) NOT NULL,
+    password character varying(255) NOT NULL,
+    user_type character(1) NOT NULL
+);
+
+
+ALTER TABLE public."user" OWNER TO "postgres-user";
+
+--
+-- Data for Name: company; Type: TABLE DATA; Schema: public; Owner: postgres-user
+--
+
+COPY public.company (user_email, name, address, website, phone_number) FROM stdin;
+company1@example.com	Tec Corp	Mediterranean street, Italy	tec-corp.com	11235813
+company2@example.com	Saturn industries	Milky way	saturn-industries.com	1110010000
+tester_email@email.com	Test&Co	Garibaldi square	test-test.com	3334433221
+\.
+
+
+--
+-- Data for Name: complaint; Type: TABLE DATA; Schema: public; Owner: postgres-user
+--
+
+COPY public.complaint (id, user_email, internship_id, description, recipient) FROM stdin;
+\.
+
+
+--
+-- Data for Name: feedback; Type: TABLE DATA; Schema: public; Owner: postgres-user
+--
+
+COPY public.feedback (id, user_email, question_id, internship_id, rating) FROM stdin;
+\.
+
+
+--
+-- Data for Name: feedback_question; Type: TABLE DATA; Schema: public; Owner: postgres-user
+--
+
+COPY public.feedback_question (id, designated_user_type, question) FROM stdin;
+1	s	Rate your internship experience.
+2	s	Are you satisfied with the mentorship?
+3	c	Rate the soft skills displayed by the students.
+4	c	How do you evaluate the previous knowledge of the students?
+\.
+
+
+--
+-- Data for Name: internship; Type: TABLE DATA; Schema: public; Owner: postgres-user
+--
+
+COPY public.internship (id, company_email, title, description, start, "end", published, application_end, status, salary, mode, location) FROM stdin;
+1	company1@example.com	Software Engineer Intern	Unpaid labor is needed. Any lost soul is accepted.	2025-04-01	2025-10-01	2025-01-29	2025-03-01	application	1000	mixed	Milan
+3	company2@example.com	Dreamer	Towards infinity and beyond.	2024-10-20	2024-12-20	2025-01-29	2024-10-10	interview	42	mixed	Milan
+4	company2@example.com	Graphic expert	Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit	2024-06-15	2024-10-15	2025-01-29	2024-06-01	terminated	800	remote	Cremona
+2	company1@example.com	Software tester	Way break things for free when you can be paid to do it?	2025-02-01	2025-03-01	2025-01-29	2025-01-29	ongoing	550	presence	Modena
+\.
+
+
+--
+-- Data for Name: interview_question; Type: TABLE DATA; Schema: public; Owner: postgres-user
+--
+
+COPY public.interview_question (id, internship_id, question) FROM stdin;
+1	1	What attracts you about this internship?
+2	1	What motivates you to work in this industry?
+3	1	Are you able to work under stress?
+4	1	Tell me about your points of strength.
+5	1	Are you able to work in team?
+6	3	What attracts you about this internship?
+7	3	What motivates you to work in this industry?
+8	3	Are you able to work under stress?
+9	3	Tell me about your points of strength.
+10	3	Are you able to work in team?
+11	4	What attracts you about this internship?
+12	4	What motivates you to work in this industry?
+13	4	Are you able to work under stress?
+14	4	Tell me about your points of strength.
+15	4	Are you able to work in team?
+16	2	What attracts you about this internship?
+17	2	What motivates you to work in this industry?
+18	2	Are you able to work under stress?
+19	2	Tell me about your points of strength.
+20	2	Are you able to work in team?
+\.
+
+
+--
+-- Data for Name: notification; Type: TABLE DATA; Schema: public; Owner: postgres-user
+--
+
+COPY public.notification (id, user_email, title, body, read, sender) FROM stdin;
+1	company1@example.com	Potential Candidate for Software Engineer Intern	A student with matching interests has been suggested. Email: [student1@example.com](/profile/student1@example.com)	f	SYSTEM
+2	student1@example.com	has invited you to apply to an internship!	[Internship Offer](/internship/1)	f	company1@example.com
+\.
+
+
+--
+-- Data for Name: reply; Type: TABLE DATA; Schema: public; Owner: postgres-user
+--
+
+COPY public.reply (student_email, question_id, answer) FROM stdin;
+\.
+
+
+--
+-- Data for Name: student; Type: TABLE DATA; Schema: public; Owner: postgres-user
+--
+
+COPY public.student (user_email, university_email, first_name, last_name, phone_number, date_of_birth, cv) FROM stdin;
+student1@example.com	university1@example.com	John	Doe	1112223333	2002-01-01	\N
+student2@example.com	university1@example.com	Jane	Scott	1112223333	2001-01-02	\N
+student3@example.com	university1@example.com	Albert	Cameron	1112233444	2002-05-05	\N
+student4@example.com	university1@example.com	Sophia	Kubrick	1110101010	2000-08-16	\N
+\.
+
+
+--
+-- Data for Name: student_internship; Type: TABLE DATA; Schema: public; Owner: postgres-user
+--
+
+COPY public.student_internship (student_email, internship_id, status) FROM stdin;
+student2@example.com	3	applied
+student3@example.com	3	applied
+student4@example.com	3	applied
+student2@example.com	2	rejected
+student4@example.com	2	rejected
+student1@example.com	4	rejected
+student1@example.com	2	accepted
+student3@example.com	4	accepted
+student1@example.com	1	applied
+\.
+
+
+--
+-- Data for Name: tag; Type: TABLE DATA; Schema: public; Owner: postgres-user
+--
+
+COPY public.tag (id, description) FROM stdin;
+1	SoftwareDevelopment
+2	Technology
+3	Documentation
+4	Testing
+5	Beta
+6	Software
+7	Tech
+8	engineering
+9	Milan
+10	University
+11	Unpaid labor
+12	Born to study
+13	PoliMi
+14	Engineer
+15	Polimi
+16	Graduate
+17	Space
+18	Exploration
+20	Graphic
+22	Design
+\.
+
+
+--
+-- Data for Name: tag_internship; Type: TABLE DATA; Schema: public; Owner: postgres-user
+--
+
+COPY public.tag_internship (tag_id, internship_id) FROM stdin;
+3	1
+4	2
+5	2
+6	2
+7	2
+7	3
+18	3
+7	4
+20	4
+22	4
+\.
+
+
+--
+-- Data for Name: tag_user; Type: TABLE DATA; Schema: public; Owner: postgres-user
+--
+
+COPY public.tag_user (tag_id, user_email) FROM stdin;
+1	company1@example.com
+2	company1@example.com
+8	university1@example.com
+9	university1@example.com
+10	university1@example.com
+11	student1@example.com
+12	student1@example.com
+13	student2@example.com
+14	student2@example.com
+15	student3@example.com
+16	student3@example.com
+15	student4@example.com
+16	student4@example.com
+17	company2@example.com
+7	company2@example.com
+3	student1@example.com
+\.
+
+
+--
+-- Data for Name: university; Type: TABLE DATA; Schema: public; Owner: postgres-user
+--
+
+COPY public.university (user_email, name, address, website, phone_number) FROM stdin;
+university1@example.com	PoliMi	Milan	www.polimi.it	11235813
+\.
+
+
+--
+-- Data for Name: user; Type: TABLE DATA; Schema: public; Owner: postgres-user
+--
+
+COPY public."user" (email, password, user_type) FROM stdin;
+company1@example.com	pass123	c
+university1@example.com	pass123	u
+student1@example.com	pass123	s
+student2@example.com	pass123	s
+student3@example.com	pass123	s
+student4@example.com	pass123	s
+company2@example.com	pass123	c
+tester_email@email.com	asd	c
+\.
+
+
+--
+-- Name: complaint_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres-user
+--
+
+SELECT pg_catalog.setval('public.complaint_id_seq', 1, false);
+
+
+--
+-- Name: feedback_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres-user
+--
+
+SELECT pg_catalog.setval('public.feedback_id_seq', 1, false);
+
+
+--
+-- Name: feedback_question_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres-user
+--
+
+SELECT pg_catalog.setval('public.feedback_question_id_seq', 8, true);
+
+
+--
+-- Name: internship_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres-user
+--
+
+SELECT pg_catalog.setval('public.internship_id_seq', 4, true);
+
+
+--
+-- Name: interview_question_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres-user
+--
+
+SELECT pg_catalog.setval('public.interview_question_id_seq', 20, true);
+
+
+--
+-- Name: notification_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres-user
+--
+
+SELECT pg_catalog.setval('public.notification_id_seq', 2, true);
+
+
+--
+-- Name: tag_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres-user
+--
+
+SELECT pg_catalog.setval('public.tag_id_seq', 22, true);
+
+
+--
+-- Name: company company_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.company
+    ADD CONSTRAINT company_pkey PRIMARY KEY (user_email);
+
+
+--
+-- Name: complaint complaint_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.complaint
+    ADD CONSTRAINT complaint_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: feedback feedback_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.feedback
+    ADD CONSTRAINT feedback_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: feedback_question feedback_question_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.feedback_question
+    ADD CONSTRAINT feedback_question_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: internship internship_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.internship
+    ADD CONSTRAINT internship_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: interview_question interview_question_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.interview_question
+    ADD CONSTRAINT interview_question_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: notification notification_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.notification
+    ADD CONSTRAINT notification_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: reply reply_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.reply
+    ADD CONSTRAINT reply_pkey PRIMARY KEY (student_email, question_id);
+
+
+--
+-- Name: student_internship student_internship_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.student_internship
+    ADD CONSTRAINT student_internship_pkey PRIMARY KEY (student_email, internship_id);
+
+
+--
+-- Name: student student_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.student
+    ADD CONSTRAINT student_pkey PRIMARY KEY (user_email);
+
+
+--
+-- Name: tag tag_description_key; Type: CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.tag
+    ADD CONSTRAINT tag_description_key UNIQUE (description);
+
+
+--
+-- Name: tag_internship tag_internship_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.tag_internship
+    ADD CONSTRAINT tag_internship_pkey PRIMARY KEY (tag_id, internship_id);
+
+
+--
+-- Name: tag tag_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.tag
+    ADD CONSTRAINT tag_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tag_user tag_user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.tag_user
+    ADD CONSTRAINT tag_user_pkey PRIMARY KEY (tag_id, user_email);
+
+
+--
+-- Name: university university_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.university
+    ADD CONSTRAINT university_pkey PRIMARY KEY (user_email);
+
+
+--
+-- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public."user"
+    ADD CONSTRAINT user_pkey PRIMARY KEY (email);
+
+
+--
+-- Name: company company_user_email_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.company
+    ADD CONSTRAINT company_user_email_fk FOREIGN KEY (user_email) REFERENCES public."user"(email);
+
+
+--
+-- Name: complaint complaint_internship_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.complaint
+    ADD CONSTRAINT complaint_internship_id_fk FOREIGN KEY (internship_id) REFERENCES public.internship(id);
+
+
+--
+-- Name: complaint complaint_user_email_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.complaint
+    ADD CONSTRAINT complaint_user_email_fk FOREIGN KEY (user_email) REFERENCES public."user"(email);
+
+
+--
+-- Name: feedback feedback_feedback_question_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.feedback
+    ADD CONSTRAINT feedback_feedback_question_id_fk FOREIGN KEY (question_id) REFERENCES public.feedback_question(id);
+
+
+--
+-- Name: feedback feedback_internship_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.feedback
+    ADD CONSTRAINT feedback_internship_id_fk FOREIGN KEY (internship_id) REFERENCES public.internship(id);
+
+
+--
+-- Name: feedback feedback_user_email_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.feedback
+    ADD CONSTRAINT feedback_user_email_fk FOREIGN KEY (user_email) REFERENCES public."user"(email);
+
+
+--
+-- Name: internship internship_user_email_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.internship
+    ADD CONSTRAINT internship_user_email_fk FOREIGN KEY (company_email) REFERENCES public."user"(email);
+
+
+--
+-- Name: interview_question interview_question_internship_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.interview_question
+    ADD CONSTRAINT interview_question_internship_id_fk FOREIGN KEY (internship_id) REFERENCES public.internship(id);
+
+
+--
+-- Name: notification notification_user_email_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.notification
+    ADD CONSTRAINT notification_user_email_fk FOREIGN KEY (user_email) REFERENCES public."user"(email);
+
+
+--
+-- Name: reply reply_interview_question_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.reply
+    ADD CONSTRAINT reply_interview_question_id_fk FOREIGN KEY (question_id) REFERENCES public.interview_question(id);
+
+
+--
+-- Name: reply reply_user_email_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.reply
+    ADD CONSTRAINT reply_user_email_fk FOREIGN KEY (student_email) REFERENCES public."user"(email);
+
+
+--
+-- Name: student_internship student_internship_internship_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.student_internship
+    ADD CONSTRAINT student_internship_internship_id_fk FOREIGN KEY (internship_id) REFERENCES public.internship(id);
+
+
+--
+-- Name: student_internship student_internship_user_email_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.student_internship
+    ADD CONSTRAINT student_internship_user_email_fk FOREIGN KEY (student_email) REFERENCES public."user"(email);
+
+
+--
+-- Name: student student_user_email_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.student
+    ADD CONSTRAINT student_user_email_fk FOREIGN KEY (user_email) REFERENCES public."user"(email);
+
+
+--
+-- Name: student student_user_email_fk_2; Type: FK CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.student
+    ADD CONSTRAINT student_user_email_fk_2 FOREIGN KEY (university_email) REFERENCES public."user"(email);
+
+
+--
+-- Name: tag_internship tag_internship_internship_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.tag_internship
+    ADD CONSTRAINT tag_internship_internship_id_fk FOREIGN KEY (internship_id) REFERENCES public.internship(id);
+
+
+--
+-- Name: tag_internship tag_internship_tag_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.tag_internship
+    ADD CONSTRAINT tag_internship_tag_id_fk FOREIGN KEY (tag_id) REFERENCES public.tag(id);
+
+
+--
+-- Name: tag_user tag_user_tag_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.tag_user
+    ADD CONSTRAINT tag_user_tag_id_fk FOREIGN KEY (tag_id) REFERENCES public.tag(id);
+
+
+--
+-- Name: tag_user tag_user_user_email_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.tag_user
+    ADD CONSTRAINT tag_user_user_email_fk FOREIGN KEY (user_email) REFERENCES public."user"(email);
+
+
+--
+-- Name: university university_user_email_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres-user
+--
+
+ALTER TABLE ONLY public.university
+    ADD CONSTRAINT university_user_email_fk FOREIGN KEY (user_email) REFERENCES public."user"(email);
+
+
+--
+-- PostgreSQL database dump complete
+--
 

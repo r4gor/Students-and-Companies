@@ -43,7 +43,7 @@ function CandidateRow(params: {
     }
 
     function profile_path(): string {
-        return `/profiles/${params.candidate.email}`
+        return `/profile/${params.candidate.email}`
     }
 
     function interview_form_path(): string {
@@ -61,25 +61,31 @@ function CandidateRow(params: {
     }
     
     return (
-		<div key={params.index} className={container_class()}>
-			<i className="material-icons small" id="interviewed-ico" title="interviewed">check_circle</i>
-			<div id="name">{params.candidate.last_name} {params.candidate.first_name}</div>
-			<button type="button" className="std-button small" id="profile">
-			    <Link to={profile_path()} target="_blank">View profile</Link>
-			</button>
-			<button type="button" className="std-button small" id="form">
-			    {/*NOTE: target="_blank" deletes state => do not use it!*/}
-			    <Link to={interview_form_path()} state={state}>Open interview form</Link> 
-			</button>
-			<div className="selector-button-container">
-				<button type="button" className={button_accept_class()} id="profile" onClick={() => handle_click_button_accept()}>
-				    <i className="material-icons">check</i>
-				</button>
-				<button type="button" className={button_reject_class()} id="profile" onClick={() => handle_click_button_reject()}>
-				    <i className="material-icons">close</i>
-				</button>
-			</div>
-		</div>
+        <div key={params.index} className={container_class()}>
+            <i className="material-icons small" id="interviewed-ico" title="interviewed">check_circle</i>
+            <div id="name">{params.candidate.last_name} {params.candidate.first_name}</div>
+            <Link to={profile_path()} target="_blank">
+                <button type="button" className="std-button small" id="profile">
+                    View profile
+                </button>
+            </Link>
+            <Link to={interview_form_path()} state={state}>
+                <button type="button" className="std-button small" id="form">
+                    {/*NOTE: target="_blank" deletes state => do not use it!*/}
+                    Open interview form
+                </button>
+            </Link>
+            <div className="selector-button-container">
+                <button type="button" className={button_accept_class()} id="profile"
+                        onClick={() => handle_click_button_accept()}>
+                    <i className="material-icons">check</i>
+                </button>
+                <button type="button" className={button_reject_class()} id="profile"
+                        onClick={() => handle_click_button_reject()}>
+                    <i className="material-icons">close</i>
+                </button>
+            </div>
+        </div>
     );
 }
 

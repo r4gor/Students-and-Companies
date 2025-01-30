@@ -18,6 +18,7 @@ function CreateInternship ()  {
 	const [mode, setMode] = useState('presence')
 	const [location, setLocation] = useState('')
 	const [tags, setTags] = useState('')
+	const [questions, setQuestions] = useState('')
 	const [internship_created, setInternshipCreated] = useState(false)
 	const [invalid_state_variables, setInvalidStateVariables] = useState({
 		title:false,
@@ -25,9 +26,10 @@ function CreateInternship ()  {
 		start_date:false,
 		end_date:false,
 		location:false,
+		questions:false
 	})
 
-	function onCreateClick() {
+	function on_create_click() {
 		if(validateInputs())
 			return;
 		post_internship({
@@ -40,7 +42,8 @@ function CreateInternship ()  {
 			tags: tags,
 			salary: salary,
 			mode: mode,
-			location:location
+			location:location,
+			questions:questions
 		}).then((result) => {
 			if(result.ok)
 				setInternshipCreated(true)
@@ -53,9 +56,16 @@ function CreateInternship ()  {
 			app_end_date: application_end_date === '',
 			start_date: start_date === '',
 			end_date: end_date === '',
-			location: location === ''
+			location: location === '',
+			questions: questions === ''
 		})
-		return (title === '' || application_end_date === '' || start_date === '' || end_date === '' || location === '')
+		return (title === '' || 
+				application_end_date === '' || 
+				start_date === '' || 
+				end_date === '' || 
+				location === '' ||
+				questions === ''
+			)
 	}
 
     return (
@@ -66,41 +76,41 @@ function CreateInternship ()  {
 				<div className="central-container">
 					<div className="box-background">
 						<div className="inner-box-section">
-							<FormField 	label='Title'
+							<FormField 	label='Insert a title for the new position:'
 										type='text'
 										name='title'
 										value={title}
 										is_invalid_state={invalid_state_variables.title}
 										onChangeHook={setTitle}>
 							</FormField>
-							<div id="label">Description</div>
+							<div id="label">Insert a description:</div>
 							<textarea 	name="description" 
 										id="description"
 										value={description} 
 										onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
 										rows={3}></textarea>
-							<FormField 	label='Application end date'
+							<FormField 	label='Specify an application end date:'
 										type='date'
 										name='application_end_date'
 										value={application_end_date}
 										is_invalid_state={invalid_state_variables.app_end_date}
 										onChangeHook={setApplicationEndDate}>
 							</FormField>
-							<FormField 	label='Start date'
+							<FormField 	label='Specify a start date:'
 										type='date'
 										name='start_date'
 										value={start_date}
 										is_invalid_state={invalid_state_variables.start_date}
 										onChangeHook={setStartDate}>
 							</FormField>
-							<FormField 	label='End date'
+							<FormField 	label='Specify an end date:'
 										type='date'
 										name='end_date'
 										value={end_date}
 										is_invalid_state={invalid_state_variables.end_date}
 										onChangeHook={setEndDate}>
 							</FormField>
-							<div id="label">Salary of the whole internship</div>
+							<div id="label">Specify the salary of the whole internship:</div>
 							<input 	type='number'
 									name='salary'
 									id='salary'
@@ -108,7 +118,7 @@ function CreateInternship ()  {
 									step={100}
 									onChange={(e: ChangeEvent<HTMLInputElement>) => setSalary(Number(e.target.value))}
 							/>
-							<div id="label">Mode</div>
+							<div id="label">Specify a mode:</div>
 							<div className="select-wrapper">
 								<select name="mode" id="mode" onChange={(e:ChangeEvent<HTMLSelectElement>) => setMode(e.target.value)}>
 									<option value="presence">In presence</option>
@@ -117,21 +127,33 @@ function CreateInternship ()  {
 								</select>
 							</div>
 							
-							<FormField 	label='Location'
+							<FormField 	label='Specify the internship location (insert company location if full remote):'
 										type='text'
 										name='location'
 										value={location}
 										is_invalid_state={invalid_state_variables.location}
 										onChangeHook={setLocation}>
 							</FormField>
-							<div id="label">Tags</div>
+							<div id="label">Tags:</div>
 							<textarea 	name='tags-input'
 										id='tags-input'
 										value={tags}
 										placeholder='Enter tags separated by spaces'
 										onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setTags(e.target.value)}
 							/>
-							<button type="button" className='std-button' onClick={onCreateClick}>Create</button>
+							<div id="label">Enter questions for the interview form:</div>
+							<textarea 	name='questions-input'
+										id='questions-input'
+										value={questions}
+										placeholder='Enter questions separated by new lines'
+										onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setQuestions(e.target.value)}
+							/>
+							{invalid_state_variables.questions && (
+								<div className="error-label">This field cannot be empty!</div>
+							)}
+							<div className="create-button-wrapper">
+								<button type="button" className='std-button' onClick={on_create_click}>Create</button>
+							</div>
 						</div>
 					</div>
 				</div>
