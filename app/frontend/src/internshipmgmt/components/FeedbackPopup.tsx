@@ -19,7 +19,7 @@ type RatingType = {
     value: null | number,
 }
 
-function FeedbackPopup(params: {id: number, title: string, setVisible: Function}) {
+function FeedbackPopup(params: {id: number, title: string, setVisible: Function, hideButton: () => void}) {
     const [ratings, setRatings] = useState([] as Array<RatingType>);
     const [questions, setQuestions] = useState([] as Array<QuestionType>);
     const [currentQuestion, setCurrentQuestion] = useState("");
@@ -84,6 +84,7 @@ function FeedbackPopup(params: {id: number, title: string, setVisible: Function}
             if (canSubmit()) {
                 post_feedback();
                 params.setVisible(false);
+                params.hideButton();
             }
         } else {
             setCurrentQuestion(questions[index+1].text);
