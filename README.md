@@ -19,7 +19,7 @@ Build the docker image:
 docker-compose build
 ```
 
-If you are running for the first time
+To create and run the container:
 ```
 docker-compose up -d
 ```
@@ -41,7 +41,7 @@ npm run dev
 ```
 The backend will be available on `http://localhost:4000`, which automatically restarts the node application when file changes in the directory are detected.
 
-To build for production run:
+To build for production (not necessary for testing) run:
 ```
 npm run build
 ```
@@ -57,7 +57,7 @@ npm run dev
 ```
 The frontend will be available on `http://localhost:5173`, with Hot Module Replacement (HMR, also called "hot reload").
 
-To build for production run:
+To build for production (not necessary for testing) run:
 ```
 npm run build
 ```
