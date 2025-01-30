@@ -17,12 +17,12 @@ export class InternshipBrowsingController extends Controller {
         let body = this.req.query;
         let query_params: SearchQueryParams = {
             user:       body.user as string,
-            text:       (body.text as string).toLowerCase(),
-            orderby:    (body.orderby as string).toLowerCase(),
+            text:       (body.text as string),
+            orderby:    (body.orderby as string),
             ascending:  Number(body.ascending as string) == 0 ? false:true,
             salary:     Number(body.salary),
             duration:   Number(body.duration),
-            mode:       (body.mode as string).toLowerCase(),
+            mode:       (body.mode as string),
             tags:       body.tags !== '' ? (body.tags as string).split(' ') as string[] : []
         }
 		
@@ -33,6 +33,9 @@ export class InternshipBrowsingController extends Controller {
 			this.res.status(400).json({ message: "Bad request" });
 			return;
 		}
+        query_params.text = query_params.text.toLowerCase()
+        query_params.orderby = query_params.orderby.toLowerCase()
+        query_params.mode = query_params.mode.toLowerCase()
         
         if (!SearchEngine.order_by_valid_values.includes(query_params.orderby)) {
 			this.res.status(400).json({ message: "Invalid order by parameter: " + query_params.orderby });
