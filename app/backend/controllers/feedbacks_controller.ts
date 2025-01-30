@@ -7,6 +7,17 @@ class FeedbacksController extends Controller {
     
     public async handle(): Promise<void> {}
 
+    public async fetch_feedbacks_state(): Promise<void> {
+        let user_email = this.req.params.user_email;
+        let result = await this.manager.fetch_feedbacks_state(user_email);
+        if (result === Status.error) {
+            this.res.status(500).json({ message: `Error fetching feedbacks state for user '${user_email}'`});
+        } else {
+            console.dir(result);
+            this.res.status(200).json(JSON.stringify(result));
+        }
+    }
+
     public async fetch_feedback_questions(): Promise<void> {
         let body = this.req.body;
 

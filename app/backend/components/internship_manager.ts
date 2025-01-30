@@ -27,6 +27,11 @@ export type FeedbackType = {
     rating: number
 }
 
+type FeedbackState = {
+    internship_id: number,
+    sent: boolean
+}
+
 export class InternshipManager {
 
     /**
@@ -460,14 +465,27 @@ export class InternshipManager {
         });
     }
 
-    // public async fetch_user_feedbacks_state(email: string): Promise<Status.error | Map<number, boolean>> {
-    //     return await pool.query(`
-    //         SELECT id, state FROM ("user" LEFT JOIN feedback ON email = user_email WHERE email='${email}')
-    //     `).catch(err => {
-    //         console.error(err);
-    //         return Status.error;
-    //     })
-    // }
+    public async fetch_feedbacks_state(email: string): Promise<Status.error | Array<FeedbackState>> {
+        return await pool.query(`
+            SELECT * FROM 
+            (SELECT internship_id AS s_id FROM student_internship WHERE student_email='${email}') FULL JOIN 
+            (SELECT internship_id AS f_id FROM feedback WHERE user_email='${email}' GROUP BY internship_id) ON s_id = f_id
+        `).then(res => {
+            if (res.rowCount === null) {
+                console.log(`[server]: (error) inside 'fetch_user_feedbacks_state':\nrowCount == null`);
+                return Status.error;
+            }
+            let feedbacks_state: Array<FeedbackState> = res.rows.map((row) => ({
+                internship_id: row.s_id as number,
+                sent: (row.f_id > 0 ? true : false)
+            } as FeedbackState));
+            console.dir(feedbacks_state);
+            return feedbacks_state;
+        }).catch(err => {
+            console.error(err);
+            return Status.error;
+        })
+    }
 
     public async fetch_feedback_questions(user_type: string): Promise<Status.error | Array<QuestionType>> {
         return await pool.query(`

@@ -11,6 +11,7 @@ type InternshipMgmtInfo = {
 
 function StudentInternshipmgmt() {
     const user_email = useAppState().userEmail as string
+    const [feedbacks, setFeedbacks] = useState(new Map<number, boolean>());
     const [internships, setInternships] = useState([] as InternshipMgmtInfo[])
     useEffect(() => {
 		const fetch_internships = async () => {
@@ -20,6 +21,7 @@ function StudentInternshipmgmt() {
 			setInternships(data)
 		}
 		fetch_internships()
+		fetch_feedbacks_state();
 	}, []);
 
     return (
@@ -36,7 +38,8 @@ function StudentInternshipmgmt() {
                                     (<InternshipComponent   id={internship.id}
                                                             title={internship.title} 
                                                             status={internship.status} 
-                                                            position={idx} 
+                                                            position={idx}
+                                                            feedbackSent={feedbacks.get(Number(internship.id))} 
                                                             key={idx}>
                                     </InternshipComponent>
                                     ))
@@ -53,6 +56,26 @@ function StudentInternshipmgmt() {
         </div>
         </>
     )
+
+    async function fetch_feedbacks_state(): Promise<void> {
+        let result: Map<number, boolean> = await fetch(`http://localhost:4000/api/feedbacks/fetch/state/${user_email}`)
+        .then(res => {
+            if(!res.ok) {
+                console.dir(res);
+                return new Map<number, boolean>();
+            }
+            return res
+                .json()
+                .then((data) => (
+                    JSON.parse(data) as Array<{internship_id:number, sent:boolean}>)
+                    .reduce((acc, row) => (acc.set(row.internship_id, row.sent)), new Map<number, boolean>)
+                );
+        }).catch(err => {
+            console.error(err);
+            return new Map<number, boolean>();
+        });
+        setFeedbacks(result);
+    } 
 }
 
 function fetch_own_internships(user:string):Promise<Response> {
