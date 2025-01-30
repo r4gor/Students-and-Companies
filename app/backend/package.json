@@ -8,7 +8,6 @@
     "dev": "nodemon index.ts",
     "test": "jest --forceExit --verbose --maxWorkers=1"
   },
-  
   "keywords": [],
   "author": "",
   "license": "ISC",
