@@ -64,7 +64,7 @@ describe('Query', () => {
             salary: '0',
             duration: '1',
             mode: 'all',
-            tags: '',
+            tags: 'documentation',
         }
         let api_result = await request(app).get(url).query(parameters);
         expect(api_result.status).toBe(200)
