@@ -34,4 +34,13 @@ describe('Get Complaints', () => {
         let api_result = await request(app).get(url).query(parameters);
         expect(api_result.status).toBe(400)
     })
+
+    test('Returns an array if correct parameters', async () => {
+        let parameters = {
+            email: 'university1@email.com'
+        }
+        let api_result = await request(app).get(url).query(parameters);
+        expect(api_result.status).toBe(200)
+        expect(api_result.body).not.toBeUndefined()
+    })
 })

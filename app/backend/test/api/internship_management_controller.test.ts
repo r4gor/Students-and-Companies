@@ -119,4 +119,13 @@ describe('Close internship', () => {
         let api_result = await request(app).get(url);
         expect(api_result.status).toBe(400)
     })
+
+    test('Closing prevented if closing conditions not respected', async () => {
+        let parameters = {
+            id: 1 // state: application
+        }
+        let api_result = await request(app).get(url).query(parameters);
+        expect(api_result.status).toBe(400)
+        expect(api_result.body.message).toBe('Internal server error')
+    })
 })
