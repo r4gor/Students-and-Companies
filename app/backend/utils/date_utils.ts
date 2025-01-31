@@ -12,6 +12,11 @@ export function get_current_datetime() : string {
                         + currentdate.getSeconds();
 }
 
+/**
+ * Formats a date object according to yyyy-MM-dd format 
+ * @param date date object to format
+ * @returns a string in the format yyyy-MM-dd
+ */
 export function format_date_for_database(date: Date): string {
     return date.getFullYear() + '-' 
         + (date.getMonth()+1) + '-'

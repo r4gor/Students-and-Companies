@@ -95,6 +95,16 @@ describe('Close interview phase', () => {
         let api_result = await request(app).get(url);
         expect(api_result.status).toBe(400)
     })
+
+    test('Server error if internship not in the correct state', async () => {
+        let parameters = {
+            id: 2,
+            user_email: ' '
+        }
+        let api_result = await request(app).get(url).query(parameters);
+        expect(api_result.status).toBe(400)
+        expect(api_result.body.message).toBe('Internal server error')
+    })
 })
 
 describe('Close internship', () => {
