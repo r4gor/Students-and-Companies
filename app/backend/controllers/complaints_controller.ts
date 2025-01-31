@@ -48,8 +48,6 @@ export class ComplaintController extends Controller {
         let internship_id:number = Number(body.internship_id)
         let description:string = body.description
         let recipient = body.recipient === undefined ? null : body.recipient
-        console.dir(body)
-
         let result = await new ComplaintManager().post_complaint(university_email, internship_id, description, recipient)
 
         if(result == Status.error) {

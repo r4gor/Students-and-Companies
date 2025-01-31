@@ -1,6 +1,15 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
 module.exports = {
-  rootDir: 'test/',
+  rootDir: "./",
+  collectCoverage:true,
+  coverageReporters:["html"],
+  modulePaths: [
+      "<rootDir>"
+  ],
+  collectCoverageFrom: [
+    "<rootDir>/**/*.ts",
+    "!<rootDir>/**/node_modules/**"
+  ],
   preset: "ts-jest",
   testEnvironment: "node",
   transform: {
