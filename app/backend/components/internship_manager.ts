@@ -310,7 +310,7 @@ export class InternshipManager {
                 `
                 UPDATE internship
                 SET status = 'interview'
-                WHERE "id" = $1
+                WHERE "id" = $1 AND status = 'application'
                 `,
                 [internship_id]
             )
