@@ -22,7 +22,7 @@ describe('Apply to internship', () => {
     test('Fail if application present', async () => {
         let parameters = {
             internship_id: 1,
-            user_email: 'test_student@email.com'
+            user_email: 'student1@example.com'
         }
         let api_result = await request(app).post(url).query(parameters);
         expect(api_result.status).toBe(409)
@@ -40,6 +40,18 @@ describe('Fetch students application', () => {
     test('Bad request if missing parameters', async () => {
         let api_result = await request(app).get(url);
         expect(api_result.status).toBe(400)
+    })
+
+    test('Contains correct fields if successful', async () => {
+        let parameters = {
+            user: 'student1@example.com'
+        }
+        let api_result = await request(app).get(url).query(parameters);
+        expect(api_result.status).toBe(200)
+        expect(api_result.body[0]).toHaveProperty("internship_id");
+        expect(api_result.body[0]).toHaveProperty("title");
+        expect(api_result.body[0]).toHaveProperty("status");
+        expect(api_result.body[0]).toHaveProperty("internship_status");
     })
 })
 
