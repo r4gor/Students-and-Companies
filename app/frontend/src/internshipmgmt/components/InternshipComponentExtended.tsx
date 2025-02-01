@@ -2,8 +2,10 @@ import { useNavigate } from "react-router-dom"
 import { InternshipInformation } from "../../searchpage/utils/internship_information"
 import { date_to_ddMMyyyy_string, month_diff } from "../../utils/frontend_date_utils"
 import { format_search_parameters } from "../../searchpage/handle_search"
+import FeedbackPopup from "./FeedbackPopup"
+import { useState } from "react"
 
-function InternshipComponentExtended({info, position}: {info:InternshipInformation, position:number}) {
+function InternshipComponentExtended({info, position, feedbackSent}: {info:InternshipInformation, position:number, feedbackSent: boolean | undefined}) {
     const internship_status_map = { 'application':'application phase',
                                     'interview':'interview phase', 
                                     'ongoing':'ongoing', 
@@ -23,7 +25,7 @@ function InternshipComponentExtended({info, position}: {info:InternshipInformati
                     <div id="status"><span className={info.status}></span> {internship_status_map[info.status as keyof typeof internship_status_map]}</div>
                 </div>
                 <div className="right-group">
-                    {render_sub_components(info)}
+                    {render_sub_components()}
                 </div>
             </div>
             <div className="internship-component-extension">
@@ -40,18 +42,18 @@ function InternshipComponentExtended({info, position}: {info:InternshipInformati
         </div>
         </>
     )
-}
 
-function render_sub_components(info:InternshipInformation) {
-    switch (info.status) {
-        case 'application':
-            return (<InternshipComponentExtendedApplication info={info}></InternshipComponentExtendedApplication>)
-        case 'interview':
-            return (<InternshipComponentExtendedInterview info={info}></InternshipComponentExtendedInterview>)
-        case 'ongoing':
-            return (<InternshipComponentExtendedOngoing info={info}></InternshipComponentExtendedOngoing>)
-        case 'terminated':
-            return (<InternshipComponentExtendedTerminated></InternshipComponentExtendedTerminated>)
+    function render_sub_components() {
+        switch (info.status) {
+            case 'application':
+                return (<InternshipComponentExtendedApplication info={info}></InternshipComponentExtendedApplication>)
+            case 'interview':
+                return (<InternshipComponentExtendedInterview info={info}></InternshipComponentExtendedInterview>)
+            case 'ongoing':
+                return (<InternshipComponentExtendedOngoing info={info}></InternshipComponentExtendedOngoing>)
+            case 'terminated':
+                return (<InternshipComponentExtendedTerminated info={info} feedbackSent={feedbackSent}></InternshipComponentExtendedTerminated>)
+        }
     }
 }
 
@@ -114,14 +116,29 @@ function InternshipComponentExtendedOngoing({info}:{info:InternshipInformation})
     )
 }
 
-function InternshipComponentExtendedTerminated() {
+function InternshipComponentExtendedTerminated({info, feedbackSent}:{info:InternshipInformation, feedbackSent: boolean | undefined}) {
+    const [visibleFeedbackPopup, setVisibleFeedbackPopup] = useState(false);
+    const [visibleFeedbackButton, setVisibleFeedbackButton] = useState(feedbackSent === undefined ? true : !feedbackSent);
     function on_leave_feedback() {
-        //TODO: add implementation
+        setVisibleFeedbackPopup(true);
+        console.log('clicked leave feedback');
     }
 
     return (
         <>
-        <button type="button" className="std-button" onClick={on_leave_feedback}>Leave feedback</button>
+            {
+                visibleFeedbackButton &&
+                <button type="button" className="std-button" onClick={on_leave_feedback}>Leave feedback</button>
+            }
+            {
+                visibleFeedbackPopup && 
+                <FeedbackPopup 
+                    id={info.id} 
+                    title={info.title}
+                    setVisible={setVisibleFeedbackPopup}
+                    hideButton={() => setVisibleFeedbackButton(false)}
+                />
+            }
         </>
     )
 }

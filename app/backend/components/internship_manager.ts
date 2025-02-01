@@ -3,16 +3,6 @@ import pool from "../utils/db_pool";
 import { format_date_for_database, get_current_datetime } from "../utils/date_utils";
 import {SuggestionManager} from "./suggestion_manager";
 
-type InternshipType = {
-    id: number,
-    email: string,
-    title: string,
-    description: string,
-    application_end_date: Date,
-    start_date: Date,
-    end_date: Date
-}
-
 type CandidateType = {
     email: string,
     first_name: string,
@@ -35,6 +25,11 @@ export type FeedbackType = {
     internship_id: number,
     user_email: string,
     rating: number
+}
+
+type FeedbackState = {
+    internship_id: number,
+    sent: boolean
 }
 
 /**
@@ -241,7 +236,7 @@ export class InternshipManager {
         try {
             let internships = await pool.query(
                 `
-                SELECT SI.internship_id, title, SI.status, internship.status as internship_status
+                SELECT SI.internship_id, title, SI.status, internship.status AS internship_status
                 FROM student_internship as SI join internship on SI.internship_id = internship."id"
                 WHERE SI.student_email = '${student_email}'
                 ORDER BY (SI.status = 'finished')
@@ -527,28 +522,51 @@ export class InternshipManager {
             return Status.error;
         }
     }
+        
+    public async fetch_feedbacks_state(email: string): Promise<Status.error | Array<FeedbackState>> {
+        return await pool.query(`
+            SELECT * FROM 
+            (SELECT internship_id AS s_id FROM student_internship WHERE student_email='${email}') FULL JOIN 
+            (SELECT internship_id AS f_id FROM feedback WHERE user_email='${email}' GROUP BY internship_id) ON s_id = f_id
+        `).then(res => {
+            if (res.rowCount === null) {
+                console.log(`[server]: (error) inside 'fetch_user_feedbacks_state':\nrowCount == null`);
+                return Status.error;
+            }
+            let feedbacks_state: Array<FeedbackState> = res.rows.map((row) => ({
+                internship_id: row.s_id as number,
+                sent: (row.f_id > 0 ? true : false)
+            } as FeedbackState));
+            console.dir(feedbacks_state);
+            return feedbacks_state;
+        }).catch(err => {
+            console.error(err);
+            return Status.error;
+        })
+    }
 
     public async fetch_feedback_questions(user_type: string): Promise<Status.error | Array<QuestionType>> {
         return await pool.query(`
-            SELECT id, questions AS text FROM feedback_question 
-            WHERE designed_user_type='${user_type}'
+            SELECT id, question AS text FROM feedback_question 
+            WHERE designated_user_type='${user_type}'
         `).then(res => {
             if (res.rowCount === null) {
-                console.log(`[server]: (error) inside 'fetch_interview_questions':\nrowCount == null`);
+                console.log(`[server]: (error) inside 'fetch_feedback_questions':\nrowCount == null`);
                 return Status.error;
             }
             return res.rows.map((row) => <QuestionType>row);
         }).catch(err => {
-            console.log(`[server]: (query error) inside 'fetch_interview_questions':\n${err}`);
+            console.log(`[server]: (query error) inside 'fetch_feedback_questions':\n${err}`);
             return Status.error;
         });
     }
 
-    public async post_feedback(fb: FeedbackType): Promise<Status> {
-        return await pool.query(`
-            INSERT INTO feedback (question_id, internshi_id, user_email, rating)
-            VALUES (${fb.question_id}, ${fb.internship_id}, '${fb.user_email}', ${fb.rating});
-        `).then(_ => Status.ok)
+    public async post_feedback(feedbacks: Array<FeedbackType>): Promise<Status> {
+        let query = feedbacks.map((f) => `
+            INSERT INTO feedback (question_id, internship_id, user_email, rating)
+            VALUES (${f.question_id}, ${f.internship_id}, '${f.user_email}', ${f.rating});
+        `).join("\n");
+        return await pool.query(query).then(_ => Status.ok)
         .catch(err => {
             console.error(err);
             return Status.error;

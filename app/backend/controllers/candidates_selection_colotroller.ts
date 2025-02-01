@@ -44,6 +44,10 @@ export class CandidateSelectionController extends Controller {
     }
 
     async set_candidate_status(): Promise<void> {
+        if (this.req.body === undefined) {
+            this.res.status(400).json({ message: `Bad request: missing body`})
+            return;
+        }
         if (this.req.body.id === undefined || this.req.body.email === undefined || this.req.body.status === undefined) {
             this.res.status(400).json({ message: `Bad request: missing field`})
             return;
@@ -62,6 +66,10 @@ export class CandidateSelectionController extends Controller {
     }
 
     async post_candidate_replies(): Promise<void> {
+        if (this.req.body === undefined) {
+            this.res.status(400).json({ message: `Bad request: missing body`})
+            return;
+        }
         if (this.req.body.replies === undefined || this.req.body.email === undefined) {
             this.res.status(400).json({ message: `Bad request: missing field`})
             return;

@@ -91,19 +91,66 @@
     }
 
     .popup-wrapper {
+        position: fixed;
         display: flex;
         flex-direction: column;
-        padding: 10px;
-        background: var(--light-gray);
+        top: 180px;
+        left: 20%;
+        width: 60%;
+        padding: 15px 10px 10px;
+        background: var(--light-grey);
+        border: 2px solid var(--dark-grey);
+        border-radius: 10px;
+        box-shadow: 0px 0px 4px -1px var(--text-grey);
+
+        hr {
+            margin: 10px 0px 20px;
+        }
+
+        .popup-question {
+            font-weight: 100;
+        }
         
         .popup-container {
             display: flex;
             flex-direction: column;
         }
+        
+        .rating-wrapper {
+            margin: 30px 35px 0px 0px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+
+            .radio-element {
+                input {
+                    margin-left: 35px;
+                }
+                label {
+                    margin-left: 5px;
+                    font-weight: 100;
+                }
+                
+            }
+        }
+
+        .counter {
+            margin-top: 30px;
+            text-align: center;
+            font-weight: 100;
+        }
+        
         .button-group {
             display: flex;
             flex-direction: row;
-            
+            justify-content: space-between;
+            margin-top: 20px;
+
+            .deactivated {
+                background: var(--dark-grey);
+                border-color: var(--dark-grey);
+                cursor: default;
+            }
         }
     }
 }
