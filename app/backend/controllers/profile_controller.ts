@@ -23,17 +23,23 @@ export class ProfileController extends Controller {
         }
 
         if(request_route_path == "/profile/add_tag_to_user"){
-            this.res.status(200).json( await this.add_tag_to_user(this.req.body.userEmail, this.req.body.tag) );
+            let result = await this.add_tag_to_user(this.req.body.userEmail, this.req.body.tag);
+            let status = result === Status.error ? 400 : 200;
+            this.res.status(status).json(result);
             return;
         }
 
         if(request_route_path == "/profile/remove_tag_from_user"){
-            this.res.status(200).json( await this.remove_tag_from_user(this.req.body.userEmail, this.req.body.tag) );
+            let result = await this.remove_tag_from_user(this.req.body.userEmail, this.req.body.tag);
+            let status = result === Status.error ? 400 : 200;
+            this.res.status(status).json(result);
             return;
         }
 
         if(request_route_path == "/profile/get_cv"){
-            this.res.status(200).json( await this.get_cv(this.req.body.userEmail) );
+            let result = await this.get_cv(this.req.body.userEmail);
+            let status = result === Status.error ? 400 : 200;
+            this.res.status(status).json(result);
             return;
         }
 
@@ -57,15 +63,15 @@ export class ProfileController extends Controller {
         return await this.account_manager.get_user_tags(email);
     }
 
-    private async add_tag_to_user(email: string, tag: string): Promise<any[]> {
+    private async add_tag_to_user(email: string, tag: string): Promise<any[] | Status.error> {
         return await this.account_manager.add_tag_to_user(email, tag);
     }
 
-    private async remove_tag_from_user(email: string, tag: string): Promise<any[]> {
+    private async remove_tag_from_user(email: string, tag: string): Promise<any[] | Status.error> {
         return await this.account_manager.remove_tag_from_user(email, tag);
     }
 
-    private async get_cv(email: string): Promise<any[]> {
+    private async get_cv(email: string): Promise<any[] | Status.error> {
         return await this.account_manager.get_cv(email);
     }
 

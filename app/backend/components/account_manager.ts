@@ -135,6 +135,7 @@ export class AccountManager {
     }
 
     public async update_profile(formData: any): Promise<Status> {
+        console.dir(formData)
         if(formData) {
             //update password
             if(formData.userType) {
@@ -144,6 +145,9 @@ export class AccountManager {
                     WHERE u.email = $2;
                 `;
                 await pool.query(updateProfileQuery, [formData.password, formData.email]);
+            }
+            else {
+                return Status.error;
             }
 
             // update info
@@ -209,7 +213,7 @@ export class AccountManager {
             return [];
     }
 
-    public async add_tag_to_user(email: string, tag: string): Promise<any[]> {
+    public async add_tag_to_user(email: string, tag: string): Promise<any[] | Status.error> {
         if(email && tag) {
             try{
                 // Begin transaction
@@ -281,7 +285,7 @@ export class AccountManager {
             }
         }
         else {
-            throw new Error('Invalid email or tag');
+            return Status.error;
         }
     }
 
@@ -302,7 +306,7 @@ export class AccountManager {
     }
 
 
-    public async remove_tag_from_user(email: string, tag: string): Promise<string[]> {
+    public async remove_tag_from_user(email: string, tag: string): Promise<string[] | Status.error> {
         if (email && tag) {
             try {
                 // Begin transaction
@@ -348,11 +352,11 @@ export class AccountManager {
                 throw error;
             }
         } else {
-            throw new Error('Invalid email or tag');
+            return Status.error;
         }
     }
 
-    public async get_cv(email: string): Promise<any> {
+    public async get_cv(email: string): Promise<any | Status.error> {
         try {
             const query = `
                 SELECT cv
@@ -384,7 +388,7 @@ export class AccountManager {
             };
         } catch (error) {
             console.error('Error in get_cv:', error);
-            throw error;
+            return Status.error;
         }
     }
 
