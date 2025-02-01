@@ -47,7 +47,7 @@ describe('Create internship', () => {
 
     test('Success if all parameters and correct dates', async () => {
         let parameters = {
-            email: 'test_email@email.com',
+            email: 'tester_email@email.com',
             title: 'test internship',
             description: 'test description',
             application_end_date: new Date(2024,3,1),
