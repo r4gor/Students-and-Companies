@@ -63,7 +63,7 @@ npm run build
 ```
 The build output will be located in the `dist/` directory.
 
-### Tests
+### Testing
 To run all the test navigate to the backend folder: 
 ```
 cd app/backend
