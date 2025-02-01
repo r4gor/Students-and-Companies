@@ -11,7 +11,7 @@ describe('Date utils', () => {
     })
     test('get_current_datetime correct formatting', () =>{
         jest.useFakeTimers()
-            .setSystemTime(new Date('2025-01-20'));
+            .setSystemTime(new Date(new Date('2025-01-20').setHours(0,0,0,0)));
         let received = get_current_datetime()
         expect(received).toBe('20/1/2025 @ 0:0:0')
     })

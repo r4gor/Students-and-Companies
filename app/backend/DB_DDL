@@ -510,26 +510,26 @@ student1@example.com	1	applied
 --
 
 COPY public.tag (id, description) FROM stdin;
-1	SoftwareDevelopment
-2	Technology
-3	Documentation
-4	Testing
-5	Beta
-6	Software
-7	Tech
+1	software-development
+2	technology
+3	documentation
+4	testing
+5	beta
+6	software
+7	tech
 8	engineering
-9	Milan
-10	University
-11	Unpaid labor
-12	Born to study
-13	PoliMi
-14	Engineer
-15	Polimi
-16	Graduate
-17	Space
-18	Exploration
-20	Graphic
-22	Design
+9	milan
+10	university
+11	unpaid-labor
+12	born-to-study
+13	polimi
+14	engineer
+15	poli-mi
+16	graduate
+17	space
+18	exploration
+20	graphic
+22	design
 \.
 
 

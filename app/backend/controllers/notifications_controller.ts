@@ -10,7 +10,7 @@ export class NotificationController extends Controller {
         let email = this.req.params.email;
         let result = await new NotificationManager().fetch_notifications(email);
         if (result === Status.error) {
-            this.res.status(400).json({ message: `Error fetching notifications for user '${email}'`});
+            this.res.status(500).json({ message: `Error fetching notifications for user '${email}'`});
         } else {
             // console.dir(result);
             this.res.status(200).json(JSON.stringify(result));
@@ -18,10 +18,18 @@ export class NotificationController extends Controller {
     }
 
     public async mark_notification_as_read(): Promise<void> {
+        let body = this.req.body;
+
+        //check for bad definitions of body and its expected fields
+        if (this.req.body.id === undefined) {
+            this.res.status(400).json({ message: 'Missing field' });
+            return;
+        }
+        
         let id = Number.parseInt(this.req.body.id);
         let result = await new NotificationManager().mark_notification_as_read(id);
         if (result === Status.error) {
-            this.res.status(400).json({ message: `Error updating notification ${id}`});
+            this.res.status(500).json({ message: `Error updating notification ${id}`});
         } else {
             this.res.status(200).send('OK');
         }
@@ -31,23 +39,20 @@ export class NotificationController extends Controller {
         let body = this.req.body;
 
         //check for bad definitions of body and its expected fields
-        if (body === undefined) {
-            this.res.status(400).json({ message: "Missing request body" });
-            return;
-        }
         if (!Array.isArray(body.receivers)) {
             this.res.status(400).json({ message: "Bad format: field 'receivers' was expected as array" });
             return;
         } 
-        if (!this.fields_are_strings([body.sender, body.title, body.body].concat(body.receivers))) {
+        if (!this.fields_are_strings([body.title, body.body].concat(body.receivers))) {
+            this.res.status(400).json({ message: "Bad format: a field is undefined or not a string" });
             return;
         }
 
-        let result = await new NotificationManager().post_notifications(body.email, body.receivers, body.title, body.body);
+        let result = await new NotificationManager().post_notifications(body.receivers, body.title, body.body, body.sender);
         if (result == Status.error) {
             this.res.status(500).json({ message: "Query failed"});
         } else {
-            this.res.status(204);
+            this.res.status(200).send('OK');
         }
     }
 
@@ -57,7 +62,6 @@ export class NotificationController extends Controller {
 
     private field_is_string(field: any): boolean {
         if (typeof field !== "string") {
-            this.res.status(400).json({ message: `Bad format: expected a string, but received '${typeof field}'`});
             return false;
         }
         return true;

@@ -14,6 +14,7 @@ import internship_management_router from "./routes/internship_management_routes"
 import profile_routes from "./routes/profile_routes";
 import single_internship_routes from "./routes/single_internship_routes";
 import complaint_router from "./routes/complaints_routes";
+import { feedbacks_route } from "./routes/feedbacks_routes";
 
 export const app: Express = express();
 const port: string = process.env.PORT || "4001";
@@ -38,6 +39,7 @@ app.use("/api/internship_management", internship_management_router);
 app.use("/api", profile_routes);
 app.use("/api", single_internship_routes);
 app.use("/api/complaints/", complaint_router);
+app.use("/api/feedbacks/", feedbacks_route);
 
 
 export const server = app.listen(port, () => {

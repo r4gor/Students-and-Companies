@@ -6,6 +6,7 @@ import { InternshipInformation } from "../../searchpage/utils/internship_informa
 
 function CompanyInternshipmgmt() {
     const user_email = useAppState().userEmail as string
+    const [feedbacks, setFeedbacks] = useState(new Map<number, boolean>());
     const [internships, setInternships] = useState([] as InternshipInformation[])
     useEffect(() => {
 		const fetch_internships = async () => {
@@ -14,6 +15,7 @@ function CompanyInternshipmgmt() {
 			setInternships(data.map((row:any) => new InternshipInformation(row)))
 		}
 		fetch_internships()
+		fetch_feedbacks_state();
 	}, []);
 
     return (
@@ -32,8 +34,11 @@ function CompanyInternshipmgmt() {
                             } 
                             {   internships.length >=1 &&
                                 internships.map((info, idx) =>
-                                    (<InternshipComponentExtended key={idx} info={info}
-                                                                  position={idx}></InternshipComponentExtended>
+                                    (<InternshipComponentExtended 
+                                        key={idx} 
+                                        info={info}
+                                        feedbackSent={feedbacks.get(info.id)} 
+                                        position={idx}></InternshipComponentExtended>
                                     ))
                             }
                             {
@@ -51,6 +56,26 @@ function CompanyInternshipmgmt() {
         </div>
         </>
     )
+    
+    async function fetch_feedbacks_state(): Promise<void> {
+        let result: Map<number, boolean> = await fetch(`http://localhost:4000/api/feedbacks/fetch/state/${user_email}`)
+        .then(res => {
+            if(!res.ok) {
+                console.dir(res);
+                return new Map<number, boolean>();
+            }
+            return res
+                .json()
+                .then((data) => (
+                    JSON.parse(data) as Array<{internship_id:number, sent:boolean}>)
+                    .reduce((acc, row) => (acc.set(row.internship_id, row.sent)), new Map<number, boolean>)
+                );
+        }).catch(err => {
+            console.error(err);
+            return new Map<number, boolean>();
+        });
+        setFeedbacks(result);
+    } 
 }
 
 function fetch_company_internships(user: string): Promise<Response> {

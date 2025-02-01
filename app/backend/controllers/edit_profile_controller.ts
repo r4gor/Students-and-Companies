@@ -13,7 +13,9 @@ export class EditProfileController extends Controller {
             return;
         }
         if(request_route_path == "/edit_profile/update_profile"){
-            this.res.status(200).json( await this.update_profile(this.req.body) );
+            let result = await this.update_profile(this.req.body);
+            let status = result === Status.ok ? 200 : 400;
+            this.res.status(status).json(result);
             return;
         }
     }
@@ -22,13 +24,7 @@ export class EditProfileController extends Controller {
         return await this.account_manager.get_user_profile(email);
     }
 
-    private async update_profile(formData:any): Promise<string> {
-            let result = await this.account_manager.update_profile(formData);
-        if (result === Status.ok) {
-            return "success";
-        }
-        else {
-            return "error updating profile";
-        }
+    private async update_profile(formData:any): Promise<Status> {
+        return await this.account_manager.update_profile(formData);
     }
 }
