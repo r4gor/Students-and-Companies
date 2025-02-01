@@ -9,6 +9,10 @@ export type Notification = {
     content: string,
 }
 
+/**
+ * Notification manager: class used to add, fetch and update notifications
+ * @author Zendikcar  
+ */
 export class NotificationManager {
 
     public async fetch_notifications(email: string): Promise<Status.error | Array<Notification>> {

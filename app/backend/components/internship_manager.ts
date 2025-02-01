@@ -37,6 +37,10 @@ export type FeedbackType = {
     rating: number
 }
 
+/**
+ * Internship manager: class used to add internships and manipulate their state
+ * @author incredX, DavideGhiiso, Zendikcar
+ */
 export class InternshipManager {
 
     /**

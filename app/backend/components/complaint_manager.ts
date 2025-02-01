@@ -1,6 +1,10 @@
 import pool from "../utils/db_pool";
 import { Status } from "../utils/status";
 
+/**
+ * Complaint manager: class used to add and access complaints
+ * @author DavideGhiiso
+ */
 export class ComplaintManager {
 
     /**

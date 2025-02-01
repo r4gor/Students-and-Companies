@@ -1,6 +1,7 @@
 import { QueryResult } from "pg";
 import pool from "../utils/db_pool";
 import { Status } from "../utils/status";
+import { ThirdPartyDataAnalyzer } from "./third_party_data_analyzer";
 
 export class SearchEngine {
 	public static order_by_valid_values: string[] = ["posted", "salary", "duration"]
@@ -54,6 +55,7 @@ export class SearchEngine {
 				ORDER BY ${this.order_by_map[query_params.orderby as keyof typeof this.order_by_map]} ${query_params.ascending ? 'ASC' : 'DESC'}
 				`
 			)
+			ThirdPartyDataAnalyzer.produce_search_recommendations(internships.rows, query_params.user);
 			return internships.rows as InternshipQueryResult[] 
 		} catch (err) {
 			console.log(`[server]: (query error) (create internship) ${err}`);
