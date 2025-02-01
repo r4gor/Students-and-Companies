@@ -1,6 +1,10 @@
 import pool from "../utils/db_pool";
 import {NotificationManager} from "./notification_manager";
 
+/**
+ * Suggestion manager: class used to generate student and internship suggestions
+ * @author incredX
+ */
 export class SuggestionManager {
     public async suggest_student_to_companies(tags: string[], studentEmail: string): Promise<void> {
         if (tags.length === 0) return;

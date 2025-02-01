@@ -5,6 +5,10 @@ import {saveBase64ToFile} from "../utils/exportBase64ToFile";
 import fs from "fs/promises";
 import {SuggestionManager} from "./suggestion_manager";
 
+/**
+ * Account manager: component used to create, edit and access the accounts and the data related to the users
+ * @author incredX, Zendikcar
+ */
 export class AccountManager {
 
     public async sign_in(email: String, password: String): Promise<[Status, String]> {
