@@ -32,6 +32,10 @@ type FeedbackState = {
     sent: boolean
 }
 
+/**
+ * Internship manager: class used to add internships and manipulate their state
+ * @author incredX, DavideGhiiso, Zendikcar
+ */
 export class InternshipManager {
 
     /**
@@ -305,7 +309,7 @@ export class InternshipManager {
                 `
                 UPDATE internship
                 SET status = 'interview'
-                WHERE "id" = $1
+                WHERE "id" = $1 AND status = 'application'
                 `,
                 [internship_id]
             )
