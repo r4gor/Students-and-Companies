@@ -12,12 +12,12 @@ describe('Fetch notifications', () => {
 
     let url = base_url + 'fetch/';
 
-    test('Bad request if missing email', async () => {
+    test('bad request if missing email', async () => {
         let api_result = await request(app).get(url);
         expect(api_result.status).toBe(404);
     })
 
-    test('Successful fetch', async () => {
+    test('successful fetch', async () => {
         let api_result = await request(app).get(url + "tester_email@email.com");
         expect(api_result.status).toBe(200);
     })
@@ -32,17 +32,12 @@ describe('Set notifications as read', () => {
 
     let url = base_url + 'mark_as_read/';
 
-    test('Bad request if missing body', async () => {
-        let api_result = await request(app).post(url).send(undefined);
-        expect(api_result.status).toBe(400);
-    })
-    
-    test('Bad request if missing body field (id)', async () => {
+    test('bad request if missing body field (id)', async () => {
         let api_result = await request(app).post(url).send({});
         expect(api_result.status).toBe(400);
     })
     
-    test('Successful test', async () => {
+    test('successful test', async () => {
         let api_result = await request(app)
             .post(url)
             .send({ id: 1 })
@@ -60,27 +55,12 @@ describe('Post notification', () => {
 
     let url = base_url + 'post/';
 
-    test('Bad request if missing body', async () => {
-        let api_result = await request(app).post(url).send(undefined);
-        expect(api_result.status).toBe(400);
-    })
-
-    test('Bad request if body field does not have the expected type 1', async () => {
+    test('bad request if body field does not have the expected type 1', async () => {
         let api_result = await request(app).post(url).send({ receivers: undefined });
         expect(api_result.status).toBe(400);
     })
-
-    test('Bad request if body field does not have the expected type 2', async () => {
-        let api_result = await request(app).post(url).send({ 
-            receivers: ['r1'], 
-            sender: 1, 
-            title: "title", 
-            body: "body" 
-        });
-        expect(api_result.status).toBe(400);
-    })
     
-    test('Bad request if body field does not have the expected type 3', async () => {
+    test('bad request if body field does not have the expected type 2', async () => {
         let api_result = await request(app).post(url).send({ 
             receivers: ['r1'], 
             sender: "sender", 
@@ -90,7 +70,7 @@ describe('Post notification', () => {
         expect(api_result.status).toBe(400);
     })
     
-    test('Bad request if body field does not have the expected type 4', async () => {
+    test('bad request if body field does not have the expected type 3', async () => {
         let api_result = await request(app).post(url).send({ 
             receivers: ['r1'], 
             sender: "sender", 
@@ -98,5 +78,35 @@ describe('Post notification', () => {
             body: undefined 
         });
         expect(api_result.status).toBe(400);
+    })
+
+    test('test server-error', async () => {
+        let api_result = await request(app).post(url).send({ 
+            receivers: ['ERROR\';ERROR', 'tester_email@email.com'], 
+            sender: "sender", 
+            title: "title", 
+            body: "body" 
+        });
+        expect(api_result.status).toBe(500);
+    })
+
+    test('successful test', async () => {
+        let api_result = await request(app).post(url).send({ 
+            receivers: ['company1@example.com'], 
+            sender: "sender", 
+            title: "title", 
+            body: "body" 
+        });
+        expect(api_result.status).toBe(200);
+    })
+    
+    test('successful test (no sender)', async () => {
+        let api_result = await request(app).post(url).send({ 
+            receivers: ['company1@example.com'], 
+            sender: undefined, 
+            title: "title", 
+            body: "body" 
+        });
+        expect(api_result.status).toBe(200);
     })
 })

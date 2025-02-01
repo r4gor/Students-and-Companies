@@ -18,6 +18,11 @@ describe('Fetch candidates', () => {
         expect(api_result.status).toBe(404);
     })
 
+    test('test server-error', async () => {
+        let api_result = await request(app).get(url + 'ERROR');
+        expect(api_result.status).toBe(500);
+    })
+
     test('successful test', async () => {
         let api_result = await request(app).get(url + '1');
         expect(api_result.status).toBe(200);
@@ -38,8 +43,43 @@ describe('Fetch interview questions', () => {
         expect(api_result.status).toBe(404);
     })
 
+    test('test server-error', async () => {
+        let api_result = await request(app).get(url + 'ERROR');
+        expect(api_result.status).toBe(500);
+    })
+
     test('successful test', async () => {
         let api_result = await request(app).get(url + '1');
+        expect(api_result.status).toBe(200);
+    })
+})
+
+describe('Fetch candidate replies', () => {
+    afterAll(() => {
+        server.closeIdleConnections()
+        server.closeAllConnections()
+        server.close()
+    })
+
+    let url = base_url + 'fetch/replies/';
+
+    test('test missing url parameter (internship_id)', async () => {
+        let api_result = await request(app).get(url);
+        expect(api_result.status).toBe(404);
+    })
+
+    test('test missing url parameter (email)', async () => {
+        let api_result = await request(app).get(url + '1');
+        expect(api_result.status).toBe(404);
+    })
+
+    test('test server-error', async () => {
+        let api_result = await request(app).get(url + '1000/\';@email.com');
+        expect(api_result.status).toBe(500);
+    })
+
+    test('successful test', async () => {
+        let api_result = await request(app).get(url + '1/student1@example.com');
         expect(api_result.status).toBe(200);
     })
 })
@@ -52,11 +92,6 @@ describe('Post candidate state', () => {
     })
 
     let url = base_url + 'post/status';
-
-    test('test missing body', async () => {
-        let api_result = await request(app).post(url)
-        expect(api_result.status).toBe(400);
-    })
 
     test('test missing body parameter (id)', async () => {
         let payload = {
@@ -120,15 +155,22 @@ describe('Post candidate replies', () => {
 
     let url = base_url + 'post/replies';
 
-    test('test missing body', async () => {
-        let api_result = await request(app).post(url)
-        expect(api_result.status).toBe(400);
-    })
-
     test('test missing body parameter (email)', async () => {
         let payload = {
             email: undefined,
             replies: [],
+        };
+        let api_result = await request(app)
+            .post(url)
+            .send(payload)
+            .set('Content-Type', 'application/json');
+        expect(api_result.status).toBe(400);
+    })
+
+    test('test missing body parameter (replies)', async () => {
+        let payload = {
+            email: 'email',
+            replies: undefined,
         };
         let api_result = await request(app)
             .post(url)

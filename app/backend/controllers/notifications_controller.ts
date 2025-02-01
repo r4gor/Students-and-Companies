@@ -7,10 +7,6 @@ export class NotificationController extends Controller {
     public async handle(): Promise<void> { }
     
     public async fetch(): Promise<void> {
-        if (this.req.params.email === undefined) {
-            this.res.status(400).json({ message: 'Missing field' });
-        }
-        
         let email = this.req.params.email;
         let result = await new NotificationManager().fetch_notifications(email);
         if (result === Status.error) {
@@ -25,10 +21,6 @@ export class NotificationController extends Controller {
         let body = this.req.body;
 
         //check for bad definitions of body and its expected fields
-        if (body === undefined) {
-            this.res.status(400).json({ message: "Missing request body" });
-            return;
-        }
         if (this.req.body.id === undefined) {
             this.res.status(400).json({ message: 'Missing field' });
             return;
@@ -47,15 +39,11 @@ export class NotificationController extends Controller {
         let body = this.req.body;
 
         //check for bad definitions of body and its expected fields
-        if (body === undefined) {
-            this.res.status(400).json({ message: "Missing request body" });
-            return;
-        }
         if (!Array.isArray(body.receivers)) {
             this.res.status(400).json({ message: "Bad format: field 'receivers' was expected as array" });
             return;
         } 
-        if (!this.fields_are_strings([body.sender, body.title, body.body].concat(body.receivers))) {
+        if (!this.fields_are_strings([body.title, body.body].concat(body.receivers))) {
             this.res.status(400).json({ message: "Bad format: a field is undefined or not a string" });
             return;
         }
@@ -64,7 +52,7 @@ export class NotificationController extends Controller {
         if (result == Status.error) {
             this.res.status(500).json({ message: "Query failed"});
         } else {
-            this.res.status(200);
+            this.res.status(200).send('OK');
         }
     }
 
