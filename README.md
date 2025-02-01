@@ -62,3 +62,14 @@ To build for production (not necessary for testing) run:
 npm run build
 ```
 The build output will be located in the `dist/` directory.
+
+### Tests
+To run all the test navigate to the backend folder: 
+```
+cd app/backend
+``` 
+and run the following command:
+```
+npm test
+``` 
+the results of all test will appear in the terminal along with additional information. After the test run ends, the html documentation regarding test coverage will be generated inside the `app/backend/coverage` folder. 
