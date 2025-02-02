@@ -63,7 +63,7 @@ export class NotificationManager {
         return await pool.query(query)
         .then(_ => Status.ok)
         .catch(err => {
-            console.error(err);
+            // console.error(err);
             return Status.error;
         });
     }

@@ -110,7 +110,7 @@ export class AccountManager {
             return Status.ok;
 
         } catch (error) {
-            console.error('Error creating account:', error);
+            // console.error('Error creating account:', error);
             return Status.error;
         }
     }
