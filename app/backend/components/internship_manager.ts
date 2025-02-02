@@ -308,8 +308,8 @@ export class InternshipManager {
             let result = await pool.query(
                 `
                 UPDATE internship
-                SET status = 'interview'
-                WHERE "id" = $1 AND status = 'application'
+                SET status = 'ongoing'
+                WHERE "id" = $1 AND status = 'interview'
                 `,
                 [internship_id]
             )

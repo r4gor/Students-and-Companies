@@ -9,7 +9,7 @@ type Student = {
     email:string,
     first_name:string,
     last_name:string,
-    internship_status:string
+    status:string
 }
 
 function OpenComplaint() {
@@ -50,7 +50,11 @@ function OpenComplaint() {
                             <p>In this page you can open a new complaint. Please be aware that the information you provide inside this form will only be visible 
                                 by {user_type === 's' ? 'your university':'the students university'}.
                             </p>
-                            {user_type=== 'c' && <StudentSelector></StudentSelector>}
+                            {user_type === 'c' && <StudentSelector 
+                                internship_id={internship_id} 
+                                user_type={user_type}
+                                set_recipient={setRecipient}>
+                            </StudentSelector>}
 							<div id="label">Please describe the problem in the field below with as much detail as possible:</div>
                             <textarea 	name='description'
 										id='description'
@@ -70,30 +74,39 @@ function OpenComplaint() {
         </div>
         </>
     )
+}
 
-    function StudentSelector() {
-        const [students, setStudents] = useState([] as Student[])
-        const fetch_this_internship_students: any = async () => {
-            const response = await fetch_students(internship_id)
-            const data = await response.json()
-            setStudents(JSON.parse(data) as Student[])
-        }
-    
-        useEffect(() => {
-            if(user_type === 'c') {
-                fetch_this_internship_students()
-            }
-        },[])
-
-        return (
-            <>
-            <div id="label">Please select a student:</div>
-            <select name="students" id="students" onChange={(e:any) => setRecipient(e.target.value)}>
-                {students.map(student => (<option>{student.first_name} {student.last_name}</option>))}
-            </select>
-            </>
-        )
+function StudentSelector(params: {
+    internship_id:string | undefined, 
+    user_type:string,
+    set_recipient:Function
+}) {
+    const [students, setStudents] = useState([] as Student[])
+    const fetch_this_internship_students: any = async () => {
+        const response = await fetch_students(params.internship_id)
+        const data = await response.json()
+        setStudents(JSON.parse(data) as Student[])
     }
+
+    useEffect(() => {
+        if(params.user_type === 'c') {
+            fetch_this_internship_students()
+        }
+    },[])
+
+    return (
+        <>
+        <div id="label">Please select a student:</div>
+        <select name="students" id="students" onChange={(e:any) => params.set_recipient(e.target.value)}>
+            {
+                
+                students
+                .filter(s => s.status === 'ongoing')
+                .map((student, i) => (<option key={i}>{student.first_name} {student.last_name}</option>))
+            }
+        </select>
+        </>
+    )
 }
 
 function fetch_students(internship_id:string | undefined):Promise<Response> {

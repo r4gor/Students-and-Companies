@@ -99,17 +99,20 @@ export class InternshipManagementController extends Controller {
     }
 
     private async close_interview_phase() {
-        let body = this.req.query;
-        let internship_id = body.id as string;
-        let user_email = body.user_email as string;
+        let body = this.req.body;
+
+        console.log(body)
 
         if (body == undefined ||
-            internship_id == undefined ||
-            user_email == undefined
+            body.internship_id == undefined ||
+            body.user_email == undefined
         ) {
 			this.res.status(400).json({ message: "Bad request" });
 			return;
 		}
+		
+        let internship_id = body.internship_id as string;
+        let user_email = body.user_email as string;
         let internship_manager = new InternshipManager()
         let result = await internship_manager.close_interview_phase(internship_id);
         let accepted_students = await internship_manager.fetch_internship_accepted_candidates(internship_id)

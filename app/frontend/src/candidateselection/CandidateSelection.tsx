@@ -1,7 +1,8 @@
+import { useAppState } from '../appstatecontext/AppStateContext';
 import '../main.css';
 import './candidateSelection.css';
-import { useState, useEffect } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 type CandidateType = {
     email: string,
@@ -94,7 +95,9 @@ function CandidateSelection() {
     const [questions, setQuestions] = useState([] as Array<QuestionType>);
 
     const params = useParams();
+    const navigate = useNavigate();
     const state = useLocation().state === null ? {} : useLocation().state;
+    const context = useAppState();
     const internship_id: number = params.internship_id === undefined ? 1 : Number.parseInt(params.internship_id);
     const internship_title: string = state === undefined || state.internship_title === undefined ? 'Title' : state.internship_title;
 
@@ -149,6 +152,28 @@ function CandidateSelection() {
         .catch(console.error);
     }
 
+    async function close_interview_phase(): Promise<void> {
+		const options = {
+			method: 'POST',
+			headers: {
+    			'Content-Type': 'application/json' // Set content type to JSON
+			},
+			body: JSON.stringify({
+			    internship_id: `${internship_id}`,
+			    user_email: context.userEmail,
+			})
+		};
+        await fetch('http://localhost:4000/api/internship_management/close_interview_phase', options)
+        .then(res => {
+            if (!res.ok) {
+                console.dir(res);
+                return;
+            }
+            navigate('/internship_management')
+        })
+        .catch(console.error);
+    }
+
     useEffect(() => {
         fetch_candidates();
         fetch_questions();
@@ -163,7 +188,7 @@ function CandidateSelection() {
 				    Internship #{Intl.NumberFormat("en-IN",{minimumIntegerDigits: 6, useGrouping: false}).format(internship_id)}
 				</div>
 				<div className="button-container">
-					<button type="button" className="std-button" id="cv">
+					<button type="button" className="std-button" id="cv" onClick={close_interview_phase}>
 					    End Interview Phase
 					</button>
 				</div>
