@@ -26,7 +26,6 @@ function OpenComplaint() {
             setInvalidDescr(true)
             return;
         }
-
         post_complaint({
             email: user_email,
             internship_id: internship_id,
@@ -86,6 +85,7 @@ function StudentSelector(params: {
         const response = await fetch_students(params.internship_id)
         const data = await response.json()
         setStudents(JSON.parse(data) as Student[])
+        params.set_recipient((JSON.parse(data) as Student[])[0].email)
     }
 
     useEffect(() => {
