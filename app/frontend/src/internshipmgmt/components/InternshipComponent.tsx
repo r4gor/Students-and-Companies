@@ -25,12 +25,10 @@ function InternshipComponent({id, title, status, internship_status, position, fe
 
     function on_leave_feedback() {
         setVisibleFeedbackPopup(true);
-        console.log('clicked leave feedback');
     }
 
     async function accept_decline_offer(accepted: number) {
         let url = new URL('http://localhost:4000/api/internship_management/update_offer');
-        console.log(id)
         url.search = format_search_parameters({
             internship_id: id,
             accepted: accepted,
@@ -38,8 +36,7 @@ function InternshipComponent({id, title, status, internship_status, position, fe
         })
         let response = await fetch(url, {method: 'POST'});
         let data = await response.json();
-
-        console.log(data)
+        window.location.reload()
     }
 
     return (<>
