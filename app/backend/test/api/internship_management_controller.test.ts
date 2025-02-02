@@ -92,7 +92,7 @@ describe('Close interview phase', () => {
 
     let url = base_url + 'close_interview_phase/'
     test('Bad request if missing parameters', async () => {
-        let api_result = await request(app).get(url);
+        let api_result = await request(app).post(url);
         expect(api_result.status).toBe(400)
     })
 
@@ -101,7 +101,7 @@ describe('Close interview phase', () => {
             id: 2,
             user_email: ' '
         }
-        let api_result = await request(app).get(url).query(parameters);
+        let api_result = await request(app).post(url).send(parameters);
         expect(api_result.status).toBe(400)
         expect(api_result.body.message).toBe('Internal server error')
     })
