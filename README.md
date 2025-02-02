@@ -64,6 +64,8 @@ npm run build
 The build output will be located in the `dist/` directory.
 
 ### Testing
+MAKE SURE the database container is up and running before running the following commands.
+
 To run all the test navigate to the backend folder: 
 ```
 cd app/backend
