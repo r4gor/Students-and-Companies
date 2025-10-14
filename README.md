@@ -1,5 +1,5 @@
 # Students&Companies (S&C)
-
+##Result: 30L/30
 ## Prerequisites
 - Docker (tested on v27.2 but should work with other versions)
 - Node v22.12.0 LTS
